@@ -13,7 +13,8 @@ Items that are deliberately relaxed for the pilot and MUST be reverted or comple
 
 ## Environments
 - [ ] Create a separate **production Supabase project** (the current `Wasla` project is DEV by decision); replay `supabase/migrations/` on it, set its keys in Vercel only.
-- [ ] Create the Vercel project linked to this GitHub repo; set env vars from `.env.example`; set `NEXT_PUBLIC_APP_URL`.
+- [x] Vercel project `wasla` linked to this repo (pilot URL https://wasla-henna.vercel.app, env vars set by `scripts/vercel-setup.mjs`). Still to do: custom domain, production env vars pointing at the production Supabase project, Vercel Deployment Protection review, and move the `VERCEL_TOKEN` out of `.env.local` into a rotated, scoped token.
+- [ ] Add the Vercel URL to Supabase Auth redirect URLs / Site URL and to the Google OAuth authorized origins (dashboards only).
 - [ ] Point n8n workflows at the production Supabase project (credentials in n8n's store) and redeploy with `npm run n8n:deploy`.
 - [ ] n8n: turn off saving of successful execution data / set pruning (executions contain lead data; Egypt PDPL).
 

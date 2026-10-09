@@ -5,6 +5,8 @@ Arabic-first, horizontal B2B lead generation and outreach SaaS for Egypt/MENA. A
 - Product spec: [`specs.md`](specs.md) · Rules for contributors and agents: [`CLAUDE.md`](CLAUDE.md) · UX: [`USER_FLOW_UIUX.md`](USER_FLOW_UIUX.md)
 - Phase reports: [`docs/`](docs) · Pre-launch checklist: [`docs/PRELAUNCH_CHECKLIST.md`](docs/PRELAUNCH_CHECKLIST.md)
 
+**Live pilot:** https://wasla-henna.vercel.app (Vercel project `wasla`, auto-deploys from `main`; DEV Supabase project, see `docs/PRELAUNCH_CHECKLIST.md`).
+
 ## Stack
 Next.js (App Router) + TypeScript + Tailwind + shadcn/ui on Vercel · Supabase (Postgres, RLS, Auth, Realtime) · self-hosted n8n for orchestration · Apify for data · OpenRouter for LLM.
 
