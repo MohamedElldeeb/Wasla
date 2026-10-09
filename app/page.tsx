@@ -5,6 +5,7 @@ import { Search, Gauge, Send } from 'lucide-react';
 import { createClient } from '@/lib/supabase/server';
 import { getT } from '@/lib/i18n/server';
 import { buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { LanguageToggle } from '@/components/app/language-toggle';
 import { DemoButton } from '@/components/app/demo-button';
 
@@ -21,10 +22,10 @@ export default async function Landing() {
     <div className="flex min-h-screen flex-col">
       <header className="border-b border-border bg-surface">
         <div className="mx-auto flex h-16 w-full max-w-[1200px] items-center justify-between gap-2 px-4 md:px-6 lg:px-8">
-          <Image src="/brand/wasla-logo.svg" alt="Wasla" width={230} height={96} priority className="h-10 w-auto" />
-          <div className="flex items-center gap-1">
-            <LanguageToggle />
-            <Link href="/login" className={buttonVariants({ variant: 'ghost' })}>{l.login}</Link>
+          <Image src="/brand/wasla-logo.svg" alt="Wasla" width={230} height={96} priority className="h-9 w-auto shrink-0" />
+          <div className="flex items-center">
+            <LanguageToggle className="px-2" />
+            <Link href="/login" className={cn(buttonVariants({ variant: 'ghost' }), 'px-2')}>{l.login}</Link>
           </div>
         </div>
       </header>

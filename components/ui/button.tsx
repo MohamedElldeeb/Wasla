@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"
 
 // DESIGN.md 5 Buttons: md 40px desktop / lg 48px (mobile default and main CTAs). Touch targets are 48px on mobile.
 const buttonVariants = cva(
-  "press transition-ui inline-flex shrink-0 select-none items-center justify-center gap-2 whitespace-nowrap rounded-control border border-transparent text-body font-medium outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-5 [&[data-loading]>svg:not([data-spinner])]:hidden",
+  "press transition-ui inline-flex shrink-0 select-none items-center justify-center gap-2 whitespace-nowrap rounded-control border border-transparent text-body font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-5 [&[data-loading]>svg:not([data-spinner])]:hidden",
   {
     variants: {
       variant: {

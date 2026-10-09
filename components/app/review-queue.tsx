@@ -167,7 +167,7 @@ export function ReviewQueue({ messages, leads, onGoLeads }: { messages: Message[
           <div className="flex min-w-0 flex-col gap-4">
             <div className="flex items-center justify-between gap-3 lg:hidden">
               <Button variant="ghost" size="icon" aria-label={r.prev} onClick={() => go(-1)} disabled={at === 0}><ChevronRight className="ltr:rotate-180" aria-hidden /></Button>
-              <span className="num text-h3 text-fg" aria-live="polite">{r.counter(at + 1, list.length)}</span>
+              <span className="num ltr-iso text-h3 text-fg" aria-live="polite">{r.counter(at + 1, list.length)}</span>
               <Button variant="ghost" size="icon" aria-label={r.next} onClick={() => go(1)} disabled={at >= list.length - 1}><ChevronLeft className="ltr:rotate-180" aria-hidden /></Button>
             </div>
 
@@ -212,12 +212,12 @@ export function ReviewQueue({ messages, leads, onGoLeads }: { messages: Message[
               )}
             </Card>
 
-            <StickyBar className="[&>div]:flex-wrap [&>div]:justify-end">
-              {status !== 'rejected' && status !== 'sent' && <Button variant="ghost" size="lg" onClick={() => setStatus('rejected')} disabled={busy}><X aria-hidden />{r.reject}</Button>}
+            <StickyBar className="[&>div]:justify-end">
+              {status !== 'rejected' && status !== 'sent' && <Button variant="ghost" size="lg" className="px-3" onClick={() => setStatus('rejected')} disabled={busy}><X className="max-sm:hidden" aria-hidden />{r.reject}</Button>}
               {status === 'rejected' && <Button variant="secondary" size="lg" onClick={() => setStatus('pending')} disabled={busy}>{r.restore}</Button>}
-              {status !== 'sent' && <Button variant="secondary" size="lg" onClick={() => setRegenOpen((o) => !o)} disabled={!!regenJob}><RefreshCw aria-hidden />{r.regenerate}</Button>}
-              {(status === 'pending' || status === 'rejected') && <Button size="lg" onClick={() => setStatus('approved')} loading={busy} disabled={!!regenJob} data-testid="approve"><Check aria-hidden />{r.approve}</Button>}
-              {status === 'approved' && <Button size="lg" onClick={() => setStatus('approved')} loading={busy} disabled={!dirty}>{r.edit}</Button>}
+              {status !== 'sent' && <Button variant="secondary" size="lg" className="px-3" onClick={() => setRegenOpen((o) => !o)} disabled={!!regenJob}><RefreshCw className="max-sm:hidden" aria-hidden />{r.regenerate}</Button>}
+              {(status === 'pending' || status === 'rejected') && <Button size="lg" className="flex-1 sm:flex-none" onClick={() => setStatus('approved')} loading={busy} disabled={!!regenJob} data-testid="approve"><Check className="max-sm:hidden" aria-hidden />{r.approve}</Button>}
+              {status === 'approved' && <Button size="lg" className="flex-1 sm:flex-none" onClick={() => setStatus('approved')} loading={busy} disabled={!dirty}>{r.edit}</Button>}
             </StickyBar>
           </div>
         </div>

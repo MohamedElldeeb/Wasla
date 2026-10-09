@@ -16,7 +16,7 @@ export function ScoreBadge({ score, className }: { score: number; className?: st
         'num flex size-10 shrink-0 items-center justify-center rounded-full text-body-sm font-semibold',
         band === 'low' && 'bg-surface-muted text-fg-muted',
         band === 'mid' && 'bg-primary-soft text-primary',
-        band === 'high' && 'bg-accent-soft text-accent-fg ring-2 ring-accent',
+        band === 'high' && 'bg-accent-soft text-accent-on-soft ring-2 ring-accent',
         className
       )}
     >

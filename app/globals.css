@@ -31,6 +31,7 @@
   --accent: var(--orange-500);
   --accent-fg: var(--petrol-950);
   --accent-soft: var(--orange-50);
+  --accent-on-soft: var(--petrol-950); /* text on accent-soft: DESIGN.md says accent-fg, which fails contrast on the dark soft surface */
   --success: #15803d; --success-soft: #f0fdf4;
   --warning: #b45309; --warning-soft: #fffbeb;
   --danger: #b91c1c; --danger-soft: #fef2f2;
@@ -67,6 +68,7 @@
   --accent: var(--orange-400);
   --accent-fg: var(--petrol-950);
   --accent-soft: var(--orange-950);
+  --accent-on-soft: var(--orange-300);
   --success: #4ade80; --success-soft: #052e16;
   --warning: #fbbf24; --warning-soft: #451a03;
   --danger: #f87171; --danger-soft: #450a0a;
@@ -92,6 +94,7 @@
   --color-accent: var(--accent);
   --color-accent-fg: var(--accent-fg);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-on-soft: var(--accent-on-soft);
   --color-success: var(--success);
   --color-success-soft: var(--success-soft);
   --color-warning: var(--warning);

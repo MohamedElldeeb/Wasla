@@ -78,3 +78,34 @@ Screens that do not exist yet and are required by DESIGN.md: **Leads** (all lead
 
 ## Acceptance items failing today (section 9)
 All of them except: Western digits (pass), Arabic/English both usable (partly), no horizontal scroll on most screens at 375 except the leads table and the wizard step 3 sticky header artifact.
+
+---
+
+# Resolution (after)
+
+Re-captured with the same script into `after/` (168 screenshots: the 12 original screens plus the new Leads and Settings screens). Side-by-side mobile comparisons of the dashboard, review and send screens are in `compare/`.
+
+## Section 9 checklist
+
+| Item | Result | How it was verified |
+|---|---|---|
+| No hardcoded colors, font sizes, radii or shadows outside the token file | Pass | `app/globals.css` is the only file with raw values. Grep for `#hex`, `rgb(`, `oklch(`, `text-xs/sm/lg…`, `rounded-md/lg/xl`, `shadow-sm/md` and legacy shadcn color classes returns nothing in `app/`, `components/`, `lib/`. The Google logo uses `--mark-google-*` variables from the token file. |
+| 375px: no horizontal scroll, primary action visible | Pass | `scripts/design-check.mjs` (overflow check, 11 screens × ar/en × light/dark). Primary actions are in the page header (full width on mobile) or the sticky bar. |
+| Touch targets ≥ 48×48 on mobile, 8px gaps | Pass | Same script measures every visible button, link, input, tab, radio and checkbox (checkboxes through their 48px label). Screen-reader-only skip links are exempt. |
+| Contrast ≥ 4.5:1 / 3:1, light and dark | Pass | axe `color-contrast` on every screen at 375, 768, 1280, ar/en, light/dark: 0 violations. |
+| One primary button per view; orange only for send, focus ring, high scores, logo | Pass | Primary = petrol. `accent` variant is used only by the WhatsApp send button; the score badge and focus ring use accent. Reviewed by code search for `accent`. |
+| Skeleton, empty, error and live-progress states | Pass | `loading.tsx` skeleton matching the page, `EmptyState` with icon on every list, `error.tsx` with retry, `JobProgress` cards (Realtime + polling). |
+| Visible focus ring on keyboard navigation | Pass | Global 2px accent ring with 2px offset; `outline-none` removed from components (it had been overriding the ring). Checked by the script (first Tab target on every screen). |
+| Arabic RTL and English LTR intentional | Pass | Logical properties only; chevrons/arrows mirrored (`rtl:-scale-x-100`, `ltr:rotate-180`); phone numbers and counters isolated with `ltr-iso`; both languages reviewed in screenshots. |
+| Dark mode on every screen | Pass | Real theme through tokens (`.dark`), `next-themes` with system default and a toggle in the account menu and Settings; every screenshot exists in dark. |
+| Before/after committed | Pass | `before/`, `after/`, `compare/`. |
+
+## Deviations from DESIGN.md (deliberate, please confirm)
+
+1. **Text on `accent-soft` in dark mode.** DESIGN.md pairs `accent-soft` with `accent-fg` (petrol 950), which gives 1.16:1 on the dark soft surface. I added the token `accent-on-soft` (petrol 950 in light, orange 300 in dark) for high-score badges. Light mode is unchanged.
+2. **Bottom-nav label "العملاء"** instead of "العملاء المحتملين": the long label wraps to two lines in a 64px bar at 375px. The page title keeps the full name; English stays "Leads".
+3. **Settings is read-only for the business profile.** DESIGN 6.6 describes editable sections with a Save button; editing needs a new server action, which would be new business logic. Language, appearance and sign-out work.
+4. **Review: bulk approve was removed.** The one-lead-per-screen flow replaces the "scroll past every card" rule; each message is reviewed individually by construction.
+5. **Onboarding has 3 steps with a summary card on the last one** (name + what you sell, customers, regions), not one input per step.
+6. **Landing page** keeps the "Try it free now" primary button plus a secondary "Create account".
+7. **`cn()` is now `tailwind-merge` configured for the design tokens.** The previous merge helper silently dropped classes such as `text-caption` when combined with a color class.

@@ -67,7 +67,7 @@ export function MobileTopBar({ balance, orgName, role, initial }: Shell) {
   const current = ITEMS.find((i) => isActive(path, i.href));
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-border bg-surface px-4 lg:hidden">
-      <Link href="/dashboard" aria-label={t.brand.name} className="shrink-0">
+      <Link href="/dashboard" aria-label={t.brand.name} className="flex size-12 shrink-0 items-center justify-center">
         <Image src="/brand/wasla-logo-mark.svg" alt="" width={32} height={32} className="size-8 rounded-control" />
       </Link>
       <span className="min-w-0 flex-1 truncate text-h3 text-fg">{current ? t.nav[current.key] : t.brand.name}</span>

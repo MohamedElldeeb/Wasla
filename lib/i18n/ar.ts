@@ -81,7 +81,7 @@ export const ar = {
       { label: 'نظام إدارة', sell: 'برنامج حجوزات وفواتير', buyer: 'العيادات والمعامل وصالونات التجميل' },
     ],
   },
-  nav: { dashboard: 'الرئيسية', campaigns: 'الحملات', leads: 'العملاء المحتملين', settings: 'الإعدادات', newCampaign: 'حملة جديدة', main: 'التنقل الرئيسي' },
+  nav: { dashboard: 'الرئيسية', campaigns: 'الحملات', leads: 'العملاء', settings: 'الإعدادات', newCampaign: 'حملة جديدة', main: 'التنقل الرئيسي' },
   shell: {
     menu: 'الحساب والإعدادات',
     theme: 'المظهر',
