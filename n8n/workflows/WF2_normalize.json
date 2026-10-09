@@ -1,0 +1,549 @@
+{
+  "name": "Wasla WF2 - Normalize and dedupe",
+  "nodes": [
+    {
+      "id": "67c39d35-e042-9adc-c5e7-54b5b86b01c1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "wasla-normalize",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SECRET__",
+          "name": "Wasla Webhook Secret"
+        }
+      },
+      "webhookId": "f6a93d67-7f13-80cc-b1a5-cc6f55e85406"
+    },
+    {
+      "id": "e7cf5735-bdd4-7a61-182a-4651d4d81ae2",
+      "name": "Get job",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/jobs?id=eq.{{ $(\"Webhook\").first().json.body.job_id }}&status=eq.running&select=*",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "5a0cd25d-65d2-d794-fb63-c60cbd26c8c1",
+      "name": "Get campaign",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/campaigns?id=eq.{{ $(\"Webhook\").first().json.body.campaign_id }}&select=id,parameters",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "c36f1a95-4392-3ea5-a237-6a51941b2987",
+      "name": "Get staging",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/lead_staging?job_id=eq.{{ $(\"Webhook\").first().json.body.job_id }}&select=external_id,raw&limit=5000",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500,
+      "alwaysOutputData": true
+    },
+    {
+      "id": "7b5b4907-2b15-f183-5f6b-f992f229988d",
+      "name": "Normalize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// WF2 \"Normalize\": staging rows -> normalized, filtered, deduped leads (spec 6.3).\r\n// The phone helper below is inlined at build time from lib/phone/egypt.mjs (single source of truth).\r\n// Egyptian phone normalization. Plain ESM JS (JSDoc types) so the same source is inlined into n8n Code nodes.\n// Stored form is E.164 with \"+\" (e.g. +201012345678). wa.me links use the digits without \"+\".\n// WhatsApp-eligible = Egyptian MOBILE only (prefixes 010, 011, 012, 015). Landlines get a call action.\n\n/**\n * @param {...(string|null|undefined)} candidates raw phone strings, best first (e.g. unformatted, then display)\n * @returns {{phone_raw: string|null, phone_e164: string|null, phone_type: 'mobile'|'landline'|'unknown', whatsapp_eligible: boolean}}\n */\nfunction normalizeEgyptPhone(...candidates) {\n  const phone_raw = candidates.find((c) => c && String(c).trim()) ?? null;\n  for (const c of candidates) {\n    if (!c) continue;\n    let d = String(c).replace(/[٠-٩]/g, (x) => String(x.charCodeAt(0) - 0x0660)).replace(/\\D/g, '');\n    if (!d) continue;\n    if (d.startsWith('0020')) d = d.slice(2); // 0020... -> 20...\n    if (d.startsWith('20') && d.length >= 11 && d.length <= 12) d = d.slice(2); // national significant number\n    else if (d.startsWith('0')) d = d.slice(1);\n    // d is now the national number without the trunk 0\n    if (/^1[0125]\\d{8}$/.test(d)) {\n      return { phone_raw, phone_e164: `+20${d}`, phone_type: 'mobile', whatsapp_eligible: true };\n    }\n    if (/^1\\d{8,9}$/.test(d)) {\n      // other mobile-looking numbers (e.g. 016, 017, 019 are not WhatsApp-eligible here)\n      return { phone_raw, phone_e164: `+20${d}`, phone_type: 'unknown', whatsapp_eligible: false };\n    }\n    if (/^[2-9]\\d{7,8}$/.test(d)) {\n      return { phone_raw, phone_e164: `+20${d}`, phone_type: 'landline', whatsapp_eligible: false };\n    }\n  }\n  return { phone_raw, phone_e164: null, phone_type: 'unknown', whatsapp_eligible: false };\n}\n\n/** wa.me link: digits only (no \"+\", no spaces) and the message URL-encoded. */\nfunction whatsappLink(phoneE164, message) {\n  const digits = String(phoneE164 || '').replace(/\\D/g, '');\n  if (!digits) return null;\n  const text = message ? `?text=${encodeURIComponent(message)}` : '';\n  return `https://wa.me/${digits}${text}`;\n}\n\n/** tel: link for landlines. */\nfunction telLink(phoneE164) {\n  return phoneE164 ? `tel:${phoneE164}` : null;\n}\n\r\n\r\nconst body = $('Webhook').first().json.body;\r\nconst campaign = $('Get campaign').first().json;\r\nconst job = $('Get job').first().json;\r\nconst staging = $('Get staging').all().map((i) => i.json).filter((r) => r.external_id);\r\n\r\nconst f = (campaign.parameters || {}).filters || {};\r\nconst cap = Number((job.counts || {}).lead_cap) || 100;\r\n\r\nconst clean = (s) => (s == null ? null : String(s).replace(/[‎‏‪-‮]/g, '').trim() || null);\r\nconst gov = (s) => { const c = clean(s); return c ? c.replace(/^محافظة\\s+/, '') : null; };\r\nconst lc = (s) => String(s || '').toLowerCase();\r\n\r\nconst stats = { staged: staging.length, filtered_out: 0, duplicates: 0, capped: 0 };\r\nconst seen = new Set();\r\nconst leads = [];\r\n\r\nfor (const row of staging) {\r\n  const x = row.raw || {};\r\n  const ph = normalizeEgyptPhone(x.phoneUnformatted, x.phone);\r\n  const categories = [x.categoryName, ...(Array.isArray(x.categories) ? x.categories : [])].filter(Boolean).map(lc);\r\n  const closed = !!(x.permanentlyClosed || x.temporarilyClosed);\r\n  const website = clean(x.website);\r\n\r\n  // campaign filters (spec 6.1)\r\n  if (f.min_rating && !(Number(x.totalScore) >= Number(f.min_rating))) { stats.filtered_out++; continue; }\r\n  if (f.min_reviews && !(Number(x.reviewsCount) >= Number(f.min_reviews))) { stats.filtered_out++; continue; }\r\n  if (f.must_have_phone && !ph.phone_e164) { stats.filtered_out++; continue; }\r\n  if (f.must_have_mobile && ph.phone_type !== 'mobile') { stats.filtered_out++; continue; }\r\n  if (f.must_have_website && !website) { stats.filtered_out++; continue; }\r\n  if (f.exclude_closed && closed) { stats.filtered_out++; continue; }\r\n  if (Array.isArray(f.categories_include) && f.categories_include.length &&\r\n      !f.categories_include.some((c) => categories.some((k) => k.includes(lc(c))))) { stats.filtered_out++; continue; }\r\n  if (Array.isArray(f.categories_exclude) && f.categories_exclude.length &&\r\n      f.categories_exclude.some((c) => categories.some((k) => k.includes(lc(c))))) { stats.filtered_out++; continue; }\r\n\r\n  const district = clean(x.neighborhood) || x._district || null;\r\n  const name = clean(x.title);\r\n  // dedupe_key priority: place id, phone, email, name + district\r\n  const dedupe_key = x.placeId ? `place:${x.placeId}`\r\n    : ph.phone_e164 ? `phone:${ph.phone_e164}`\r\n    : `name:${lc(name)}|${lc(district)}`;\r\n  if (seen.has(dedupe_key)) { stats.duplicates++; continue; }\r\n  seen.add(dedupe_key);\r\n\r\n  if (leads.length >= cap) { stats.capped++; continue; }\r\n  leads.push({\r\n    business_name: name,\r\n    category: clean(x.categoryName),\r\n    address: clean(x.address),\r\n    governorate: gov(x.state) || gov(x._governorate),\r\n    city: clean(x.city) || x._city || null,\r\n    district,\r\n    lat: x.location?.lat ?? null,\r\n    lng: x.location?.lng ?? null,\r\n    phone_raw: ph.phone_raw,\r\n    phone_e164: ph.phone_e164,\r\n    phone_type: ph.phone_type,\r\n    whatsapp_eligible: ph.whatsapp_eligible,\r\n    website,\r\n    email: null,\r\n    facebook_url: null,\r\n    instagram_url: null,\r\n    linkedin_url: null,\r\n    rating: x.totalScore ?? null,\r\n    reviews_count: x.reviewsCount ?? null,\r\n    opening_hours: x.openingHours ?? null,\r\n    google_place_id: x.placeId || null,\r\n    google_maps_url: x.url || null,\r\n    contact_name: null,\r\n    job_title: null,\r\n    seniority: null,\r\n    company_domain: null,\r\n    source: 'google_maps',\r\n    raw: x,\r\n    dedupe_key,\r\n  });\r\n}\r\n\r\nreturn [{ json: { p_org: body.organization_id, p_campaign: body.campaign_id, p_leads: leads, stats } }];\r\n"
+      }
+    },
+    {
+      "id": "3ccdad04-3312-f0c5-8f71-87fca1980c38",
+      "name": "Ingest leads",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__SUPABASE_URL__/rest/v1/rpc/ingest_leads",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ p_org: $json.p_org, p_campaign: $json.p_campaign, p_leads: $json.p_leads }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "c846e836-9023-b382-d801-3705f862629c",
+      "name": "Counts",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// WF2 \"Counts\": merge ingest results into job counts and decide the next step.\nconst ing = $input.first().json;\nconst norm = $('Normalize').first().json;\nconst job = $('Get job').first().json;\nconst campaign = $('Get campaign').first().json;\nconst body = $('Webhook').first().json.body;\n\nconst signals = ((campaign.parameters || {}).signals || []).filter((s) => s && Number(s.weight) !== 0);\nconst counts = {\n  ...(job.counts || {}),\n  staged: norm.stats.staged,\n  filtered_out: norm.stats.filtered_out,\n  duplicates_in_batch: norm.stats.duplicates,\n  capped: norm.stats.capped,\n  received: ing.received,\n  dropped_opted_out: ing.dropped_opted_out,\n  new: ing.new,\n  already_known: ing.already_known,\n  linked: ing.newly_linked,\n};\n\nreturn [{\n  json: {\n    job_id: body.job_id,\n    campaign_id: body.campaign_id,\n    organization_id: body.organization_id,\n    counts,\n    credits_used: ing.new, // 1 credit per NEW lead; leads already in the org are linked, not charged again\n    signals_on: signals.length > 0,\n    model: body.model,\n    fallback_models: body.fallback_models,\n  },\n}];\n"
+      }
+    },
+    {
+      "id": "00be9492-ceaa-e7ef-daa8-9ae884f6adf4",
+      "name": "Update counts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1920,
+        300
+      ],
+      "parameters": {
+        "method": "PATCH",
+        "url": "=__SUPABASE_URL__/rest/v1/jobs?id=eq.{{ $json.job_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ progress: 70, counts: $json.counts }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "34abf3ac-af98-4557-f464-90b67ec16dbb",
+      "name": "Delete staging",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2160,
+        300
+      ],
+      "parameters": {
+        "method": "DELETE",
+        "url": "=__SUPABASE_URL__/rest/v1/lead_staging?job_id=eq.{{ $(\"Webhook\").first().json.body.job_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "7d1324e5-2e88-997a-5bb4-36014a713745",
+      "name": "Signals on?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2400,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f2d11760-a80a-d300-890c-0de4256d4a79",
+              "leftValue": "={{ $(\"Counts\").first().json.signals_on }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "45f1c0a0-24a8-bfdc-4a08-2ae29b59ed30",
+      "name": "Call signals",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2640,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__N8N_BASE__/webhook/wasla-signals",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $(\"Webhook\").first().json.body }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SECRET__",
+          "name": "Wasla Webhook Secret"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "id": "8de57964-8ce6-1281-e528-893df2e1a29f",
+      "name": "Settle",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2640,
+        460
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__SUPABASE_URL__/rest/v1/rpc/settle_job",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ p_job_id: $(\"Counts\").first().json.job_id, p_credits_used: $(\"Counts\").first().json.credits_used, p_status: \"succeeded\", p_counts: $(\"Counts\").first().json.counts }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "ac8e59bb-0d82-90f6-0d6c-2b89aa09bf1e",
+      "name": "Campaign ready",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2880,
+        460
+      ],
+      "parameters": {
+        "method": "PATCH",
+        "url": "=__SUPABASE_URL__/rest/v1/campaigns?id=eq.{{ $(\"Counts\").first().json.campaign_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ status: \"ready\" }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get job",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get job": {
+      "main": [
+        [
+          {
+            "node": "Get campaign",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get campaign": {
+      "main": [
+        [
+          {
+            "node": "Get staging",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get staging": {
+      "main": [
+        [
+          {
+            "node": "Normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize": {
+      "main": [
+        [
+          {
+            "node": "Ingest leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ingest leads": {
+      "main": [
+        [
+          {
+            "node": "Counts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Counts": {
+      "main": [
+        [
+          {
+            "node": "Update counts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update counts": {
+      "main": [
+        [
+          {
+            "node": "Delete staging",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete staging": {
+      "main": [
+        [
+          {
+            "node": "Signals on?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Signals on?": {
+      "main": [
+        [
+          {
+            "node": "Call signals",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Settle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Settle": {
+      "main": [
+        [
+          {
+            "node": "Campaign ready",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -1,0 +1,609 @@
+{
+  "name": "Wasla WF1 - Campaign ingestion",
+  "nodes": [
+    {
+      "id": "c23d05cc-021a-e52e-9861-5d5ecaa09237",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "wasla-ingest",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SECRET__",
+          "name": "Wasla Webhook Secret"
+        }
+      },
+      "webhookId": "83368514-b323-0012-a60c-9c8a0052c35c"
+    },
+    {
+      "id": "35d69eb3-5c30-bf2e-960a-e2c9011f71b8",
+      "name": "Claim job",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        300
+      ],
+      "parameters": {
+        "method": "PATCH",
+        "url": "=__SUPABASE_URL__/rest/v1/jobs?id=eq.{{ $(\"Webhook\").first().json.body.job_id }}&status=eq.queued",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ status: \"running\", started_at: new Date().toISOString(), progress: 5 }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "4ecbe003-cb21-cf2d-d261-d4c29bfd84ab",
+      "name": "Get campaign",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/campaigns?id=eq.{{ $(\"Webhook\").first().json.body.campaign_id }}&select=id,organization_id,parameters,source",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "4ee725ab-a9ce-2c8c-6398-9479e7524d09",
+      "name": "Signal cost",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__SUPABASE_URL__/rest/v1/rpc/signal_credits_per_lead",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ p_signals: $json.parameters.signals || [] }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "19ac3029-6d7b-9845-10d0-14f3811f45ac",
+      "name": "Plan queries",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// WF1 \"Plan queries\": expand keywords x locations into Apify runs (one location per run),\n// with per-search caps derived from the reserved credits so a run can never exceed its cap.\nconst body = $('Webhook').first().json.body;\nconst job = $('Claim job').first().json;\nconst campaign = $('Get campaign').first().json;\nconst sigRes = $('Signal cost').first().json;\nconst perLeadSignals = Number(sigRes !== null && typeof sigRes === 'object' ? (sigRes.data ?? Object.values(sigRes)[0]) : sigRes) || 0;\n\nconst p = campaign.parameters || {};\nconst f = p.filters || {};\nconst keywords = (p.keywords || []).map((k) => String(k).trim()).filter(Boolean);\nconst locations = (p.locations || []).filter((l) => l && (l.district || l.city || l.governorate));\nconst hardMax = Number(body.max_results_cap) || 100;\nconst wanted = Math.min(Number(p.max_results) || 0, hardMax);\nconst leadCap = Math.max(0, Math.min(wanted, Math.floor(job.credits_reserved / (1 + perLeadSignals))));\n\nif (!keywords.length || !locations.length || leadCap < 1) {\n  return [{ json: { error: 'no_queries', leadCap, requestBody: '{}' } }];\n}\n\nconst stars = (m) => (m >= 4.5 ? 'fourAndHalf' : m >= 4 ? 'four' : m >= 3.5 ? 'threeAndHalf' : m >= 3 ? 'three' : m >= 2.5 ? 'twoAndHalf' : m >= 2 ? 'two' : '');\nconst searches = locations.length * keywords.length;\nconst perSearch = Math.max(1, Math.ceil(leadCap / searches));\n\nreturn locations.map((l) => {\n  const area = l.district || l.city || l.governorate;\n  const input = {\n    searchStringsArray: keywords.map((k) => `${k} ${area}`.trim()),\n    locationQuery: [l.district, l.city, l.governorate, 'Egypt'].filter(Boolean).join(', '),\n    maxCrawledPlacesPerSearch: perSearch,\n    language: 'ar',\n    countryCode: 'eg',\n    skipClosedPlaces: !!f.exclude_closed,\n    placeMinimumStars: stars(Number(f.min_rating) || 0),\n    website: f.must_have_website ? 'withWebsite' : 'allPlaces',\n    scrapePlaceDetailPage: false,\n    scrapeContacts: false,\n  };\n  return {\n    json: {\n      requestBody: JSON.stringify(input),\n      district: l.district || null,\n      city: l.city || null,\n      governorate: l.governorate || null,\n      leadCap,\n      perSearch,\n    },\n  };\n});\n"
+      }
+    },
+    {
+      "id": "eed2807c-3352-71ec-c220-7a96b0714252",
+      "name": "Has queries?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1440,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "16bceef6-b397-b23c-fe9e-e2d19b978696",
+              "leftValue": "={{ !$json.error }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "5749ab8d-6837-7869-e4c9-3537a8825139",
+      "name": "Apify places",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1680,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/compass~crawler-google-places/run-sync-get-dataset-items?timeout=300&format=json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.requestBody }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          },
+          "timeout": 320000
+        }
+      },
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "__CRED_APIFY__",
+          "name": "Wasla Apify"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "0159cc82-ace1-28d0-7522-441f4df9d659",
+      "name": "Collect",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// WF1 \"Collect\": flatten Apify responses into staging rows (trimmed raw, deduped by place id).\nconst body = $('Webhook').first().json.body;\nconst plans = $('Plan queries').all().map((i) => i.json);\nconst outs = $input.all();\n\nconst KEEP = ['title', 'categoryName', 'categories', 'address', 'neighborhood', 'street', 'city', 'state', 'countryCode',\n  'website', 'phone', 'phoneUnformatted', 'location', 'totalScore', 'reviewsCount', 'permanentlyClosed',\n  'temporarilyClosed', 'placeId', 'url', 'openingHours'];\n\nconst rows = new Map();\nconst errors = [];\nlet found = 0;\nouts.forEach((it, idx) => {\n  const r = it.json || {};\n  const plan = plans[idx] || {};\n  if (typeof r.statusCode === 'number' && r.statusCode >= 200 && r.statusCode < 300 && Array.isArray(r.body)) {\n    for (const x of r.body) {\n      if (!x || !x.placeId) continue;\n      found++;\n      if (rows.has(x.placeId)) continue;\n      const raw = {};\n      for (const k of KEEP) if (x[k] !== undefined) raw[k] = x[k];\n      raw._district = plan.district;\n      raw._city = plan.city;\n      raw._governorate = plan.governorate;\n      rows.set(x.placeId, {\n        organization_id: body.organization_id,\n        job_id: body.job_id,\n        source: 'google_maps',\n        external_id: x.placeId,\n        raw,\n      });\n    }\n  } else {\n    errors.push(String(r.statusCode || (r.error && (r.error.message || r.error)) || 'unknown'));\n  }\n});\n\nreturn [{ json: { rows: [...rows.values()], found, unique: rows.size, errors, allFailed: outs.length > 0 && errors.length === outs.length } }];\n"
+      }
+    },
+    {
+      "id": "7a0d486f-d11e-2dbd-75be-c15c801598a6",
+      "name": "Rows found?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2160,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "09c76d25-1e17-8c9f-f18c-6e0c84e652a6",
+              "leftValue": "={{ $json.rows.length > 0 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "d96dd542-18ca-6c48-d265-40d09dede21f",
+      "name": "Save staging",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2400,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__SUPABASE_URL__/rest/v1/lead_staging?on_conflict=job_id,external_id",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Prefer",
+              "value": "resolution=ignore-duplicates,return=minimal"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.rows) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "0b8b9ff8-0e10-aed6-46b3-28ea4de021a5",
+      "name": "Save lead cap",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2640,
+        300
+      ],
+      "parameters": {
+        "method": "PATCH",
+        "url": "=__SUPABASE_URL__/rest/v1/jobs?id=eq.{{ $(\"Webhook\").first().json.body.job_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ progress: 40, counts: { found: $(\"Collect\").first().json.found, unique: $(\"Collect\").first().json.unique, lead_cap: $(\"Plan queries\").first().json.leadCap, queries: $(\"Plan queries\").all().length } }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "15a46986-cbd0-6139-72c1-ad078e87c5a4",
+      "name": "Call normalize",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2880,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__N8N_BASE__/webhook/wasla-normalize",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $(\"Webhook\").first().json.body }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SECRET__",
+          "name": "Wasla Webhook Secret"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "id": "e61231c5-4c62-6aab-fe87-d71ad780c5cd",
+      "name": "Settle empty or failed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2640,
+        460
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__SUPABASE_URL__/rest/v1/rpc/settle_job",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ p_job_id: $(\"Webhook\").first().json.body.job_id, p_credits_used: 0, p_status: $(\"Collect\").first().json.allFailed ? \"failed\" : \"succeeded\", p_error: $(\"Collect\").first().json.allFailed ? \"البحث على خرائط جوجل ماشتغلش. جرّب تاني بعد شوية.\" : null, p_counts: { found: 0, lead_cap: $(\"Plan queries\").first().json.leadCap } }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "f32720e1-12c5-be10-89b6-ecb88eb1e786",
+      "name": "Settle no queries",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2880,
+        620
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__SUPABASE_URL__/rest/v1/rpc/settle_job",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ p_job_id: $(\"Webhook\").first().json.body.job_id, p_credits_used: 0, p_status: \"failed\", p_error: \"الحملة محتاجة كلمات بحث ومنطقة على الأقل.\" }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Claim job",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claim job": {
+      "main": [
+        [
+          {
+            "node": "Get campaign",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get campaign": {
+      "main": [
+        [
+          {
+            "node": "Signal cost",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Signal cost": {
+      "main": [
+        [
+          {
+            "node": "Plan queries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plan queries": {
+      "main": [
+        [
+          {
+            "node": "Has queries?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has queries?": {
+      "main": [
+        [
+          {
+            "node": "Apify places",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Settle no queries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apify places": {
+      "main": [
+        [
+          {
+            "node": "Collect",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collect": {
+      "main": [
+        [
+          {
+            "node": "Rows found?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rows found?": {
+      "main": [
+        [
+          {
+            "node": "Save staging",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Settle empty or failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save staging": {
+      "main": [
+        [
+          {
+            "node": "Save lead cap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save lead cap": {
+      "main": [
+        [
+          {
+            "node": "Call normalize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

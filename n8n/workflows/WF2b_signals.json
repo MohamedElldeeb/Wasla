@@ -1,0 +1,957 @@
+{
+  "name": "Wasla WF2b - Signals and score",
+  "nodes": [
+    {
+      "id": "59bfc1c5-8891-0108-3737-dcae9c964b72",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "wasla-signals",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SECRET__",
+          "name": "Wasla Webhook Secret"
+        }
+      },
+      "webhookId": "65f9dc7a-2376-8dd5-8443-2b6df69a6c51"
+    },
+    {
+      "id": "ab8e00fe-2aac-826e-737d-c97e65cc8be4",
+      "name": "Get job",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/jobs?id=eq.{{ $(\"Webhook\").first().json.body.job_id }}&status=eq.running&select=*",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "bcaeb666-9302-ed09-5019-7702cdad456b",
+      "name": "Get campaign",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/campaigns?id=eq.{{ $(\"Webhook\").first().json.body.campaign_id }}&select=id,parameters",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "208756d9-c627-b915-eb64-fbd3658509f0",
+      "name": "Get campaign leads",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/campaign_leads?campaign_id=eq.{{ $(\"Webhook\").first().json.body.campaign_id }}&select=lead_id,leads(id,business_name,google_place_id,website,reviews_count,rating)&limit=5000",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500,
+      "alwaysOutputData": true
+    },
+    {
+      "id": "f91f4b40-6138-80a2-1da6-e0d8da691c47",
+      "name": "Get fresh signals",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/lead_signals?organization_id=eq.{{ $(\"Webhook\").first().json.body.organization_id }}&collected_at=gte.{{ new Date(Date.now() - 30 * 86400000).toISOString() }}&select=lead_id,signal_key&limit=20000",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500,
+      "alwaysOutputData": true
+    },
+    {
+      "id": "6a01d0ff-5d3c-5f78-d5a6-b8146d3f6a5e",
+      "name": "Get org names",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/leads?organization_id=eq.{{ $(\"Webhook\").first().json.body.organization_id }}&select=business_name&limit=20000",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500,
+      "alwaysOutputData": true
+    },
+    {
+      "id": "548e842b-6bb0-966a-2a94-d9b10b144f01",
+      "name": "Reviews cost",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1680,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__SUPABASE_URL__/rest/v1/rpc/signal_credits_per_lead",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ p_signals: $(\"Get campaign\").first().json.parameters.signals || [] }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "f30c4cf9-b3d5-ba9b-7f26-31efeb502b6f",
+      "name": "Plan signals",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// WF2b \"Plan signals\": compute FREE signals from data already collected and pick leads that need\n// the paid review scrape (capped by the credits still reserved on the job).\n//\n// Normalized value convention: value in 0..1 where 1 = the signal's \"high\" state\n//   has_website : 1 = has a website, 0 = none\n//   size_proxy  : 0.60 * reviews (log scale, ~2000 reviews = 1) + 0.15 * rating above 3 + 0.25 * extra branches (3+ = 1)\nconst body = $('Webhook').first().json.body;\nconst job = $('Get job').first().json;\nconst campaign = $('Get campaign').first().json;\nconst perLeadRes = $('Reviews cost').first().json;\nconst perLead = Number(perLeadRes !== null && typeof perLeadRes === 'object' ? (perLeadRes.data ?? Object.values(perLeadRes)[0]) : perLeadRes) || 0;\n\nconst campaignSignals = ((campaign.parameters || {}).signals || []).filter((s) => s && Number(s.weight) !== 0);\nconst on = new Set(campaignSignals.map((s) => s.key));\nconst wantsInsights = on.has('review_insights');\nconst wantsAge = on.has('business_age');\n\nconst links = $('Get campaign leads').all().map((i) => i.json).filter((r) => r.leads);\nconst fresh = new Set($('Get fresh signals').all().map((i) => `${i.json.lead_id}|${i.json.signal_key}`));\n\nconst baseName = (n) => String(n || '').split(/\\s[-–|]\\s|\\(|\\|/)[0].toLowerCase().replace(/[^\\p{L}\\p{N}]+/g, ' ').trim();\nconst branchCount = new Map();\nfor (const r of $('Get org names').all()) {\n  const k = baseName(r.json.business_name);\n  if (k) branchCount.set(k, (branchCount.get(k) || 0) + 1);\n}\n\nconst now = new Date().toISOString();\nconst mk = (lead_id, signal_key, value, raw) => ({\n  organization_id: body.organization_id,\n  lead_id,\n  signal_key,\n  raw,\n  normalized: { value: Math.max(0, Math.min(1, Math.round(value * 1000) / 1000)) },\n  source: signal_key === 'has_website' || signal_key === 'size_proxy' ? 'google_maps_data' : 'compass/google-maps-reviews-scraper',\n  job_id: body.job_id,\n  collected_at: now,\n});\n\nconst freeRows = [];\nfor (const r of links) {\n  const l = r.leads;\n  if (on.has('has_website')) freeRows.push(mk(l.id, 'has_website', l.website ? 1 : 0, { has_website: !!l.website }));\n  if (on.has('size_proxy')) {\n    const reviews = Number(l.reviews_count) || 0;\n    const rating = Number(l.rating) || 0;\n    const branches = Math.max(1, branchCount.get(baseName(l.business_name)) || 1);\n    const rc = Math.min(1, Math.log10(1 + reviews) / 3.3);\n    const rt = Math.max(0, Math.min(1, (rating - 3) / 2));\n    const bc = Math.min(1, (branches - 1) / 3);\n    freeRows.push(mk(l.id, 'size_proxy', 0.6 * rc + 0.15 * rt + 0.25 * bc, { reviews_count: reviews, rating, branches }));\n  }\n}\n\nlet targets = [];\nif ((wantsInsights || wantsAge) && perLead > 0) {\n  const stillFresh = (id) => (!wantsInsights || fresh.has(`${id}|review_insights`)) && (!wantsAge || fresh.has(`${id}|business_age`));\n  const all = links.map((r) => r.leads).filter((l) => l.google_place_id && !stillFresh(l.id));\n  const spent = Number((job.counts || {}).new) || 0;\n  const affordable = Math.max(0, Math.floor((job.credits_reserved - spent) / perLead));\n  targets = all.slice(0, affordable).map((l) => ({ lead_id: l.id, place_id: l.google_place_id, business_name: l.business_name, reviews_count: l.reviews_count }));\n}\n\nconst reviewsRequest = {\n  placeIds: targets.map((t) => t.place_id),\n  maxReviews: 10,\n  reviewsSort: 'newest',\n  language: 'ar',\n  personalData: false,\n};\n\nreturn [{\n  json: {\n    freeRows,\n    targets,\n    perLead,\n    wantsInsights,\n    wantsAge,\n    hasTargets: targets.length > 0,\n    reviewsRequestBody: JSON.stringify(reviewsRequest),\n  },\n}];\n"
+      }
+    },
+    {
+      "id": "8a5f6f03-a79c-667b-d8d2-24b55ef88688",
+      "name": "Save free signals",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2160,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__SUPABASE_URL__/rest/v1/lead_signals?on_conflict=lead_id,signal_key",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Prefer",
+              "value": "resolution=merge-duplicates,return=minimal"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.freeRows) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "20f12908-facd-9bbd-46a0-3562a7cb6418",
+      "name": "Has targets?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2400,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "30aa0504-803d-acd1-fe05-616eb5ac972f",
+              "leftValue": "={{ $(\"Plan signals\").first().json.hasTargets }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "e089f8d1-431a-6d19-ed49-8ff815fcdcef",
+      "name": "Apify reviews",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2640,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/compass~google-maps-reviews-scraper/run-sync-get-dataset-items?timeout=300&format=json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpQueryAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $(\"Plan signals\").first().json.reviewsRequestBody }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          },
+          "timeout": 320000
+        }
+      },
+      "credentials": {
+        "httpQueryAuth": {
+          "id": "__CRED_APIFY__",
+          "name": "Wasla Apify"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "id": "d998e72d-e02c-c121-6d16-ecfe169a5cb8",
+      "name": "Group reviews",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2880,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// WF2b \"Group reviews\": one item per lead that actually has reviews, with the business_age row\n// and (when there is enough review text) an OpenRouter request for review_insights.\n//\n// business_age convention: value 1 = looks NEW, 0 = established.\n// Only the 10 newest reviews are fetched, so true age is ESTIMATED from review velocity:\n//   spanMonths = months covered by the visible reviews; velocity = visible / spanMonths\n//   estAgeMonths = reviews_count / velocity (if the visible window already holds every review, the real oldest date is used)\n//   value = 1 - clamp((estAgeMonths - 6) / (30 - 6), 0, 1)\nconst body = $('Webhook').first().json.body;\nconst plan = $('Plan signals').first().json;\nconst res = $input.first().json || {};\nconst now = Date.now();\nconst MONTH = 30.44 * 24 * 3600 * 1000;\n\nconst ok = typeof res.statusCode === 'number' && res.statusCode >= 200 && res.statusCode < 300 && Array.isArray(res.body);\nif (!ok) return [{ json: { empty: true, error: String(res.statusCode || (res.error && (res.error.message || res.error)) || 'unknown') } }];\n\nconst byPlace = new Map();\nfor (const r of res.body) {\n  if (!r || !r.placeId) continue;\n  if (!byPlace.has(r.placeId)) byPlace.set(r.placeId, []);\n  byPlace.get(r.placeId).push(r);\n}\n\nconst SYSTEM = `You summarize Google Maps reviews of a business. Return ONE JSON object only:\n{\"summary_ar\": string (max 160 chars, Egyptian colloquial Arabic), \"praise\": [string] (max 3, short Arabic), \"complaints\": [string] (max 3, short Arabic), \"complaint_level\": number 0..1 (0 = no complaints, 1 = mostly complaints), \"top_complaint_ar\": string|null (the single most repeated complaint as a short Arabic noun phrase of up to 4 words, or null if none)}.\nUse ONLY what the reviews say. Do not invent anything.`;\n\nconst items = [];\nfor (const t of plan.targets) {\n  const rev = byPlace.get(t.place_id);\n  if (!rev || !rev.length) continue;\n  const dates = rev.map((r) => Date.parse(r.publishedAtDate)).filter(Number.isFinite).sort((a, b) => a - b);\n  const texts = rev.map((r) => ({ stars: r.stars ?? null, text: (r.text || r.textTranslated || '').toString().slice(0, 400) })).filter((r) => r.text.trim());\n\n  let ageRow = null;\n  if (plan.wantsAge && dates.length) {\n    const spanMonths = Math.max(0.25, (now - dates[0]) / MONTH);\n    const total = Number(t.reviews_count) || rev.length;\n    const complete = total <= rev.length;\n    const est = complete ? spanMonths : total / (rev.length / spanMonths);\n    const value = 1 - Math.max(0, Math.min(1, (est - 6) / 24));\n    ageRow = {\n      organization_id: body.organization_id,\n      lead_id: t.lead_id,\n      signal_key: 'business_age',\n      raw: { visible_reviews: rev.length, oldest_visible: new Date(dates[0]).toISOString(), newest_visible: new Date(dates[dates.length - 1]).toISOString(), est_age_months: Math.round(est * 10) / 10, method: complete ? 'oldest_review' : 'velocity_estimate' },\n      normalized: { value: Math.round(value * 1000) / 1000 },\n      source: 'compass/google-maps-reviews-scraper',\n      job_id: body.job_id,\n      collected_at: new Date().toISOString(),\n    };\n  }\n\n  let llm = false;\n  let requestBody = '{}';\n  if (plan.wantsInsights && texts.length >= 3) {\n    llm = true;\n    const req = {\n      messages: [\n        { role: 'system', content: SYSTEM },\n        { role: 'user', content: JSON.stringify({ business: t.business_name, reviews: texts }) },\n      ],\n      response_format: { type: 'json_object' },\n      temperature: 0.2,\n      usage: { include: true },\n    };\n    const fb = Array.isArray(body.fallback_models) ? body.fallback_models.filter(Boolean) : [];\n    if (fb.length) req.models = [body.model, ...fb]; else req.model = body.model;\n    requestBody = JSON.stringify(req);\n  }\n  items.push({ json: { lead_id: t.lead_id, place_id: t.place_id, n_reviews: rev.length, n_texts: texts.length, ageRow, llm, requestBody } });\n}\nif (!items.length) return [{ json: { empty: true, error: 'no_reviews' } }];\nreturn items;\n"
+      }
+    },
+    {
+      "id": "c9edfaea-1509-99ff-63d2-ae5746710df1",
+      "name": "Needs LLM?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3120,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "be20b492-6a28-116c-a474-04847df2b1c4",
+              "leftValue": "={{ $json.llm === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "bb9b7d87-96b7-b7f6-bd2b-78e6990e2a82",
+      "name": "OpenRouter insights",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3360,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "HTTP-Referer",
+              "value": "__APP_URL__"
+            },
+            {
+              "name": "X-Title",
+              "value": "Wasla"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.requestBody }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          },
+          "timeout": 120000,
+          "batching": {
+            "batch": {
+              "batchSize": 3,
+              "batchInterval": 1200
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_OPENROUTER__",
+          "name": "Wasla OpenRouter"
+        }
+      }
+    },
+    {
+      "id": "7bf08a63-3ade-d356-d858-e53dbfc1765c",
+      "name": "Merge reviews",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        3600,
+        300
+      ],
+      "parameters": {
+        "mode": "append"
+      }
+    },
+    {
+      "id": "641c2582-e5c3-36e3-cb7a-f54f6ac1ac18",
+      "name": "Parse signals",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3840,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// WF2b \"Parse signals\": collect business_age rows and review_insights rows (LLM) for the paid signals.\nconst body = $('Webhook').first().json.body;\nconst groups = $('Group reviews').all().map((i) => i.json);\nlet llmOut = [];\ntry { llmOut = $('OpenRouter insights').all(); } catch (e) { llmOut = []; }\nconst llmGroups = groups.filter((g) => g.llm);\n\nconst rows = [];\nconst usage = { in: 0, out: 0, cost: 0, model: null };\nconst clamp01 = (v) => Math.max(0, Math.min(1, Number(v) || 0));\n\ngroups.forEach((g) => { if (g.ageRow) rows.push(g.ageRow); });\n\nllmGroups.forEach((g, j) => {\n  const r = (llmOut[j] || {}).json || {};\n  const u = (r.body && r.body.usage) || {};\n  usage.in += u.prompt_tokens || 0;\n  usage.out += u.completion_tokens || 0;\n  usage.cost += Number(u.cost) || 0;\n  usage.model = (r.body && r.body.model) || usage.model;\n  if (!(r.statusCode >= 200 && r.statusCode < 300) || !r.body || !r.body.choices) return;\n  let d;\n  try { d = JSON.parse((r.body.choices[0]?.message?.content || '').replace(/^```(?:json)?/i, '').replace(/```$/, '').trim()); } catch (e) { return; }\n  const top = typeof d.top_complaint_ar === 'string' && d.top_complaint_ar.trim() ? d.top_complaint_ar.trim().slice(0, 40) : null;\n  const normalized = { value: Math.round(clamp01(d.complaint_level) * 1000) / 1000 };\n  if (top) normalized.label_ar = `الريفيوهات بتشتكي من ${top}`;\n  rows.push({\n    organization_id: body.organization_id,\n    lead_id: g.lead_id,\n    signal_key: 'review_insights',\n    raw: {\n      summary_ar: String(d.summary_ar || '').slice(0, 200),\n      praise: Array.isArray(d.praise) ? d.praise.slice(0, 3).map((x) => String(x).slice(0, 60)) : [],\n      complaints: Array.isArray(d.complaints) ? d.complaints.slice(0, 3).map((x) => String(x).slice(0, 60)) : [],\n      n_reviews: g.n_reviews,\n      n_texts: g.n_texts,\n    },\n    normalized,\n    source: 'compass/google-maps-reviews-scraper+llm',\n    job_id: body.job_id,\n    collected_at: new Date().toISOString(),\n  });\n});\n\nreturn [{ json: { rows, chargedLeads: groups.length, usage } }];\n"
+      }
+    },
+    {
+      "id": "a3f898f7-ac25-6bf3-2c33-64efa3817bff",
+      "name": "Save paid signals",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4080,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__SUPABASE_URL__/rest/v1/lead_signals?on_conflict=lead_id,signal_key",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Prefer",
+              "value": "resolution=merge-duplicates,return=minimal"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.rows) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "3e5b128d-6571-c31d-4710-9cb309e848ec",
+      "name": "Score",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3840,
+        460
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__SUPABASE_URL__/rest/v1/rpc/recompute_campaign_scores",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ p_campaign: $(\"Webhook\").first().json.body.campaign_id }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "a47fe58e-7ba6-122a-9ff8-50e70ff793aa",
+      "name": "Finish",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4080,
+        460
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// WF2b \"Finish\": final credit usage and counts for the whole ingest job (leads + signals).\nconst body = $('Webhook').first().json.body;\nconst job = $('Get job').first().json;\nconst plan = $('Plan signals').first().json;\nlet parsed = null;\ntry { parsed = $('Parse signals').first().json; } catch (e) { parsed = null; }\nlet warning = null;\ntry { const g = $('Group reviews').first().json; if (g && g.empty && g.error) warning = String(g.error); } catch (e) { /* node did not run */ }\n\nconst charged = parsed ? parsed.chargedLeads : 0;\nconst newLeads = Number((job.counts || {}).new) || 0;\nconst used = newLeads + charged * plan.perLead;\n\nreturn [{\n  json: {\n    job_id: body.job_id,\n    campaign_id: body.campaign_id,\n    credits_used: used,\n    counts: {\n      ...(job.counts || {}),\n      signals_free: plan.freeRows.length,\n      review_targets: plan.targets.length,\n      reviews_scraped: charged,\n      signals_warning: warning,\n    },\n    usage: parsed ? parsed.usage : { in: 0, out: 0, cost: 0, model: null },\n  },\n}];\n"
+      }
+    },
+    {
+      "id": "d5b56b25-679f-b15e-76a1-057836530bfc",
+      "name": "Update counts",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4320,
+        460
+      ],
+      "parameters": {
+        "method": "PATCH",
+        "url": "=__SUPABASE_URL__/rest/v1/jobs?id=eq.{{ $json.job_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ progress: 95, counts: $json.counts }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "282d7fe2-5890-c700-bf5c-111d5db0bd06",
+      "name": "Settle",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4560,
+        460
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__SUPABASE_URL__/rest/v1/rpc/settle_job",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ p_job_id: $(\"Finish\").first().json.job_id, p_credits_used: $(\"Finish\").first().json.credits_used, p_status: \"succeeded\", p_counts: $(\"Finish\").first().json.counts, p_cost_usd: $(\"Finish\").first().json.usage.cost, p_llm_model: $(\"Finish\").first().json.usage.model, p_tokens_in: $(\"Finish\").first().json.usage.in, p_tokens_out: $(\"Finish\").first().json.usage.out }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "14e5f12c-3c62-1b83-7676-c4d3f3a3e278",
+      "name": "Campaign ready",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4800,
+        460
+      ],
+      "parameters": {
+        "method": "PATCH",
+        "url": "=__SUPABASE_URL__/rest/v1/campaigns?id=eq.{{ $(\"Finish\").first().json.campaign_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ status: \"ready\" }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get job",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get job": {
+      "main": [
+        [
+          {
+            "node": "Get campaign",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get campaign": {
+      "main": [
+        [
+          {
+            "node": "Get campaign leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get campaign leads": {
+      "main": [
+        [
+          {
+            "node": "Get fresh signals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get fresh signals": {
+      "main": [
+        [
+          {
+            "node": "Get org names",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get org names": {
+      "main": [
+        [
+          {
+            "node": "Reviews cost",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reviews cost": {
+      "main": [
+        [
+          {
+            "node": "Plan signals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plan signals": {
+      "main": [
+        [
+          {
+            "node": "Save free signals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save free signals": {
+      "main": [
+        [
+          {
+            "node": "Has targets?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has targets?": {
+      "main": [
+        [
+          {
+            "node": "Apify reviews",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apify reviews": {
+      "main": [
+        [
+          {
+            "node": "Group reviews",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Group reviews": {
+      "main": [
+        [
+          {
+            "node": "Needs LLM?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Needs LLM?": {
+      "main": [
+        [
+          {
+            "node": "OpenRouter insights",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge reviews",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "OpenRouter insights": {
+      "main": [
+        [
+          {
+            "node": "Merge reviews",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge reviews": {
+      "main": [
+        [
+          {
+            "node": "Parse signals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse signals": {
+      "main": [
+        [
+          {
+            "node": "Save paid signals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save paid signals": {
+      "main": [
+        [
+          {
+            "node": "Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Score": {
+      "main": [
+        [
+          {
+            "node": "Finish",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Finish": {
+      "main": [
+        [
+          {
+            "node": "Update counts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update counts": {
+      "main": [
+        [
+          {
+            "node": "Settle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Settle": {
+      "main": [
+        [
+          {
+            "node": "Campaign ready",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -1,0 +1,475 @@
+{
+  "name": "Wasla WF0 - Campaign planner",
+  "nodes": [
+    {
+      "id": "1dada4b1-ed31-17ab-41ad-9661b8475e13",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "wasla-plan",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SECRET__",
+          "name": "Wasla Webhook Secret"
+        }
+      },
+      "webhookId": "c15fdbd6-15cc-0c6b-caa8-5845bd1c95f2"
+    },
+    {
+      "id": "86d576c3-f0a4-52ba-4044-0b8817aab6b6",
+      "name": "Claim job",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        300
+      ],
+      "parameters": {
+        "method": "PATCH",
+        "url": "=__SUPABASE_URL__/rest/v1/jobs?id=eq.{{ $(\"Webhook\").first().json.body.job_id }}&status=eq.queued",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ status: \"running\", started_at: new Date().toISOString(), progress: 10 }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "a8c3abe3-d3ac-fa63-98db-805817e5c9f8",
+      "name": "Get org",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/organizations?id=eq.{{ $(\"Webhook\").first().json.body.organization_id }}&select=name,offer_profile",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "dacb5c7e-be19-7510-4dba-1e9102f44b96",
+      "name": "Get signals",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/signal_definitions?enabled=eq.true&select=key,name_ar,reason_low_ar,reason_high_ar&order=sort_order",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "a16cf8eb-82a2-2c61-496a-c3f7dd0f932d",
+      "name": "Build request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// WF0 \"Build request\": builds the OpenRouter request for the campaign planner.\r\n// Offer-agnostic on purpose: nothing here assumes any industry, segment, or offer.\r\nconst body = $('Webhook').first().json.body;\r\nconst org = $('Get org').first().json;\r\nconst defs = $('Get signals').all().map((i) => i.json);\r\n\r\nconst override = body.offer_override && String(body.offer_override).trim();\r\nconst offer = override ? { offer_override: override, regions: (org.offer_profile || {}).regions || [] } : (org.offer_profile || {});\r\n\r\nconst signalList = defs\r\n  .map((d) => `- ${d.key} (${d.name_ar}): HIGH value means \"${d.reason_high_ar}\"; LOW value means \"${d.reason_low_ar}\"`)\r\n  .join('\\n');\r\n\r\nconst system = `You are the campaign planner of Wasla, a B2B lead generation tool. The user's company (the SELLER) sells something to other businesses in Egypt. From the seller's offer profile ONLY, plan a lead generation campaign on Google Maps that finds the seller's potential CUSTOMERS (the PROSPECTS). Never assume an industry or customer type that the profile does not support.\r\nIMPORTANT: categories and keywords must describe the prospects (the kinds of businesses that would BUY from the seller), NEVER the seller's own kind of business or competitors. Signals are facts about a PROSPECT business, never about the seller.\r\n\r\nReturn ONE JSON object with exactly these keys:\r\n{\r\n  \"categories\": [string],          // 3-8 business categories to target, in Arabic\r\n  \"keywords\": [string],            // 4-10 Google Maps search terms that find PROSPECT businesses, mix of Arabic and English, in the form a person would type in Maps\r\n  \"locations\": [{\"governorate\": string, \"city\": string, \"district\": string}], // ONLY from the profile's regions; split large areas into districts/neighborhoods (max 8). Empty array if no regions are given\r\n  \"signals\": [{\"key\": string, \"weight\": number, \"reason_ar\": string}], // 3-6 items\r\n  \"angles\": [{\"title_ar\": string, \"description_ar\": string}]           // 2-3 message angles\r\n}\r\n\r\nSignals you may use (use ONLY these keys):\r\n${signalList}\r\n\r\nSignal weights are signed numbers from -100 to 100. A positive weight rewards leads where the signal value is HIGH; a negative weight rewards leads where it is LOW. Choose the sign according to this company's offer (the same signal can mean opposite things for different offers). reason_ar is one short Arabic sentence (max 70 characters) explaining why this signal about a prospect matters for THIS seller's offer.\r\nWrite all Arabic in simple, natural Egyptian colloquial style. Output JSON only.`;\r\n\r\nconst user = `Company offer profile (JSON):\\n${JSON.stringify(offer)}`;\r\n\r\nconst request = {\r\n  messages: [\r\n    { role: 'system', content: system },\r\n    { role: 'user', content: user },\r\n  ],\r\n  response_format: { type: 'json_object' },\r\n  temperature: 0.4,\r\n  usage: { include: true },\r\n};\r\nconst fallbacks = Array.isArray(body.fallback_models) ? body.fallback_models.filter(Boolean) : [];\r\nif (fallbacks.length) request.models = [body.model, ...fallbacks];\r\nelse request.model = body.model;\r\n\r\nreturn [{ json: { requestBody: JSON.stringify(request), job_id: body.job_id } }];\r\n"
+      }
+    },
+    {
+      "id": "c66323b9-6d8c-a91f-cb2b-036103f3ff59",
+      "name": "OpenRouter",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "HTTP-Referer",
+              "value": "__APP_URL__"
+            },
+            {
+              "name": "X-Title",
+              "value": "Wasla"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.requestBody }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          },
+          "timeout": 120000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_OPENROUTER__",
+          "name": "Wasla OpenRouter"
+        }
+      }
+    },
+    {
+      "id": "e37366cb-b2f2-6219-f483-3398cf52b053",
+      "name": "Parse planner",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1680,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// WF0 \"Parse planner\": validates the LLM output against the signal library and clamps everything.\nconst res = $input.first().json;\nconst defs = $('Get signals').all().map((i) => i.json);\nconst allowed = new Map(defs.map((d) => [d.key, d]));\nconst body = $('Webhook').first().json.body;\n\nconst fail = (msg) => ({ json: { ok: false, error: msg, job_id: body.job_id } });\nif (!res || res.statusCode < 200 || res.statusCode >= 300 || !res.body || !res.body.choices) {\n  return [fail('ماقدرناش نكلم الذكاء الاصطناعي دلوقتي. جرّب تاني بعد شوية.')];\n}\nconst raw = res.body.choices[0]?.message?.content || '';\nlet data;\ntry {\n  data = JSON.parse(raw.replace(/^```(?:json)?/i, '').replace(/```$/, '').trim());\n} catch (e) {\n  return [fail('الخطة طلعت بشكل مش مفهوم. جرّب تاني.')];\n}\n\nconst str = (v, n) => (typeof v === 'string' ? v.trim().slice(0, n) : '');\nconst strs = (a, max, n) => (Array.isArray(a) ? a.map((x) => str(x, n)).filter(Boolean).slice(0, max) : []);\n\nconst signals = [];\nconst seen = new Set();\nfor (const s of Array.isArray(data.signals) ? data.signals : []) {\n  const key = str(s?.key, 60);\n  const weight = Math.round(Math.max(-100, Math.min(100, Number(s?.weight))));\n  if (!allowed.has(key) || seen.has(key) || !Number.isFinite(weight) || weight === 0) continue;\n  seen.add(key);\n  signals.push({ key, weight, reason_ar: str(s.reason_ar, 120) });\n}\n\nconst locations = (Array.isArray(data.locations) ? data.locations : [])\n  .map((l) => ({ governorate: str(l?.governorate, 60), city: str(l?.city, 60), district: str(l?.district, 60) }))\n  .filter((l) => l.governorate || l.city || l.district)\n  .slice(0, 8);\n\nconst draft = {\n  categories: strs(data.categories, 8, 60),\n  keywords: strs(data.keywords, 10, 60),\n  locations,\n  signals: signals.slice(0, 6),\n  angles: (Array.isArray(data.angles) ? data.angles : [])\n    .map((a) => ({ title_ar: str(a?.title_ar, 80), description_ar: str(a?.description_ar, 300) }))\n    .filter((a) => a.title_ar)\n    .slice(0, 3),\n};\nif (!draft.keywords.length) return [fail('الخطة مطلعتش كلمات بحث. جرّب تاني أو عدّل وصف اللي بتبيعه.')];\n\nconst u = res.body.usage || {};\nreturn [{\n  json: {\n    ok: true,\n    draft,\n    job_id: body.job_id,\n    tokens_in: u.prompt_tokens || 0,\n    tokens_out: u.completion_tokens || 0,\n    cost: Number(u.cost) || 0,\n    model: res.body.model || body.model,\n  },\n}];\n"
+      }
+    },
+    {
+      "id": "d0d8a93f-083b-cb46-d38c-79fb4d82cf1f",
+      "name": "OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1920,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6e9393c1-4b18-98d0-2ce7-37494942919a",
+              "leftValue": "={{ $json.ok }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "c98a39c4-80d7-57b4-d3eb-2410ad67f4e8",
+      "name": "Save draft",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2160,
+        140
+      ],
+      "parameters": {
+        "method": "PATCH",
+        "url": "=__SUPABASE_URL__/rest/v1/jobs?id=eq.{{ $json.job_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ result: $json.draft }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "e7c3da30-4af5-7585-8ad5-e82971230e6d",
+      "name": "Settle ok",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2400,
+        140
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__SUPABASE_URL__/rest/v1/rpc/settle_job",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ p_job_id: $(\"Parse planner\").first().json.job_id, p_credits_used: $(\"Claim job\").first().json.credits_reserved, p_status: \"succeeded\", p_cost_usd: $(\"Parse planner\").first().json.cost, p_llm_model: $(\"Parse planner\").first().json.model, p_tokens_in: $(\"Parse planner\").first().json.tokens_in, p_tokens_out: $(\"Parse planner\").first().json.tokens_out }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "3bde6823-6eb8-a8a8-6995-cbfde70609be",
+      "name": "Settle failed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2400,
+        460
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__SUPABASE_URL__/rest/v1/rpc/settle_job",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ p_job_id: $json.job_id, p_credits_used: 0, p_status: \"failed\", p_error: $json.error }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Claim job",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claim job": {
+      "main": [
+        [
+          {
+            "node": "Get org",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get org": {
+      "main": [
+        [
+          {
+            "node": "Get signals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get signals": {
+      "main": [
+        [
+          {
+            "node": "Build request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build request": {
+      "main": [
+        [
+          {
+            "node": "OpenRouter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter": {
+      "main": [
+        [
+          {
+            "node": "Parse planner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse planner": {
+      "main": [
+        [
+          {
+            "node": "OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OK?": {
+      "main": [
+        [
+          {
+            "node": "Save draft",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Settle failed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save draft": {
+      "main": [
+        [
+          {
+            "node": "Settle ok",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

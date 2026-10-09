@@ -1,0 +1,755 @@
+{
+  "name": "Wasla WF3 - Message generation",
+  "nodes": [
+    {
+      "id": "f56be432-ff5f-7811-f71f-c423e003e36f",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "wasla-generate",
+        "authentication": "headerAuth",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SECRET__",
+          "name": "Wasla Webhook Secret"
+        }
+      },
+      "webhookId": "40b82d99-38f8-f0fb-ff2b-a4a3c9e9fbc2"
+    },
+    {
+      "id": "e0144292-da12-61df-ae7b-9bba6fb66cb8",
+      "name": "Claim job",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        300
+      ],
+      "parameters": {
+        "method": "PATCH",
+        "url": "=__SUPABASE_URL__/rest/v1/jobs?id=eq.{{ $(\"Webhook\").first().json.body.job_id }}&status=eq.queued",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Prefer",
+              "value": "return=representation"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ status: \"running\", started_at: new Date().toISOString(), progress: 5 }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "67652e49-6aae-df35-1b96-cd01a5c1046c",
+      "name": "Get campaign",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/campaigns?id=eq.{{ $(\"Webhook\").first().json.body.campaign_id }}&select=id,parameters",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "5c43d614-dcab-298e-7864-ad3ce36d557a",
+      "name": "Get org",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/organizations?id=eq.{{ $(\"Webhook\").first().json.body.organization_id }}&select=name,offer_profile",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "7025505f-7c4e-9bd6-017f-b1785417c18e",
+      "name": "Get campaign leads",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/campaign_leads?campaign_id=eq.{{ $(\"Webhook\").first().json.body.campaign_id }}&select=opportunity_score,score_reasons,leads(id,business_name,category,district,city,rating,reviews_count,website,whatsapp_eligible,status)&order=opportunity_score.desc.nullslast&limit=2000",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500,
+      "alwaysOutputData": true
+    },
+    {
+      "id": "4086a4d5-76f2-8d0b-c7dc-1ed2edab6f75",
+      "name": "Get messages",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/messages?campaign_id=eq.{{ $(\"Webhook\").first().json.body.campaign_id }}&select=id,lead_id,channel,regen_count,review_status&limit=5000",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500,
+      "alwaysOutputData": true
+    },
+    {
+      "id": "6cc1486e-2585-dd81-a878-18665d8d6a74",
+      "name": "Get insights",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1680,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/lead_signals?organization_id=eq.{{ $(\"Webhook\").first().json.body.organization_id }}&signal_key=eq.review_insights&select=lead_id,raw&limit=5000",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500,
+      "alwaysOutputData": true
+    },
+    {
+      "id": "c73d8614-13bd-cfdb-543d-29e63a581f08",
+      "name": "Select and build",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1920,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// WF3 \"Select and build\": pick leads that need a message and build one OpenRouter request per lead.\r\n// Offer-agnostic: the offer, the lead facts and the collected signals are the only inputs.\r\nconst body = $('Webhook').first().json.body;\r\nconst job = $('Claim job').first().json;\r\nconst campaign = $('Get campaign').first().json;\r\nconst org = $('Get org').first().json;\r\nconst links = $('Get campaign leads').all().map((i) => i.json).filter((r) => r.leads);\r\nconst messages = $('Get messages').all().map((i) => i.json);\r\nconst insights = new Map($('Get insights').all().map((i) => [i.json.lead_id, i.json.raw]));\r\n\r\nconst p = campaign.parameters || {};\r\nconst channel = p.channel || 'whatsapp';\r\nconst tone = p.tone || 'friendly';\r\nconst TONES = {\r\n  friendly: 'ودود وخفيف، زي زميل بيكلم زميل',\r\n  professional: 'مهذب ومحترم وجاد من غير تكلف',\r\n  direct: 'مباشر وواضح وقصير من غير لف ودوران',\r\n};\r\nconst offer = (p.offer_override && String(p.offer_override).trim())\r\n  ? { what_we_sell: String(p.offer_override).trim(), regions: (org.offer_profile || {}).regions || [] }\r\n  : (org.offer_profile || {});\r\nconst angle = p.angle && typeof p.angle === 'object' ? p.angle : null;\r\n\r\nconst SYSTEM = `You write the FIRST outreach message from a company to another business, in Egyptian colloquial Arabic (respectful, sounds like a real person, not an ad).\r\nReturn ONE JSON object only: {\"message\": string, \"angle\": string}. \"angle\" is a short Arabic note (max 80 chars) naming the personalization hook you used.\r\nHard rules:\r\n- ${channel === 'email' ? 'Email: add \"subject\" (max 70 chars) to the JSON; body 60-120 words, plain text.' : 'WhatsApp/Messenger text: between 40 and 90 words. No links, no URLs, no phone numbers.'}\r\n- End with ONE clear, soft question.\r\n- Mention at least ONE real detail taken from the business facts or collected signals below. NEVER invent facts, numbers, clients, results, prices, or offers. Never mention a fact that is not given.\r\n- No pressure or exaggeration (no \"limited time\", no \"guaranteed\"). At most ONE emoji in total.\r\n- Introduce the sender's offer briefly using ONLY the offer profile provided. If proof_points are given you may use them, otherwise do not claim any.\r\n- Build the opening on the strongest real signal when one is given. Follow the requested structure hint so messages differ from each other. Do not start every message with a greeting plus the business name only.\r\n- Do NOT invent a sender name, a person name, or a company name. If \"sender_company_name\" is given you may use it once, otherwise speak as \"إحنا\" without any name.\r\n- Do not claim you visited, used, or heard about them. State only what you actually saw in the provided data (for example \"شفت إنكم على خرائط جوجل\" or the rating).\r\n- Use natural Egyptian dialect words (إزاي، دلوقتي، كده، عايز، ممكن)، not formal Modern Standard Arabic. Keep sentences short.\r\n- Write in the requested tone.`;\r\n\r\nconst HINTS = [\r\n  'ابدأ بملاحظة قصيرة عن نشاطهم أو منطقتهم.',\r\n  'ابدأ بسؤال قصير عن حاجة مرتبطة بشغلهم.',\r\n  'ابدأ بتقدير حاجة حقيقية في بياناتهم (زي التقييم أو الريفيوهات).',\r\n  'ابدأ بتعريف نفسك في جملة واحدة وبعدين اربطها بحالتهم.',\r\n  'ابدأ بالمشكلة اللي بتحلها وإزاي بتخص نشاطهم.',\r\n  'ابدأ بجملة بسيطة إنك لقيتهم وانت بتدور على شغل في منطقتهم.',\r\n  'اكتب الرسالة في سطرين قصيرين ثم السؤال.',\r\n  'ابدأ بالسؤال الأول وبعدين وضّح ليه بتسأل.',\r\n];\r\n\r\n// Targets: explicit lead ids, a regeneration, or every eligible lead that has no message yet.\r\nconst haveMsg = new Set(messages.filter((m) => m.channel === channel).map((m) => m.lead_id));\r\nlet chosen;\r\nlet regen = null;\r\nif (body.regenerate && body.regenerate.message_id) {\r\n  regen = messages.find((m) => m.id === body.regenerate.message_id);\r\n  chosen = regen ? links.filter((r) => r.leads.id === regen.lead_id) : [];\r\n} else {\r\n  const ids = Array.isArray(body.lead_ids) && body.lead_ids.length ? new Set(body.lead_ids) : null;\r\n  chosen = links.filter((r) => {\r\n    const l = r.leads;\r\n    if (ids && !ids.has(l.id)) return false;\r\n    if (haveMsg.has(l.id)) return false;\r\n    if (l.status === 'opted_out') return false;\r\n    if (channel === 'whatsapp' && !l.whatsapp_eligible) return false;\r\n    return true;\r\n  });\r\n}\r\nchosen = chosen.slice(0, Math.max(0, job.credits_reserved));\r\n\r\nif (!chosen.length) return [{ json: { noop: true } }];\r\n\r\nreturn chosen.map((r, idx) => {\r\n  const l = r.leads;\r\n  const ins = insights.get(l.id);\r\n  const facts = {\r\n    name: l.business_name,\r\n    category: l.category,\r\n    district: l.district || l.city,\r\n    rating: l.rating,\r\n    reviews_count: l.reviews_count,\r\n    has_website: !!l.website,\r\n  };\r\n  const user = {\r\n    tone: TONES[tone] || TONES.friendly,\r\n    channel,\r\n    structure_hint: HINTS[idx % HINTS.length],\r\n    sender_company_name: org.name || null,\r\n    sender_offer: offer,\r\n    message_angle: angle,\r\n    extra_instruction: regen ? (body.regenerate.instruction || null) : null,\r\n    business_facts: facts,\r\n    collected_signals: Array.isArray(r.score_reasons) ? r.score_reasons : [],\r\n    review_summary: ins ? { summary_ar: ins.summary_ar, praise: ins.praise, complaints: ins.complaints } : null,\r\n  };\r\n  const req = {\r\n    messages: [{ role: 'system', content: SYSTEM }, { role: 'user', content: JSON.stringify(user) }],\r\n    response_format: { type: 'json_object' },\r\n    temperature: 0.9,\r\n    usage: { include: true },\r\n  };\r\n  const fb = Array.isArray(body.fallback_models) ? body.fallback_models.filter(Boolean) : [];\r\n  if (fb.length) req.models = [body.model, ...fb]; else req.model = body.model;\r\n  return {\r\n    json: {\r\n      lead_id: l.id,\r\n      message_id: regen ? regen.id : null,\r\n      regen_count: regen ? (regen.regen_count || 0) + 1 : 0,\r\n      channel,\r\n      organization_id: body.organization_id,\r\n      campaign_id: body.campaign_id,\r\n      job_id: body.job_id,\r\n      requestBody: JSON.stringify(req),\r\n      total: chosen.length,\r\n    },\r\n  };\r\n});\r\n"
+      }
+    },
+    {
+      "id": "f0d04197-972a-017e-449d-98eeb3641309",
+      "name": "Nothing to do?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2160,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b1ff4a86-f071-0296-8ed9-62e0a173e710",
+              "leftValue": "={{ $json.noop === true }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "4d1fc9fd-d35b-2f77-d909-daee34b280ac",
+      "name": "Loop",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2400,
+        300
+      ],
+      "parameters": {
+        "batchSize": 5,
+        "options": {}
+      }
+    },
+    {
+      "id": "51dca805-b7b4-5e22-7a14-de41563ae3e8",
+      "name": "OpenRouter",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2640,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "HTTP-Referer",
+              "value": "__APP_URL__"
+            },
+            {
+              "name": "X-Title",
+              "value": "Wasla"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.requestBody }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          },
+          "timeout": 120000,
+          "batching": {
+            "batch": {
+              "batchSize": 5,
+              "batchInterval": 1200
+            }
+          }
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_OPENROUTER__",
+          "name": "Wasla OpenRouter"
+        }
+      }
+    },
+    {
+      "id": "a9f05b6d-e2c8-4d0f-9342-6c147145d0d7",
+      "name": "Validate message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2880,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// WF3 \"Validate message\": parse the LLM JSON and enforce the message rules (spec 6.4). Runs once per item.\r\nconst meta = $('Select and build').item.json;\r\nconst res = $input.item.json;\r\n\r\nconst base = { lead_id: meta.lead_id, message_id: meta.message_id, regen_count: meta.regen_count, channel: meta.channel,\r\n  organization_id: meta.organization_id, campaign_id: meta.campaign_id, job_id: meta.job_id, total: meta.total };\r\nconst body = res && res.body;\r\nconst u = (body && body.usage) || {};\r\nconst usage = { tokens_in: u.prompt_tokens || 0, tokens_out: u.completion_tokens || 0, cost: Number(u.cost) || 0, model: (body && body.model) || null };\r\n// Save instruction for the single \"Save message\" HTTP node: invalid items become a harmless no-op PATCH (matches no row).\r\nconst NOOP = { method: 'PATCH', path: 'messages?id=eq.00000000-0000-0000-0000-000000000000', prefer: 'return=minimal', body: { review_status: 'pending' } };\r\nconst bad = (reason) => ({ json: { ...base, ...usage, ok: false, reason, save: NOOP } });\r\n\r\nif (!res || res.statusCode < 200 || res.statusCode >= 300 || !body || !body.choices) return bad(`http_${res && res.statusCode}`);\r\nlet d;\r\ntry { d = JSON.parse((body.choices[0]?.message?.content || '').replace(/^```(?:json)?/i, '').replace(/```$/, '').trim()); } catch (e) { return bad('bad_json'); }\r\nlet message = typeof d.message === 'string' ? d.message.trim() : '';\r\nif (!message) return bad('empty');\r\n\r\nconst words = message.split(/\\s+/).filter(Boolean).length;\r\nconst chat = meta.channel !== 'email';\r\nif (chat && (words < 30 || words > 110)) return bad(`word_count_${words}`);\r\nif (!chat && (words < 50 || words > 150)) return bad(`word_count_${words}`);\r\nif (chat && /https?:|www\\.|\\.com\\b|\\.net\\b|\\.eg\\b|wa\\.me/i.test(message)) return bad('contains_link');\r\n// At most ONE emoji (spec 6.4): keep the first, drop the rest instead of wasting the generation.\r\nlet seenEmoji = 0;\r\nmessage = message.replace(/\\p{Extended_Pictographic}️?/gu, (m) => (seenEmoji++ === 0 ? m : '')).replace(/[ \t]{2,}/g, ' ').trim();\r\n\r\nconst angle = typeof d.angle === 'string' ? d.angle.trim().slice(0, 120) : null;\r\nconst subject = typeof d.subject === 'string' ? d.subject.trim().slice(0, 100) : null;\r\nconst save = meta.message_id\r\n  ? { method: 'PATCH', path: `messages?id=eq.${meta.message_id}&review_status=neq.sent`, prefer: 'return=minimal',\r\n      body: { generated_text: message, edited_text: null, angle, subject, review_status: 'pending', regen_count: meta.regen_count, llm_model: usage.model, job_id: meta.job_id } }\r\n  : { method: 'POST', path: 'messages?on_conflict=lead_id,campaign_id,channel', prefer: 'resolution=ignore-duplicates,return=minimal',\r\n      body: { organization_id: meta.organization_id, lead_id: meta.lead_id, campaign_id: meta.campaign_id, job_id: meta.job_id, channel: meta.channel,\r\n        subject, generated_text: message, angle, llm_model: usage.model } };\r\nreturn { json: { ...base, ...usage, ok: true, message, angle, subject, save } };\r\n"
+      }
+    },
+    {
+      "id": "f7ba1f5f-ea1f-5b6f-6973-1fb2702a8604",
+      "name": "Save message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3120,
+        300
+      ],
+      "parameters": {
+        "method": "={{ $json.save.method }}",
+        "url": "=__SUPABASE_URL__/rest/v1/{{ $json.save.path }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Prefer",
+              "value": "={{ $json.save.prefer }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.save.body) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "683ae6d6-bd7f-0a91-66f0-ebf399adfe4e",
+      "name": "Summarize",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3360,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// per item: keep validate meta; flag DB errors from the save step\nconst m = $('Validate message').item.json;\nconst inp = $input.item.json || {};\nconst saveErr = m.ok && (inp.code || inp.hint || inp.details);\nreturn { json: { ok: m.ok && !saveErr, reason: saveErr ? String(inp.message || inp.code).slice(0, 80) : m.reason, tokens_in: m.tokens_in, tokens_out: m.tokens_out, cost: m.cost, model: m.model } };"
+      }
+    },
+    {
+      "id": "e271006f-4b6a-fef5-af3d-fe08897d834f",
+      "name": "Progress",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3600,
+        300
+      ],
+      "parameters": {
+        "method": "PATCH",
+        "url": "=__SUPABASE_URL__/rest/v1/jobs?id=eq.{{ $(\"Webhook\").first().json.body.job_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ progress: Math.min(95, Math.round(((($runIndex + 1) * 5) / ($(\"Select and build\").all().length || 1)) * 100)) }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500,
+      "executeOnce": true
+    },
+    {
+      "id": "57b9d597-324a-73df-4713-0086b41abedc",
+      "name": "Final",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3840,
+        300
+      ],
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// WF3 \"Final\": totals for settle_job. Credits are charged only for messages that were actually created.\nconst body = $('Webhook').first().json.body;\nconst job = $('Claim job').first().json;\nconst items = $input.all().map((i) => i.json);\n\nlet created = 0, failed = 0, tin = 0, tout = 0, cost = 0, model = null;\nconst reasons = {};\nfor (const r of items) {\n  tin += r.tokens_in || 0;\n  tout += r.tokens_out || 0;\n  cost += r.cost || 0;\n  model = r.model || model;\n  if (r.ok) created++; else { failed++; reasons[r.reason] = (reasons[r.reason] || 0) + 1; }\n}\nconst status = created === 0 && failed > 0 ? 'failed' : 'succeeded';\nreturn [{\n  json: {\n    job_id: body.job_id,\n    status,\n    credits_used: created,\n    error: status === 'failed' ? 'ماقدرناش نكتب الرسائل دلوقتي. جرّب تاني بعد شوية.' : null,\n    counts: { ...(job.counts || {}), generated: created, failed, failure_reasons: reasons },\n    cost_usd: Math.round(cost * 1e6) / 1e6,\n    model,\n    tokens_in: tin,\n    tokens_out: tout,\n  },\n}];\n"
+      }
+    },
+    {
+      "id": "355803d5-1070-c7b3-fdc1-056726015c0a",
+      "name": "Settle",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4080,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__SUPABASE_URL__/rest/v1/rpc/settle_job",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ p_job_id: $json.job_id, p_credits_used: $json.credits_used, p_status: $json.status, p_error: $json.error, p_counts: $json.counts, p_cost_usd: $json.cost_usd, p_llm_model: $json.model, p_tokens_in: $json.tokens_in, p_tokens_out: $json.tokens_out }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "09f42b18-a378-6b1e-fea8-0b2bea621262",
+      "name": "Settle nothing to do",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4320,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__SUPABASE_URL__/rest/v1/rpc/settle_job",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ p_job_id: $(\"Webhook\").first().json.body.job_id, p_credits_used: 0, p_status: \"succeeded\", p_counts: { generated: 0, note: \"no eligible leads without a message\" } }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Claim job",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claim job": {
+      "main": [
+        [
+          {
+            "node": "Get campaign",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get campaign": {
+      "main": [
+        [
+          {
+            "node": "Get org",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get org": {
+      "main": [
+        [
+          {
+            "node": "Get campaign leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get campaign leads": {
+      "main": [
+        [
+          {
+            "node": "Get messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get messages": {
+      "main": [
+        [
+          {
+            "node": "Get insights",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get insights": {
+      "main": [
+        [
+          {
+            "node": "Select and build",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select and build": {
+      "main": [
+        [
+          {
+            "node": "Nothing to do?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nothing to do?": {
+      "main": [
+        [
+          {
+            "node": "Settle nothing to do",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop": {
+      "main": [
+        [
+          {
+            "node": "Final",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OpenRouter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter": {
+      "main": [
+        [
+          {
+            "node": "Validate message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate message": {
+      "main": [
+        [
+          {
+            "node": "Save message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save message": {
+      "main": [
+        [
+          {
+            "node": "Summarize",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Summarize": {
+      "main": [
+        [
+          {
+            "node": "Progress",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Final": {
+      "main": [
+        [
+          {
+            "node": "Settle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

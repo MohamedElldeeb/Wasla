@@ -1,0 +1,10 @@
+.env*
+!.env.example
+node_modules/
+.next/
+n8n/.credentials.local.json
+scripts/.e2e-state.local.json
+.playwright-mcp/
+*.png.tmp
+tsconfig.tsbuildinfo
+.claude/

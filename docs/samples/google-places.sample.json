@@ -1,0 +1,2129 @@
+[
+  {
+    "title": "الدهان للمشويات - مدينتي",
+    "subTitle": null,
+    "description": null,
+    "ownerDescription": null,
+    "price": null,
+    "categoryName": "مطعم مأكولات مشوية",
+    "address": "ساوث بارك, Wadi Rd، ثانى القاهرة الجديدة، محافظة القاهرة‬ 4771340، مصر",
+    "neighborhood": null,
+    "street": "ساوث بارك, Wadi Rd",
+    "city": "ثانى القاهرة الجديدة",
+    "postalCode": null,
+    "state": "محافظة القاهرة‬",
+    "countryCode": "EG",
+    "website": "http://www.eldahangrill.com/",
+    "phone": "+20 2 21250000",
+    "phoneUnformatted": "+20221250000",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 30.084493,
+      "lng": 31.6406662
+    },
+    "locatedIn": null,
+    "floor": null,
+    "plusCode": null,
+    "menu": null,
+    "servicesLink": null,
+    "totalScore": 4.8,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJVVVVVWX2VxQRlhtYcNUbzGU",
+    "categories": [
+      "مطعم مأكولات مشوية"
+    ],
+    "fid": "0x1457f66555555555:0x65cc1bd570581b96",
+    "cid": "7335268496606501782",
+    "reviewsCount": 8997,
+    "reviewsDistribution": {
+      "oneStar": 151,
+      "twoStar": 69,
+      "threeStar": 166,
+      "fourStar": 518,
+      "fiveStar": 8093
+    },
+    "imagesCount": 1212,
+    "imageCategories": [],
+    "scrapedAt": "2026-10-09T13:15:51.555Z",
+    "reserveTableUrl": null,
+    "googleFoodUrl": null,
+    "hotelStars": null,
+    "hotelDescription": null,
+    "checkInDate": null,
+    "checkOutDate": null,
+    "hotelAds": [],
+    "popularTimesLiveText": null,
+    "popularTimesLivePercent": null,
+    "popularTimesHistogram": {},
+    "openingHours": [
+      {
+        "day": "الجمعة",
+        "hours": "12م to 1ص"
+      },
+      {
+        "day": "السبت",
+        "hours": "12م to 1ص"
+      },
+      {
+        "day": "الأحد",
+        "hours": "12م to 12ص"
+      },
+      {
+        "day": "الاثنين",
+        "hours": "12م to 1ص"
+      },
+      {
+        "day": "الثلاثاء",
+        "hours": "12م to 1ص"
+      },
+      {
+        "day": "الأربعاء",
+        "hours": "12م to 1ص"
+      },
+      {
+        "day": "الخميس",
+        "hours": "12م to 1ص"
+      }
+    ],
+    "wasOpenAtScrapeTime": true,
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "خيارات الخدمة": [
+        {
+          "أماكن جلوس في الهواء الطلق": true
+        },
+        {
+          "التسليم بدون تلامس": true
+        },
+        {
+          "خدمة التوصيل": true
+        },
+        {
+          "طعام سفري": true
+        },
+        {
+          "الجلوس داخل المكان": true
+        }
+      ],
+      "أهم السمات": [
+        {
+          "أماكن جلوس على السطح": true
+        },
+        {
+          "تشكيلة شاي رائعة": true
+        },
+        {
+          "حلويات رائعة": true
+        },
+        {
+          "قهوة رائعة": true
+        },
+        {
+          "مدفأة": true
+        },
+        {
+          "مشروبات كوكتيل رائعة": true
+        }
+      ],
+      "يشتهر بـ": [
+        {
+          "الإفطار": true
+        },
+        {
+          "الغداء": true
+        },
+        {
+          "العشاء": true
+        },
+        {
+          "العشاء الفردي": true
+        }
+      ],
+      "إمكانية الوصول": [
+        {
+          "أماكن جلوس صالحة للكراسي المتحركة": true
+        },
+        {
+          "دورة مياه تستوعب الكراسي المتحركة": true
+        },
+        {
+          "مدخل صالح للكراسي المتحركة": true
+        },
+        {
+          "موقف سيارات صالح للكراسي المتحركة": true
+        }
+      ],
+      "الخدمات المقدّمة": [
+        {
+          "خيارات صحية": true
+        },
+        {
+          "غرفة طعام خاصة": true
+        },
+        {
+          "قهوة": true
+        },
+        {
+          "مأكولات في ساعات متأخرة من الليل": true
+        },
+        {
+          "مطعم وجبات سريعة": true
+        },
+        {
+          "وجبات خفيفة": true
+        }
+      ],
+      "خيارات تناول الطعام": [
+        {
+          "فطور": true
+        },
+        {
+          "إفطار متأخر": true
+        },
+        {
+          "الغداء": true
+        },
+        {
+          "العشاء": true
+        },
+        {
+          "خدمات التزويد بالطعام": true
+        },
+        {
+          "الحلويات": true
+        },
+        {
+          "أماكن الجلوس": true
+        },
+        {
+          "خدمة المائدة": true
+        }
+      ],
+      "وسائل الراحة": [
+        {
+          "مرحاض": true
+        }
+      ],
+      "الأجواء": [
+        {
+          "خفيفة": true
+        },
+        {
+          "عالي المستوى": true
+        },
+        {
+          "عصري": true
+        },
+        {
+          "مريح": true
+        },
+        {
+          "هادئ": true
+        }
+      ],
+      "الجمهور": [
+        {
+          "سياح": true
+        },
+        {
+          "طلاب جامعيون": true
+        },
+        {
+          "مجموعات": true
+        }
+      ],
+      "التخطيط": [
+        {
+          "حجوزات الغداء مُوصى بها": true
+        },
+        {
+          "يُنصح بإجراء حجوزات العشاء": true
+        },
+        {
+          "يقبل الحجوزات": true
+        }
+      ],
+      "الدفعات": [
+        {
+          "الدفع على الأجهزة الجوّالة عبر NFC": true
+        },
+        {
+          "بطاقات ائتمان": true
+        },
+        {
+          "بطاقات سحب آلي": true
+        },
+        {
+          "بطاقات الائتمان": true
+        }
+      ],
+      "أطفال": [
+        {
+          "مناسب للأطفال": true
+        }
+      ],
+      "موقف سيارات": [
+        {
+          "تتوفّر مواقف كثيرة للسيارات": true
+        },
+        {
+          "موقف سيارات مجاني": true
+        },
+        {
+          "موقف سيارات مجاني في الشارع": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=%D8%A7%D9%84%D8%AF%D9%87%D8%A7%D9%86%20%D9%84%D9%84%D9%85%D8%B4%D9%88%D9%8A%D8%A7%D8%AA%20-%20%D9%85%D8%AF%D9%8A%D9%86%D8%AA%D9%8A&query_place_id=ChIJVVVVVWX2VxQRlhtYcNUbzGU",
+    "searchPageUrl": "https://www.google.com/maps/search/%D9%85%D8%B7%D8%A7%D8%B9%D9%85%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1/@30.0346115,31.837900957226584,12z?hl=ar",
+    "searchString": "مطاعم مدينة نصر",
+    "language": "ar",
+    "rank": 1,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9Q7WrOwM0MZwkv_0Af4r0RPcKUbTwibX7weoJkkjpSHN-ADxCWcTem1kWZ6J6_XprvCFnHqySoYbYEEPlLzqeeOePHdrE5FmFi9qaQ9GqZNnguau1WrV76iZdqEkRyArSvNoDAJ=w408-h306-k-no",
+    "kgmid": "/g/11c2l8z48l",
+    "businessProfileId": "10707816713594387841"
+  },
+  {
+    "title": "ANAKOTA - Open Air Mall (Madinty)",
+    "subTitle": null,
+    "description": null,
+    "ownerDescription": null,
+    "price": null,
+    "categoryName": "مطعم مأكولات مصرية",
+    "address": "4J5G+52W، ثانى القاهرة الجديدة، محافظة القاهرة‬ 11575، مصر",
+    "neighborhood": null,
+    "street": "4J5G+52W",
+    "city": "ثانى القاهرة الجديدة",
+    "postalCode": "11575",
+    "state": "محافظة القاهرة‬",
+    "countryCode": "EG",
+    "website": "https://anakota-eg.com/",
+    "phone": "+20 12 11100024",
+    "phoneUnformatted": "+201211100024",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 30.1073465,
+      "lng": 31.6249561
+    },
+    "locatedIn": null,
+    "floor": null,
+    "plusCode": null,
+    "menu": null,
+    "servicesLink": null,
+    "totalScore": 4.7,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJq9akeicdWBQR4YcgVhzdeZE",
+    "categories": [
+      "مطعم مأكولات مصرية"
+    ],
+    "fid": "0x14581d277aa4d6ab:0x9179dd1c562087e1",
+    "cid": "10482652721455335393",
+    "reviewsCount": 2151,
+    "reviewsDistribution": {
+      "oneStar": 97,
+      "twoStar": 31,
+      "threeStar": 44,
+      "fourStar": 148,
+      "fiveStar": 1831
+    },
+    "imagesCount": 749,
+    "imageCategories": [],
+    "scrapedAt": "2026-10-09T13:15:51.557Z",
+    "reserveTableUrl": null,
+    "googleFoodUrl": null,
+    "hotelStars": null,
+    "hotelDescription": null,
+    "checkInDate": null,
+    "checkOutDate": null,
+    "hotelAds": [],
+    "popularTimesLiveText": null,
+    "popularTimesLivePercent": null,
+    "popularTimesHistogram": {},
+    "openingHours": [
+      {
+        "day": "الجمعة",
+        "hours": "9ص to 2ص"
+      },
+      {
+        "day": "السبت",
+        "hours": "9ص to 2ص"
+      },
+      {
+        "day": "الأحد",
+        "hours": "9ص to 2ص"
+      },
+      {
+        "day": "الاثنين",
+        "hours": "9ص to 2ص"
+      },
+      {
+        "day": "الثلاثاء",
+        "hours": "9ص to 2ص"
+      },
+      {
+        "day": "الأربعاء",
+        "hours": "9ص to 2ص"
+      },
+      {
+        "day": "الخميس",
+        "hours": "9ص to 2ص"
+      }
+    ],
+    "wasOpenAtScrapeTime": true,
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "من النشاط التجاري": [
+        {
+          "معرَّف كنشاط تجاري تملكه امرأة": true
+        }
+      ],
+      "خيارات الخدمة": [
+        {
+          "أماكن جلوس في الهواء الطلق": true
+        },
+        {
+          "التسليم بدون تلامس": true
+        },
+        {
+          "خدمة التوصيل": true
+        },
+        {
+          "طعام سفري": true
+        },
+        {
+          "الجلوس داخل المكان": true
+        }
+      ],
+      "أهم السمات": [
+        {
+          "الألعاب الرياضية": true
+        },
+        {
+          "تشكيلة شاي رائعة": true
+        },
+        {
+          "حلويات رائعة": true
+        },
+        {
+          "قهوة رائعة": true
+        },
+        {
+          "مشروبات كوكتيل رائعة": true
+        }
+      ],
+      "يشتهر بـ": [
+        {
+          "الإفطار": true
+        },
+        {
+          "الغداء": true
+        },
+        {
+          "العشاء": true
+        },
+        {
+          "العشاء الفردي": true
+        }
+      ],
+      "إمكانية الوصول": [
+        {
+          "أماكن جلوس صالحة للكراسي المتحركة": true
+        },
+        {
+          "مدخل صالح للكراسي المتحركة": true
+        },
+        {
+          "موقف سيارات صالح للكراسي المتحركة": true
+        },
+        {
+          "حلقة سمع تلبّي احتياجات المستهلك": false
+        }
+      ],
+      "الخدمات المقدّمة": [
+        {
+          "الكحول": true
+        },
+        {
+          "غرفة طعام خاصة": true
+        },
+        {
+          "قهوة": true
+        },
+        {
+          "مأكولات في ساعات متأخرة من الليل": true
+        },
+        {
+          "مشروبات كوكتيل": true
+        },
+        {
+          "مطعم وجبات سريعة": true
+        },
+        {
+          "وجبات خفيفة": true
+        }
+      ],
+      "خيارات تناول الطعام": [
+        {
+          "فطور": true
+        },
+        {
+          "إفطار متأخر": true
+        },
+        {
+          "الغداء": true
+        },
+        {
+          "العشاء": true
+        },
+        {
+          "خدمات التزويد بالطعام": true
+        },
+        {
+          "الخدمة عند الكاونتر": true
+        },
+        {
+          "الحلويات": true
+        },
+        {
+          "أماكن الجلوس": true
+        },
+        {
+          "خدمة المائدة": true
+        }
+      ],
+      "وسائل الراحة": [
+        {
+          "اتصال Wi-Fi مجاني": true
+        },
+        {
+          "بار داخل المكان": true
+        },
+        {
+          "دورة مياه للجنسين": true
+        },
+        {
+          "مرحاض": true
+        },
+        {
+          "Wi-Fi": true
+        }
+      ],
+      "الأجواء": [
+        {
+          "عالي المستوى": true
+        },
+        {
+          "عصري": true
+        },
+        {
+          "مريح": true
+        },
+        {
+          "هادئ": true
+        }
+      ],
+      "الجمهور": [
+        {
+          "سياح": true
+        },
+        {
+          "مجموعات": true
+        },
+        {
+          "مناسب للعائلة": true
+        }
+      ],
+      "التخطيط": [
+        {
+          "يُنصح بإجراء حجوزات العشاء": true
+        },
+        {
+          "يقبل الحجوزات": true
+        }
+      ],
+      "الدفعات": [
+        {
+          "الدفع على الأجهزة الجوّالة عبر NFC": true
+        },
+        {
+          "بطاقات ائتمان": true
+        },
+        {
+          "بطاقات سحب آلي": true
+        },
+        {
+          "بطاقات الائتمان": true
+        }
+      ],
+      "أطفال": [
+        {
+          "قائمة الأطفال": true
+        },
+        {
+          "مناسب للأطفال": true
+        }
+      ],
+      "موقف سيارات": [
+        {
+          "تتوفّر مواقف كثيرة للسيارات": true
+        },
+        {
+          "موقف سيارات مجاني": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=ANAKOTA%20-%20Open%20Air%20Mall%20(Madinty)&query_place_id=ChIJq9akeicdWBQR4YcgVhzdeZE",
+    "searchPageUrl": "https://www.google.com/maps/search/%D9%85%D8%B7%D8%A7%D8%B9%D9%85%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1/@30.0346115,31.837900957226584,12z?hl=ar",
+    "searchString": "مطاعم مدينة نصر",
+    "language": "ar",
+    "rank": 2,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9Qt50VZBilf1JiuOf04tp-Wv1a_qAnXsgsBKClSKtE8mMP23ncM_dNlDB6xffT8NuxRVJxXezdBrjvNfV4Y3ROM6NM28xseM2e3QObInprzt48LXJjOMXOasVU2hKsB-2SNmQt7kA=w408-h442-k-no",
+    "kgmid": "/g/11kqckttz9",
+    "businessProfileId": "15694612693183380149"
+  },
+  {
+    "title": "مطعم الحراق",
+    "subTitle": null,
+    "description": null,
+    "ownerDescription": null,
+    "price": null,
+    "categoryName": "مطعم أرز",
+    "address": "الرابعه تعاونيات امام جامعه، بدر، محافظة القاهرة‬، مصر",
+    "neighborhood": null,
+    "street": "الرابعه تعاونيات امام جامعه",
+    "city": "بدر",
+    "postalCode": null,
+    "state": "محافظة القاهرة‬",
+    "countryCode": "EG",
+    "phone": "",
+    "phoneUnformatted": "",
+    "claimThisBusiness": true,
+    "location": {
+      "lat": 30.1288122,
+      "lng": 31.7054563
+    },
+    "locatedIn": null,
+    "floor": null,
+    "plusCode": null,
+    "menu": null,
+    "servicesLink": null,
+    "totalScore": 3.9,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJl8zw7nj3VxQR39pMA8QhQBE",
+    "categories": [
+      "مطعم أرز"
+    ],
+    "fid": "0x1457f778eef0cc97:0x114021c4034cdadf",
+    "cid": "1243030622906931935",
+    "reviewsCount": 230,
+    "reviewsDistribution": {
+      "oneStar": 25,
+      "twoStar": 12,
+      "threeStar": 39,
+      "fourStar": 32,
+      "fiveStar": 122
+    },
+    "imagesCount": 53,
+    "imageCategories": [],
+    "scrapedAt": "2026-10-09T13:15:51.558Z",
+    "reserveTableUrl": null,
+    "googleFoodUrl": null,
+    "hotelStars": null,
+    "hotelDescription": null,
+    "checkInDate": null,
+    "checkOutDate": null,
+    "hotelAds": [],
+    "popularTimesLiveText": null,
+    "popularTimesLivePercent": null,
+    "popularTimesHistogram": {},
+    "openingHours": [
+      {
+        "day": "الجمعة",
+        "hours": "نعمل على مدار 24 ساعة"
+      },
+      {
+        "day": "السبت",
+        "hours": "نعمل على مدار 24 ساعة"
+      },
+      {
+        "day": "الأحد",
+        "hours": "نعمل على مدار 24 ساعة"
+      },
+      {
+        "day": "الاثنين",
+        "hours": "نعمل على مدار 24 ساعة"
+      },
+      {
+        "day": "الثلاثاء",
+        "hours": "نعمل على مدار 24 ساعة"
+      },
+      {
+        "day": "الأربعاء",
+        "hours": "نعمل على مدار 24 ساعة"
+      },
+      {
+        "day": "الخميس",
+        "hours": "نعمل على مدار 24 ساعة"
+      }
+    ],
+    "wasOpenAtScrapeTime": true,
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "خيارات الخدمة": [
+        {
+          "أماكن جلوس في الهواء الطلق": true
+        },
+        {
+          "التسليم بدون تلامس": true
+        },
+        {
+          "خدمة التوصيل": true
+        },
+        {
+          "خدمة الطلب أثناء القيادة": true
+        },
+        {
+          "طعام سفري": true
+        },
+        {
+          "الجلوس داخل المكان": true
+        }
+      ],
+      "يشتهر بـ": [
+        {
+          "الغداء": true
+        },
+        {
+          "العشاء": true
+        },
+        {
+          "العشاء الفردي": true
+        }
+      ],
+      "إمكانية الوصول": [
+        {
+          "مدخل صالح للكراسي المتحركة": true
+        }
+      ],
+      "الخدمات المقدّمة": [
+        {
+          "مأكولات في ساعات متأخرة من الليل": true
+        },
+        {
+          "مطعم وجبات سريعة": true
+        },
+        {
+          "وجبات خفيفة": true
+        }
+      ],
+      "خيارات تناول الطعام": [
+        {
+          "فطور": true
+        },
+        {
+          "إفطار متأخر": true
+        },
+        {
+          "الغداء": true
+        },
+        {
+          "العشاء": true
+        },
+        {
+          "خدمات التزويد بالطعام": true
+        },
+        {
+          "الحلويات": true
+        },
+        {
+          "أماكن الجلوس": true
+        },
+        {
+          "خدمة المائدة": true
+        }
+      ],
+      "وسائل الراحة": [
+        {
+          "مرحاض": true
+        }
+      ],
+      "الأجواء": [
+        {
+          "خفيفة": true
+        },
+        {
+          "مريح": true
+        }
+      ],
+      "الجمهور": [
+        {
+          "مجموعات": true
+        }
+      ],
+      "التخطيط": [
+        {
+          "يقبل الحجوزات": true
+        }
+      ],
+      "الدفعات": [
+        {
+          "الدفع النقدي فقط": true
+        }
+      ],
+      "أطفال": [
+        {
+          "مناسب للأطفال": true
+        }
+      ],
+      "موقف سيارات": [
+        {
+          "موقف سيارات مجاني": true
+        },
+        {
+          "موقف سيارات مجاني في الشارع": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=%D9%85%D8%B7%D8%B9%D9%85%20%D8%A7%D9%84%D8%AD%D8%B1%D8%A7%D9%82&query_place_id=ChIJl8zw7nj3VxQR39pMA8QhQBE",
+    "searchPageUrl": "https://www.google.com/maps/search/%D9%85%D8%B7%D8%A7%D8%B9%D9%85%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1/@30.0346115,31.837900957226584,12z?hl=ar",
+    "searchString": "مطاعم مدينة نصر",
+    "language": "ar",
+    "rank": 3,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9QOCUFzinfwAdFF1CizG4SvO8DZIjma9hZvGrKIcDvrSpeWKa2HV0QYlQxj0ivvdEdvHeF_NGdvJRaHSfPLwIwx4kz2G31oLPbe2nG4Dptqg_mzom51oRvKsQ5e-YUJuO5p3m8s=w408-h408-k-no",
+    "kgmid": "/g/11hm4xkx7s",
+    "businessProfileId": null
+  },
+  {
+    "title": "مطعم سلطان سراي",
+    "subTitle": null,
+    "description": null,
+    "ownerDescription": null,
+    "price": null,
+    "categoryName": "مطعم مأكولات تركية",
+    "address": "3MFC+9C، طريق، ثانى القاهرة الجديدة، محافظة القاهرة‬ 4770301، مصر",
+    "neighborhood": null,
+    "street": "3MFC+9C، طريق",
+    "city": "ثانى القاهرة الجديدة",
+    "postalCode": "4770301",
+    "state": "محافظة القاهرة‬",
+    "countryCode": "EG",
+    "website": "https://sultan-saray.lamaz.app/macho-menu/vfxxd-ghcfm-qtu2v",
+    "phone": "+20 10 20116617",
+    "phoneUnformatted": "+201020116617",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 30.0734375,
+      "lng": 31.6710625
+    },
+    "locatedIn": null,
+    "floor": null,
+    "plusCode": null,
+    "menu": null,
+    "servicesLink": null,
+    "totalScore": 4.8,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJlZV-35D1VxQRS--YGqnDu04",
+    "categories": [
+      "مطعم مأكولات تركية"
+    ],
+    "fid": "0x1457f590df7e9595:0x4ebbc3a91a98ef4b",
+    "cid": "5673343286666391371",
+    "reviewsCount": 7317,
+    "reviewsDistribution": {
+      "oneStar": 144,
+      "twoStar": 37,
+      "threeStar": 135,
+      "fourStar": 279,
+      "fiveStar": 6722
+    },
+    "imagesCount": 1681,
+    "imageCategories": [],
+    "scrapedAt": "2026-10-09T13:15:51.558Z",
+    "reserveTableUrl": null,
+    "googleFoodUrl": null,
+    "hotelStars": null,
+    "hotelDescription": null,
+    "checkInDate": null,
+    "checkOutDate": null,
+    "hotelAds": [],
+    "popularTimesLiveText": null,
+    "popularTimesLivePercent": null,
+    "popularTimesHistogram": {},
+    "openingHours": [
+      {
+        "day": "الجمعة",
+        "hours": "9ص to 12ص"
+      },
+      {
+        "day": "السبت",
+        "hours": "9ص to 12ص"
+      },
+      {
+        "day": "الأحد",
+        "hours": "9ص to 12ص"
+      },
+      {
+        "day": "الاثنين",
+        "hours": "9ص to 12ص"
+      },
+      {
+        "day": "الثلاثاء",
+        "hours": "9ص to 12ص"
+      },
+      {
+        "day": "الأربعاء",
+        "hours": "9ص to 12ص"
+      },
+      {
+        "day": "الخميس",
+        "hours": "9ص to 12ص"
+      }
+    ],
+    "wasOpenAtScrapeTime": true,
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "خيارات الخدمة": [
+        {
+          "أماكن جلوس في الهواء الطلق": true
+        },
+        {
+          "التسليم بدون تلامس": true
+        },
+        {
+          "خدمة التوصيل": true
+        },
+        {
+          "الخدمات في الموقع": true
+        },
+        {
+          "طعام سفري": true
+        },
+        {
+          "الجلوس داخل المكان": true
+        }
+      ],
+      "أهم السمات": [
+        {
+          "تشكيلة شاي رائعة": true
+        },
+        {
+          "حلويات رائعة": true
+        },
+        {
+          "قهوة رائعة": true
+        },
+        {
+          "مدفأة": true
+        },
+        {
+          "مشروبات كوكتيل رائعة": true
+        }
+      ],
+      "يشتهر بـ": [
+        {
+          "الإفطار": true
+        },
+        {
+          "الغداء": true
+        },
+        {
+          "العشاء": true
+        },
+        {
+          "العشاء الفردي": true
+        }
+      ],
+      "إمكانية الوصول": [
+        {
+          "أماكن جلوس صالحة للكراسي المتحركة": true
+        },
+        {
+          "دورة مياه تستوعب الكراسي المتحركة": true
+        },
+        {
+          "مدخل صالح للكراسي المتحركة": true
+        },
+        {
+          "موقف سيارات صالح للكراسي المتحركة": true
+        }
+      ],
+      "الخدمات المقدّمة": [
+        {
+          "الكحول": true
+        },
+        {
+          "قهوة": true
+        },
+        {
+          "كل ما يمكنك أكله": true
+        },
+        {
+          "مأكولات في ساعات متأخرة من الليل": true
+        },
+        {
+          "مشروبات كوكتيل": true
+        },
+        {
+          "وجبات خفيفة": true
+        }
+      ],
+      "خيارات تناول الطعام": [
+        {
+          "فطور": true
+        },
+        {
+          "إفطار متأخر": true
+        },
+        {
+          "الغداء": true
+        },
+        {
+          "العشاء": true
+        },
+        {
+          "خدمات التزويد بالطعام": true
+        },
+        {
+          "الخدمة عند الكاونتر": true
+        },
+        {
+          "الحلويات": true
+        },
+        {
+          "أماكن الجلوس": true
+        },
+        {
+          "خدمة المائدة": true
+        }
+      ],
+      "وسائل الراحة": [
+        {
+          "بار داخل المكان": true
+        },
+        {
+          "دورة مياه للجنسين": true
+        },
+        {
+          "مرحاض": true
+        }
+      ],
+      "الأجواء": [
+        {
+          "خفيفة": true
+        },
+        {
+          "رومانسي": true
+        },
+        {
+          "عالي المستوى": true
+        },
+        {
+          "عصري": true
+        },
+        {
+          "مريح": true
+        },
+        {
+          "هادئ": true
+        }
+      ],
+      "الجمهور": [
+        {
+          "سياح": true
+        },
+        {
+          "مجموعات": true
+        }
+      ],
+      "التخطيط": [
+        {
+          "حجوزات الإفطار المتأخر مُوصى بها": true
+        },
+        {
+          "حجوزات الغداء مُوصى بها": true
+        },
+        {
+          "يُنصح بإجراء حجوزات العشاء": true
+        },
+        {
+          "يقبل الحجوزات": true
+        }
+      ],
+      "الدفعات": [
+        {
+          "الدفع على الأجهزة الجوّالة عبر NFC": true
+        },
+        {
+          "بطاقات ائتمان": true
+        },
+        {
+          "بطاقات سحب آلي": true
+        },
+        {
+          "بطاقات الائتمان": true
+        }
+      ],
+      "أطفال": [
+        {
+          "قائمة الأطفال": true
+        },
+        {
+          "مناسب للأطفال": true
+        }
+      ],
+      "موقف سيارات": [
+        {
+          "مرآب مجاني للسيارات": true
+        },
+        {
+          "تتوفّر مواقف كثيرة للسيارات": true
+        },
+        {
+          "موقف سيارات مجاني": true
+        },
+        {
+          "موقف سيارات مجاني في الشارع": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=%D9%85%D8%B7%D8%B9%D9%85%20%D8%B3%D9%84%D8%B7%D8%A7%D9%86%20%D8%B3%D8%B1%D8%A7%D9%8A&query_place_id=ChIJlZV-35D1VxQRS--YGqnDu04",
+    "searchPageUrl": "https://www.google.com/maps/search/%D9%85%D8%B7%D8%A7%D8%B9%D9%85%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1/@30.0346115,31.837900957226584,12z?hl=ar",
+    "searchString": "مطاعم مدينة نصر",
+    "language": "ar",
+    "rank": 4,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9SqRqaDHSNHltNUhHigOeW_YhU_fjEapHggWWn5O6Lw_c6xARxLpbVqLCq949tD1wXQUuPCnhCzqE3WjBVbufMrR7JOUesXp6TSjJWFBJdg4GNrrryOu9PsPrDw5sUjm4o-X5He=w408-h411-k-no",
+    "kgmid": "/g/11jyfs7nqv",
+    "businessProfileId": "282511441383345162"
+  },
+  {
+    "title": "بيسترو مدينة نصر",
+    "subTitle": null,
+    "description": null,
+    "ownerDescription": null,
+    "price": null,
+    "categoryName": "مطعم مأكولات إيطالية",
+    "address": "16 أبو داوود الظاهري، المنطقة السادسة، مدينة نصر، محافظة القاهرة‬ 4450455، مصر",
+    "neighborhood": "المنطقة السادسة",
+    "street": "16 أبو داوود الظاهري",
+    "city": "مدينة نصر",
+    "postalCode": "4450455",
+    "state": "محافظة القاهرة‬",
+    "countryCode": "EG",
+    "website": "http://www.bistro.com.eg/",
+    "phone": "+20 12 00007090",
+    "phoneUnformatted": "+201200007090",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 30.0613361,
+      "lng": 31.3517166
+    },
+    "locatedIn": null,
+    "floor": null,
+    "plusCode": null,
+    "menu": null,
+    "servicesLink": null,
+    "totalScore": 4.3,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJTXnmyXU-WBQRXKcUX82caYo",
+    "categories": [
+      "مطعم مأكولات إيطالية"
+    ],
+    "fid": "0x14583e75c9e6794d:0x8a699ccd5f14a75c",
+    "cid": "9973675255666091868",
+    "reviewsCount": 4092,
+    "reviewsDistribution": {
+      "oneStar": 176,
+      "twoStar": 147,
+      "threeStar": 414,
+      "fourStar": 1003,
+      "fiveStar": 2352
+    },
+    "imagesCount": 686,
+    "imageCategories": [],
+    "scrapedAt": "2026-10-09T13:15:51.558Z",
+    "reserveTableUrl": null,
+    "googleFoodUrl": null,
+    "hotelStars": null,
+    "hotelDescription": null,
+    "checkInDate": null,
+    "checkOutDate": null,
+    "hotelAds": [],
+    "popularTimesLiveText": null,
+    "popularTimesLivePercent": null,
+    "popularTimesHistogram": {},
+    "openingHours": [
+      {
+        "day": "الجمعة",
+        "hours": "11ص to 3ص"
+      },
+      {
+        "day": "السبت",
+        "hours": "11ص to 3ص"
+      },
+      {
+        "day": "الأحد",
+        "hours": "11ص to 3ص"
+      },
+      {
+        "day": "الاثنين",
+        "hours": "11ص to 3ص"
+      },
+      {
+        "day": "الثلاثاء",
+        "hours": "11ص to 3ص"
+      },
+      {
+        "day": "الأربعاء",
+        "hours": "11ص to 3ص"
+      },
+      {
+        "day": "الخميس",
+        "hours": "11ص to 3ص"
+      }
+    ],
+    "wasOpenAtScrapeTime": true,
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "خيارات الخدمة": [
+        {
+          "خدمة التوصيل": true
+        },
+        {
+          "طعام سفري": true
+        },
+        {
+          "الجلوس داخل المكان": true
+        }
+      ],
+      "أهم السمات": [
+        {
+          "تشكيلة شاي رائعة": true
+        },
+        {
+          "حلويات رائعة": true
+        },
+        {
+          "مشروبات كوكتيل رائعة": true
+        }
+      ],
+      "يشتهر بـ": [
+        {
+          "الإفطار": true
+        },
+        {
+          "الغداء": true
+        },
+        {
+          "العشاء": true
+        },
+        {
+          "العشاء الفردي": true
+        }
+      ],
+      "إمكانية الوصول": [
+        {
+          "أماكن جلوس صالحة للكراسي المتحركة": true
+        },
+        {
+          "دورة مياه تستوعب الكراسي المتحركة": true
+        },
+        {
+          "مدخل صالح للكراسي المتحركة": false
+        },
+        {
+          "موقف سيارات صالح للكراسي المتحركة": false
+        }
+      ],
+      "الخدمات المقدّمة": [
+        {
+          "بوفيه سلطات": true
+        },
+        {
+          "خيارات خالية من المنتجات الحيوانية": true
+        },
+        {
+          "خيارات نباتية": true
+        },
+        {
+          "قهوة": true
+        },
+        {
+          "مأكولات في ساعات متأخرة من الليل": true
+        },
+        {
+          "مطعم وجبات سريعة": true
+        },
+        {
+          "وجبات خفيفة": true
+        }
+      ],
+      "خيارات تناول الطعام": [
+        {
+          "فطور": true
+        },
+        {
+          "إفطار متأخر": true
+        },
+        {
+          "الغداء": true
+        },
+        {
+          "العشاء": true
+        },
+        {
+          "خدمات التزويد بالطعام": true
+        },
+        {
+          "الحلويات": true
+        },
+        {
+          "أماكن الجلوس": true
+        },
+        {
+          "خدمة المائدة": true
+        }
+      ],
+      "وسائل الراحة": [
+        {
+          "مرحاض": true
+        }
+      ],
+      "الأجواء": [
+        {
+          "خفيفة": true
+        },
+        {
+          "عالي المستوى": true
+        },
+        {
+          "عصري": true
+        },
+        {
+          "مريح": true
+        },
+        {
+          "هادئ": true
+        }
+      ],
+      "الجمهور": [
+        {
+          "طلاب جامعيون": true
+        },
+        {
+          "مجموعات": true
+        },
+        {
+          "مناسب للعائلة": true
+        }
+      ],
+      "التخطيط": [
+        {
+          "حجوزات الغداء مُوصى بها": true
+        },
+        {
+          "يُنصح بإجراء حجوزات العشاء": true
+        },
+        {
+          "يقبل الحجوزات": true
+        }
+      ],
+      "الدفعات": [
+        {
+          "الدفع على الأجهزة الجوّالة عبر NFC": true
+        },
+        {
+          "بطاقات ائتمان": true
+        },
+        {
+          "بطاقات سحب آلي": true
+        },
+        {
+          "بطاقات الائتمان": true
+        }
+      ],
+      "أطفال": [
+        {
+          "قائمة الأطفال": true
+        },
+        {
+          "مناسب للأطفال": true
+        }
+      ],
+      "موقف سيارات": [
+        {
+          "من الصعب إلى حدٍّ ما العثور على موقف للسيارة": true
+        },
+        {
+          "موقف سيارات مجاني في الشارع": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=%D8%A8%D9%8A%D8%B3%D8%AA%D8%B1%D9%88%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1&query_place_id=ChIJTXnmyXU-WBQRXKcUX82caYo",
+    "searchPageUrl": "https://www.google.com/maps/search/%D9%85%D8%B7%D8%A7%D8%B9%D9%85%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1/@30.0346115,31.837900957226584,12z?hl=ar",
+    "searchString": "مطاعم مدينة نصر",
+    "language": "ar",
+    "rank": 5,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9RCUMJ91LdQEk403ktte7PI4pPxElWA_v5ohQrD_PbQtDAPHWFHzNCK028cgbkgKz5GqwSXQuo-ORMiNh7jf6en1VE1oAGG-T9o0KWDa7mtDy26WOHRbhVZ1l-uc9LicbioRZo=w426-h240-k-no",
+    "kgmid": "/g/11bwyh00q3",
+    "businessProfileId": "16910149545928642483"
+  },
+  {
+    "title": "اسماك المرشدي مدينتي ملك البحر",
+    "subTitle": null,
+    "description": null,
+    "ownerDescription": null,
+    "price": null,
+    "categoryName": "مطعم مأكولات بحرية",
+    "address": "الساوث بارك، ثانى القاهرة الجديدة، محافظة القاهرة‬ 4771340، مصر",
+    "neighborhood": null,
+    "street": "الساوث بارك",
+    "city": "ثانى القاهرة الجديدة",
+    "postalCode": null,
+    "state": "محافظة القاهرة‬",
+    "countryCode": "EG",
+    "phone": "+20 12 00035666",
+    "phoneUnformatted": "+201200035666",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 30.0843703,
+      "lng": 31.6404584
+    },
+    "locatedIn": null,
+    "floor": null,
+    "plusCode": null,
+    "menu": null,
+    "servicesLink": null,
+    "totalScore": 4.8,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJx1DI8BH1VxQRQgIEVyR4wz4",
+    "categories": [
+      "مطعم مأكولات بحرية"
+    ],
+    "fid": "0x1457f511f0c850c7:0x3ec3782457040242",
+    "cid": "4522590548284146242",
+    "reviewsCount": 4049,
+    "reviewsDistribution": {
+      "oneStar": 128,
+      "twoStar": 44,
+      "threeStar": 78,
+      "fourStar": 199,
+      "fiveStar": 3600
+    },
+    "imagesCount": 1025,
+    "imageCategories": [],
+    "scrapedAt": "2026-10-09T13:15:51.558Z",
+    "reserveTableUrl": null,
+    "googleFoodUrl": null,
+    "hotelStars": null,
+    "hotelDescription": null,
+    "checkInDate": null,
+    "checkOutDate": null,
+    "hotelAds": [],
+    "popularTimesLiveText": null,
+    "popularTimesLivePercent": null,
+    "popularTimesHistogram": {},
+    "openingHours": [
+      {
+        "day": "الجمعة",
+        "hours": "12م to 12ص"
+      },
+      {
+        "day": "السبت",
+        "hours": "12م to 12ص"
+      },
+      {
+        "day": "الأحد",
+        "hours": "12م to 12ص"
+      },
+      {
+        "day": "الاثنين",
+        "hours": "12م to 12ص"
+      },
+      {
+        "day": "الثلاثاء",
+        "hours": "12م to 12ص"
+      },
+      {
+        "day": "الأربعاء",
+        "hours": "12م to 12ص"
+      },
+      {
+        "day": "الخميس",
+        "hours": "12م to 12ص"
+      }
+    ],
+    "wasOpenAtScrapeTime": true,
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "خيارات الخدمة": [
+        {
+          "أماكن جلوس في الهواء الطلق": true
+        },
+        {
+          "التسليم بدون تلامس": true
+        },
+        {
+          "خدمة التوصيل": true
+        },
+        {
+          "طعام سفري": true
+        },
+        {
+          "الجلوس داخل المكان": true
+        }
+      ],
+      "أهم السمات": [
+        {
+          "مدفأة": true
+        }
+      ],
+      "يشتهر بـ": [
+        {
+          "الغداء": true
+        },
+        {
+          "العشاء": true
+        },
+        {
+          "العشاء الفردي": true
+        }
+      ],
+      "إمكانية الوصول": [
+        {
+          "أماكن جلوس صالحة للكراسي المتحركة": true
+        },
+        {
+          "دورة مياه تستوعب الكراسي المتحركة": true
+        },
+        {
+          "مدخل صالح للكراسي المتحركة": true
+        },
+        {
+          "موقف سيارات صالح للكراسي المتحركة": true
+        }
+      ],
+      "الخدمات المقدّمة": [
+        {
+          "قهوة": true
+        },
+        {
+          "مأكولات في ساعات متأخرة من الليل": true
+        },
+        {
+          "وجبات خفيفة": true
+        }
+      ],
+      "خيارات تناول الطعام": [
+        {
+          "فطور": true
+        },
+        {
+          "إفطار متأخر": true
+        },
+        {
+          "الغداء": true
+        },
+        {
+          "العشاء": true
+        },
+        {
+          "خدمات التزويد بالطعام": true
+        },
+        {
+          "الحلويات": true
+        },
+        {
+          "أماكن الجلوس": true
+        },
+        {
+          "خدمة المائدة": true
+        }
+      ],
+      "وسائل الراحة": [
+        {
+          "دورة مياه للجنسين": true
+        },
+        {
+          "مرحاض": true
+        }
+      ],
+      "الأجواء": [
+        {
+          "خفيفة": true
+        },
+        {
+          "عالي المستوى": true
+        },
+        {
+          "عصري": true
+        },
+        {
+          "مريح": true
+        },
+        {
+          "هادئ": true
+        }
+      ],
+      "الجمهور": [
+        {
+          "سياح": true
+        },
+        {
+          "مجموعات": true
+        },
+        {
+          "مناسب للعائلة": true
+        }
+      ],
+      "التخطيط": [
+        {
+          "الحجوزات مطلوبة": true
+        },
+        {
+          "يقبل الحجوزات": true
+        }
+      ],
+      "الدفعات": [
+        {
+          "بطاقات ائتمان": true
+        },
+        {
+          "بطاقات سحب آلي": true
+        }
+      ],
+      "أطفال": [
+        {
+          "قائمة الأطفال": true
+        },
+        {
+          "مناسب للأطفال": true
+        }
+      ],
+      "موقف سيارات": [
+        {
+          "تتوفّر مواقف كثيرة للسيارات": true
+        },
+        {
+          "موقف سيارات مجاني": true
+        },
+        {
+          "موقف سيارات مجاني في الشارع": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=%D8%A7%D8%B3%D9%85%D8%A7%D9%83%20%D8%A7%D9%84%D9%85%D8%B1%D8%B4%D8%AF%D9%8A%20%D9%85%D8%AF%D9%8A%D9%86%D8%AA%D9%8A%20%D9%85%D9%84%D9%83%20%D8%A7%D9%84%D8%A8%D8%AD%D8%B1&query_place_id=ChIJx1DI8BH1VxQRQgIEVyR4wz4",
+    "searchPageUrl": "https://www.google.com/maps/search/%D9%85%D8%B7%D8%A7%D8%B9%D9%85%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1/@30.0346115,31.837900957226584,12z?hl=ar",
+    "searchString": "مطاعم مدينة نصر",
+    "language": "ar",
+    "rank": 6,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9Rl5EkI9Xbswet4MPpV55wz_9TCAU9H7ESGkuLOt3Epljg_YaDsWoAXL4GTNA69PHyqTxn0SSIq26YnVUB-tUqCgcdYfW4S60CM2wWWSESrIG566cOiTYZHWgxSfRgohXQPlkQb=w408-h306-k-no",
+    "kgmid": "/g/11h_yv1wkd",
+    "businessProfileId": "18104581886246496882"
+  },
+  {
+    "title": "كبدة ومخ الشرقاوي",
+    "subTitle": null,
+    "description": null,
+    "ownerDescription": null,
+    "price": null,
+    "categoryName": "مطعم",
+    "address": "شارع الإمام أبو داود، بدر، محافظة القاهرة‬ 4950711، مصر",
+    "neighborhood": null,
+    "street": "شارع الإمام أبو داود",
+    "city": "بدر",
+    "postalCode": null,
+    "state": "محافظة القاهرة‬",
+    "countryCode": "EG",
+    "phone": "+20 10 27988665",
+    "phoneUnformatted": "+201027988665",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 30.1296875,
+      "lng": 31.7055625
+    },
+    "locatedIn": null,
+    "floor": null,
+    "plusCode": null,
+    "menu": null,
+    "servicesLink": null,
+    "totalScore": 4.4,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJEcVeEDX3VxQRB48CtuZ3eVM",
+    "categories": [
+      "مطعم"
+    ],
+    "fid": "0x1457f735105ec511:0x537977e6b6028f07",
+    "cid": "6014970610109812487",
+    "reviewsCount": 100,
+    "reviewsDistribution": {
+      "oneStar": 8,
+      "twoStar": 1,
+      "threeStar": 10,
+      "fourStar": 9,
+      "fiveStar": 72
+    },
+    "imagesCount": 33,
+    "imageCategories": [],
+    "scrapedAt": "2026-10-09T13:15:51.558Z",
+    "reserveTableUrl": null,
+    "googleFoodUrl": null,
+    "hotelStars": null,
+    "hotelDescription": null,
+    "checkInDate": null,
+    "checkOutDate": null,
+    "hotelAds": [],
+    "popularTimesLiveText": null,
+    "popularTimesLivePercent": null,
+    "popularTimesHistogram": {},
+    "openingHours": [
+      {
+        "day": "الجمعة",
+        "hours": "9ص to 2:30ص"
+      },
+      {
+        "day": "السبت",
+        "hours": "9ص to 2:30ص"
+      },
+      {
+        "day": "الأحد",
+        "hours": "9ص to 2ص"
+      },
+      {
+        "day": "الاثنين",
+        "hours": "9ص to 3ص"
+      },
+      {
+        "day": "الثلاثاء",
+        "hours": "9ص to 2:30ص"
+      },
+      {
+        "day": "الأربعاء",
+        "hours": "9ص to 2:30ص"
+      },
+      {
+        "day": "الخميس",
+        "hours": "9ص to 2:30ص"
+      }
+    ],
+    "wasOpenAtScrapeTime": true,
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "خيارات الخدمة": [
+        {
+          "أماكن جلوس في الهواء الطلق": true
+        },
+        {
+          "التسليم بدون تلامس": true
+        },
+        {
+          "خدمة التوصيل": true
+        },
+        {
+          "خدمة الطلب أثناء القيادة": true
+        },
+        {
+          "طعام سفري": true
+        },
+        {
+          "الجلوس داخل المكان": true
+        }
+      ],
+      "يشتهر بـ": [
+        {
+          "الإفطار": true
+        },
+        {
+          "الغداء": true
+        },
+        {
+          "العشاء": true
+        },
+        {
+          "العشاء الفردي": true
+        }
+      ],
+      "إمكانية الوصول": [
+        {
+          "أماكن جلوس صالحة للكراسي المتحركة": true
+        }
+      ],
+      "الخدمات المقدّمة": [
+        {
+          "طعام حلال": true
+        },
+        {
+          "مأكولات في ساعات متأخرة من الليل": true
+        },
+        {
+          "مطعم وجبات سريعة": true
+        },
+        {
+          "وجبات خفيفة": true
+        }
+      ],
+      "خيارات تناول الطعام": [
+        {
+          "فطور": true
+        },
+        {
+          "الغداء": true
+        },
+        {
+          "العشاء": true
+        },
+        {
+          "خدمات التزويد بالطعام": true
+        },
+        {
+          "أماكن الجلوس": true
+        },
+        {
+          "خدمة المائدة": true
+        }
+      ],
+      "الأجواء": [
+        {
+          "خفيفة": true
+        },
+        {
+          "عصري": true
+        },
+        {
+          "مريح": true
+        },
+        {
+          "هادئ": true
+        }
+      ],
+      "الجمهور": [
+        {
+          "مجموعات": true
+        }
+      ],
+      "الدفعات": [
+        {
+          "الدفع النقدي فقط": true
+        }
+      ],
+      "أطفال": [
+        {
+          "مناسب للأطفال": true
+        }
+      ],
+      "موقف سيارات": [
+        {
+          "موقف سيارات مجاني": true
+        },
+        {
+          "موقف سيارات مجاني في الشارع": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=%D9%83%D8%A8%D8%AF%D8%A9%20%D9%88%D9%85%D8%AE%20%D8%A7%D9%84%D8%B4%D8%B1%D9%82%D8%A7%D9%88%D9%8A&query_place_id=ChIJEcVeEDX3VxQRB48CtuZ3eVM",
+    "searchPageUrl": "https://www.google.com/maps/search/%D9%85%D8%B7%D8%A7%D8%B9%D9%85%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1/@30.0346115,31.837900957226584,12z?hl=ar",
+    "searchString": "مطاعم مدينة نصر",
+    "language": "ar",
+    "rank": 7,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9Tiu1BjAe8ymcNztciaL7ojrCZfYuPaizMzTCva9P4RMlM3cwfQvijnLyHTnfA5ulD6iegtNznynYMw8Mv2Yxf3AZZyYpxwrydG9k-cq2H_XTcX0354ZJ_YZ2U3pU1PAWHho2f0Hg=w408-h271-k-no",
+    "kgmid": "/g/11p5_dr8xc",
+    "businessProfileId": "5211513928444241142"
+  },
+  {
+    "title": "(مطعم انس الدمشقى)",
+    "subTitle": null,
+    "description": null,
+    "ownerDescription": null,
+    "price": null,
+    "categoryName": "مطعم مأكولات سورية",
+    "address": "48 عباس العقاد، المنطقة الأولى، مدينة نصر، محافظة القاهرة‬ 4450320، مصر",
+    "neighborhood": "المنطقة الأولى",
+    "street": "48 عباس العقاد",
+    "city": "مدينة نصر",
+    "postalCode": "4450320",
+    "state": "محافظة القاهرة‬",
+    "countryCode": "EG",
+    "website": "https://anasaldimashky.store/",
+    "phone": "+20 12 23877773",
+    "phoneUnformatted": "+201223877773",
+    "claimThisBusiness": false,
+    "location": {
+      "lat": 30.0613378,
+      "lng": 31.3378728
+    },
+    "locatedIn": null,
+    "floor": null,
+    "plusCode": null,
+    "menu": null,
+    "servicesLink": null,
+    "totalScore": 4.2,
+    "permanentlyClosed": false,
+    "temporarilyClosed": false,
+    "placeId": "ChIJD9h2xWU-WBQRh385Z4vl4VI",
+    "categories": [
+      "مطعم مأكولات سورية",
+      "مطعم مأكولات الشرق الأوسط"
+    ],
+    "fid": "0x14583e65c576d80f:0x52e1e58b67397f87",
+    "cid": "5972306967765024647",
+    "reviewsCount": 6500,
+    "reviewsDistribution": {
+      "oneStar": 428,
+      "twoStar": 212,
+      "threeStar": 655,
+      "fourStar": 1447,
+      "fiveStar": 3758
+    },
+    "imagesCount": 1442,
+    "imageCategories": [],
+    "scrapedAt": "2026-10-09T13:15:51.559Z",
+    "reserveTableUrl": null,
+    "googleFoodUrl": null,
+    "hotelStars": null,
+    "hotelDescription": null,
+    "checkInDate": null,
+    "checkOutDate": null,
+    "hotelAds": [],
+    "popularTimesLiveText": null,
+    "popularTimesLivePercent": null,
+    "popularTimesHistogram": {},
+    "openingHours": [
+      {
+        "day": "الجمعة",
+        "hours": "9ص to 4ص"
+      },
+      {
+        "day": "السبت",
+        "hours": "9ص to 4ص"
+      },
+      {
+        "day": "الأحد",
+        "hours": "9ص to 4ص"
+      },
+      {
+        "day": "الاثنين",
+        "hours": "9ص to 4ص"
+      },
+      {
+        "day": "الثلاثاء",
+        "hours": "9ص to 4ص"
+      },
+      {
+        "day": "الأربعاء",
+        "hours": "9ص to 4ص"
+      },
+      {
+        "day": "الخميس",
+        "hours": "9ص to 4ص"
+      }
+    ],
+    "wasOpenAtScrapeTime": true,
+    "peopleAlsoSearch": [],
+    "placesTags": [],
+    "reviewsTags": [],
+    "additionalInfo": {
+      "خيارات الخدمة": [
+        {
+          "التسليم بدون تلامس": true
+        },
+        {
+          "خدمة التوصيل": true
+        },
+        {
+          "الخدمات في الموقع": true
+        },
+        {
+          "طعام سفري": true
+        },
+        {
+          "الجلوس داخل المكان": true
+        }
+      ],
+      "أهم السمات": [
+        {
+          "تشكيلة شاي رائعة": true
+        },
+        {
+          "حلويات رائعة": true
+        },
+        {
+          "مشروبات كوكتيل رائعة": true
+        }
+      ],
+      "يشتهر بـ": [
+        {
+          "الإفطار": true
+        },
+        {
+          "الغداء": true
+        },
+        {
+          "العشاء": true
+        },
+        {
+          "العشاء الفردي": true
+        }
+      ],
+      "إمكانية الوصول": [
+        {
+          "دورة مياه تستوعب الكراسي المتحركة": true
+        }
+      ],
+      "الخدمات المقدّمة": [
+        {
+          "الكحول": true
+        },
+        {
+          "قهوة": true
+        },
+        {
+          "مأكولات في ساعات متأخرة من الليل": true
+        },
+        {
+          "مشروبات كوكتيل": true
+        },
+        {
+          "مطعم وجبات سريعة": true
+        },
+        {
+          "وجبات خفيفة": true
+        }
+      ],
+      "خيارات تناول الطعام": [
+        {
+          "فطور": true
+        },
+        {
+          "إفطار متأخر": true
+        },
+        {
+          "الغداء": true
+        },
+        {
+          "العشاء": true
+        },
+        {
+          "خدمات التزويد بالطعام": true
+        },
+        {
+          "الحلويات": true
+        },
+        {
+          "خدمة المائدة": true
+        }
+      ],
+      "وسائل الراحة": [
+        {
+          "مرحاض": true
+        }
+      ],
+      "الأجواء": [
+        {
+          "خفيفة": true
+        },
+        {
+          "عالي المستوى": true
+        },
+        {
+          "عصري": true
+        },
+        {
+          "مريح": true
+        },
+        {
+          "هادئ": true
+        }
+      ],
+      "الجمهور": [
+        {
+          "سياح": true
+        },
+        {
+          "طلاب جامعيون": true
+        },
+        {
+          "مجموعات": true
+        }
+      ],
+      "التخطيط": [
+        {
+          "حجوزات الغداء مُوصى بها": true
+        },
+        {
+          "يقبل الحجوزات": true
+        },
+        {
+          "يلزم الانتظار عادةً": true
+        }
+      ],
+      "الدفعات": [
+        {
+          "الدفع على الأجهزة الجوّالة عبر NFC": true
+        },
+        {
+          "بطاقات ائتمان": true
+        },
+        {
+          "بطاقات سحب آلي": true
+        }
+      ],
+      "أطفال": [
+        {
+          "قائمة الأطفال": true
+        },
+        {
+          "مناسب للأطفال": true
+        }
+      ],
+      "موقف سيارات": [
+        {
+          "موقف سيارات مجاني في الشارع": true
+        }
+      ]
+    },
+    "gasPrices": [],
+    "url": "https://www.google.com/maps/search/?api=1&query=(%D9%85%D8%B7%D8%B9%D9%85%20%D8%A7%D9%86%D8%B3%20%D8%A7%D9%84%D8%AF%D9%85%D8%B4%D9%82%D9%89)&query_place_id=ChIJD9h2xWU-WBQRh385Z4vl4VI",
+    "searchPageUrl": "https://www.google.com/maps/search/%D9%85%D8%B7%D8%A7%D8%B9%D9%85%20%D9%85%D8%AF%D9%8A%D9%86%D8%A9%20%D9%86%D8%B5%D8%B1/@30.0346115,31.837900957226584,12z?hl=ar",
+    "searchString": "مطاعم مدينة نصر",
+    "language": "ar",
+    "rank": 8,
+    "isAdvertisement": false,
+    "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TziI1sYLY4hEZwHPnoFrU0t8IA5W_E3S5KTz47sAhN1WJqOO5DHzfeDxhh13Gtn2cJmBAdrf3v9yPKR6x4Nkl-exyuL6B1mwAWYfypjyABiKmItSqaH3-hYe3nHrPL5S1jvbM=w408-h329-k-no",
+    "kgmid": "/g/11d_8p0h2t",
+    "businessProfileId": "16074176074356705448"
+  }
+]
