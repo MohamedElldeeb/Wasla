@@ -1,8 +1,10 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Alert } from '@/components/ui/alert';
+import { StatusBadge } from '@/components/app/status-badge';
 import { useJob } from '@/components/app/use-job';
 import { useT } from '@/components/app/i18n-provider';
 import type { Job } from '@/lib/types';
@@ -10,8 +12,8 @@ import { num } from '@/lib/format';
 
 const num0 = (v: unknown) => (typeof v === 'number' ? v : 0);
 
-/** Active-pipeline state: live progress from Realtime; refreshes the page data when the job finishes. */
-export function JobProgress({ initial, compact = false }: { initial: Job; compact?: boolean }) {
+/** Active-pipeline state: one live progress card per job (title, bar, counts); refreshes the page data when the job finishes. */
+export function JobProgress({ initial }: { initial: Job }) {
   const t = useT();
   const router = useRouter();
   const job = useJob(initial, () => router.refresh());
@@ -25,28 +27,28 @@ export function JobProgress({ initial, compact = false }: { initial: Job; compac
     : job.progress < 70 ? t.campaign.pipeline.clean
     : t.campaign.pipeline.signals;
   return (
-    <div className="flex flex-col gap-2 rounded-xl border bg-card p-4" aria-live="polite">
-      <div className="flex items-center justify-between gap-3 text-sm">
-        <strong>{t.job.types[job.type] ?? job.type}</strong>
-        <span className="text-muted-foreground">{t.job.status[job.status]}</span>
+    <Card className="gap-3" aria-live="polite">
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-h3 text-fg">{t.job.types[job.type] ?? job.type}</h2>
+        <StatusBadge kind="job" status={job.status} />
       </div>
       {active && (
         <>
           <Progress value={Math.max(job.progress, 3)} aria-label={step} />
-          <p className="text-xs text-muted-foreground">{step}</p>
+          <p className="text-body-sm text-fg-muted">{step}</p>
         </>
       )}
-      {!compact && job.type === 'ingest' && (num0(c.found) > 0 || !active) && (
-        <dl className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm sm:grid-cols-4">
-          <div><dt className="text-xs text-muted-foreground">{t.campaign.found}</dt><dd className="font-semibold">{num(num0(c.found))}</dd></div>
-          <div><dt className="text-xs text-muted-foreground">{t.campaign.newLeads}</dt><dd className="font-semibold">{num(num0(c.new))}</dd></div>
-          <div><dt className="text-xs text-muted-foreground">{t.campaign.known}</dt><dd className="font-semibold">{num(num0(c.already_known))}</dd></div>
-          <div><dt className="text-xs text-muted-foreground">{t.campaign.filtered}</dt><dd className="font-semibold">{num(num0(c.filtered_out))}</dd></div>
+      {job.type === 'ingest' && (num0(c.found) > 0 || !active) && (
+        <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {([[t.campaign.found, c.found], [t.campaign.newLeads, c.new], [t.campaign.known, c.already_known], [t.campaign.filtered, c.filtered_out]] as const).map(([label, val]) => (
+            <div key={label}>
+              <dt className="text-caption text-fg-muted">{label}</dt>
+              <dd className="num text-h3 text-fg">{num(num0(val))}</dd>
+            </div>
+          ))}
         </dl>
       )}
-      {job.status === 'failed' && (
-        <Alert variant="destructive" role="alert">{t.jobErrors[job.error ?? ''] ?? t.campaign.jobFailed}</Alert>
-      )}
-    </div>
+      {job.status === 'failed' && <Alert variant="danger" role="alert">{t.jobErrors[job.error ?? ''] ?? t.campaign.jobFailed}</Alert>}
+    </Card>
   );
 }

@@ -6,8 +6,10 @@ export default async function SignupPage() {
   const { t } = await getT();
   return (
     <>
-      <h1 className="mb-1 text-2xl">{t.auth.signupTitle}</h1>
-      <p className="mb-6 text-sm text-muted-foreground">{t.auth.signupSub}</p>
+      <div>
+        <h1 className="text-h1 text-fg">{t.auth.signupTitle}</h1>
+        <p className="mt-1 text-body text-fg-muted">{t.auth.signupSub}</p>
+      </div>
       <AuthForm mode="signup" action={signup} />
     </>
   );

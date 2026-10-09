@@ -10,12 +10,12 @@ export function DemoButton() {
   const t = useT();
   const [state, run, pending] = useActionState(startDemo, undefined);
   return (
-    <form action={run} className="flex flex-col items-start gap-2">
-      <Button type="submit" variant="cta" size="lg" disabled={pending} data-testid="try-demo">
+    <form action={run} className="flex flex-col gap-2">
+      <Button type="submit" variant="primary" size="lg" loading={pending} data-testid="try-demo">
         {pending ? t.landing.demoBusy : t.landing.tryDemo}
       </Button>
-      <span className="text-xs text-muted-foreground">{t.landing.tryDemoHint}</span>
-      {state?.error && <Alert variant="destructive" role="alert">{t.landing.demoFailed}</Alert>}
+      <span className="text-body-sm text-fg-muted">{t.landing.tryDemoHint}</span>
+      {state?.error && <Alert variant="danger" role="alert">{t.landing.demoFailed}</Alert>}
     </form>
   );
 }

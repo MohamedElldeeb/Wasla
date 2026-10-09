@@ -1,7 +1,7 @@
 import { requireOrg } from '@/lib/org';
 import { getT } from '@/lib/i18n/server';
-import { regionsToText } from '@/lib/regions';
 import { CampaignWizard } from '@/components/app/campaign-wizard';
+import { PageHeader } from '@/components/app/page-header';
 import type { SignalDefinition } from '@/lib/types';
 
 export default async function NewCampaignPage() {
@@ -13,13 +13,13 @@ export default async function NewCampaignPage() {
     supabase.from('campaign_templates').select('code,name_ar,parameters,offer_text').order('created_at'),
   ]);
   return (
-    <div className="mx-auto flex max-w-3xl flex-col gap-6">
-      <h1 className="text-2xl">{t.wizard.title}</h1>
+    <div className="flex flex-col gap-6">
+      <PageHeader title={t.wizard.title} />
       <CampaignWizard
         balance={Number(balance ?? 0)}
         signalDefs={(defs ?? []) as SignalDefinition[]}
         templates={(templates ?? []) as never}
-        orgRegions={regionsToText(org.offer_profile.regions)}
+        orgRegions={org.offer_profile.regions ?? []}
       />
     </div>
   );
