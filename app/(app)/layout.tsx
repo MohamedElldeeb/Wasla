@@ -1,40 +1,29 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { Coins } from 'lucide-react';
 import { requireOrg } from '@/lib/org';
-import { logout } from '@/app/actions/auth';
-import { Button } from '@/components/ui/button';
-import { LanguageToggle } from '@/components/app/language-toggle';
-import { NavLinks } from '@/components/app/nav-links';
 import { getT } from '@/lib/i18n/server';
-import { num } from '@/lib/format';
+import { BottomNav, MobileTopBar, Sidebar } from '@/components/app/app-nav';
 
+// App shell (DESIGN.md 4.3): mobile = top bar + bottom navigation; desktop = start-side sidebar, no top bar.
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-  const { supabase, org } = await requireOrg();
+  const { supabase, org, user } = await requireOrg();
   const { t } = await getT();
-  const { data: balance } = await supabase.rpc('org_credit_balance', { org: org.id });
-  const ghost = 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground';
+  const { data } = await supabase.rpc('org_credit_balance', { org: org.id });
+  const shell = {
+    balance: Number(data ?? 0),
+    orgName: org.name,
+    role: org.role,
+    initial: (org.name || user.email || 'W').trim().charAt(0).toUpperCase(),
+  };
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-30 border-b bg-sidebar text-sidebar-foreground">
-        <div className="mx-auto flex h-16 w-full max-w-5xl items-center gap-2 px-4 sm:gap-3">
-          <Link href="/dashboard" aria-label={t.brand.name} className="shrink-0">
-            <Image src="/brand/wasla-logo-mark.svg" alt="" width={36} height={36} className="size-9 rounded-lg" />
-          </Link>
-          <NavLinks />
-          <span className="hidden max-w-40 truncate text-xs opacity-80 md:inline">{org.name}</span>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-sidebar-accent px-3 py-1.5 text-sm" title={t.common.credits}>
-            <Coins className="size-4" aria-hidden />
-            <b>{num(Number(balance ?? 0))}</b>
-            <span className="hidden text-xs opacity-80 sm:inline">{t.common.creditUnit}</span>
-          </span>
-          <LanguageToggle className={ghost} />
-          <form action={logout}>
-            <Button type="submit" variant="ghost" size="sm" className={ghost}>{t.common.signOut}</Button>
-          </form>
-        </div>
-      </header>
-      <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">{children}</main>
+    <div className="min-h-screen lg:flex">
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-control focus:bg-surface focus:px-4 focus:py-3 focus:text-fg">{t.shell.skip}</a>
+      <Sidebar {...shell} />
+      <div className="flex min-w-0 flex-1 flex-col">
+        <MobileTopBar {...shell} />
+        <main id="main" className="mx-auto w-full max-w-[1200px] flex-1 px-4 pb-[calc(64px+env(safe-area-inset-bottom)+24px)] pt-6 md:px-6 lg:px-8 lg:pb-12 lg:pt-8">
+          {children}
+        </main>
+      </div>
+      <BottomNav />
     </div>
   );
 }

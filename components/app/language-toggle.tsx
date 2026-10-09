@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { setLocale } from '@/app/actions/locale';
 import { useLocale, useT } from '@/components/app/i18n-provider';
 
-export function LanguageToggle({ className }: { className?: string }) {
+/** Shows the OTHER language's name (in its own language). Used in the auth/landing corner and inside the user menu. */
+export function LanguageToggle({ className, variant = 'ghost' }: { className?: string; variant?: 'ghost' | 'secondary' }) {
   const locale = useLocale();
   const t = useT();
   const router = useRouter();
@@ -15,10 +16,9 @@ export function LanguageToggle({ className }: { className?: string }) {
   return (
     <Button
       type="button"
-      variant="ghost"
-      size="sm"
+      variant={variant}
       className={className}
-      disabled={pending}
+      loading={pending}
       title={t.lang.label}
       onClick={() => start(async () => { await setLocale(locale === 'ar' ? 'en' : 'ar'); router.refresh(); })}
     >

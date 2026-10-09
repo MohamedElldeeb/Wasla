@@ -37,6 +37,9 @@
   --info: var(--petrol-600); --info-soft: var(--petrol-50);
   --overlay: rgb(12 17 20 / 0.5);
 
+  /* third-party brand marks (not part of the Wasla palette) */
+  --mark-google-blue: #4285f4; --mark-google-green: #34a853; --mark-google-yellow: #fbbc05; --mark-google-red: #ea4335;
+
   /* 4.4 shape and depth */
   --radius-control: 8px;
   --radius-card: 12px;
