@@ -95,6 +95,7 @@ export type CampaignLead = {
   id: string;
   opportunity_score: number | null;
   score_reasons: string[];
+  score_reason_keys: { k: string; s: 'high' | 'low'; label?: string }[];
   leads: Lead;
 };
 

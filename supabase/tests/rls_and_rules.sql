@@ -124,7 +124,7 @@ begin
     (org_a, lead_a,    'size_proxy',  '{"value":1}', 'test'),
     (org_a, lead2,     'has_website', '{"value":1}', 'test'),
     (org_a, lead2,     'size_proxy',  '{"value":0}', 'test'),
-    (org_a, lead_land, 'review_insights', '{"value":0.9,"label_ar":"الريفيوهات بتشتكي من التأخير"}', 'test');
+    (org_a, lead_land, 'review_insights', '{"value":0.9,"label_ar":"التقييمات تشكو من التأخير"}', 'test');
   perform pg_temp.ok(pg_temp.err('postgres', null, format('insert into public.lead_signals (organization_id, lead_id, signal_key, normalized, source) values (%L, %L, %L, %L, %L)', org_a, lead_a, 'has_website', '{"value":0.5}', 'dup')) like '23505%', 'one value per lead and signal');
   perform pg_temp.ok(pg_temp.err('postgres', null, format('insert into public.lead_signals (organization_id, lead_id, signal_key, normalized, source) values (%L, %L, %L, %L, %L)', org_a, lead_a, 'review_insights', '{"value":2}', 'bad')) like '23514%', 'normalized value must be within 0..1');
   perform pg_temp.ok(pg_temp.q('authenticated', a, 'select count(*) from public.lead_signals') = '5', 'A sees own signals');
@@ -135,11 +135,13 @@ begin
   perform pg_temp.ok(pg_temp.err('authenticated', b, format('select public.recompute_campaign_scores(%L)', camp_a)) like '42501%', 'B cannot score A campaign');
   perform pg_temp.ok(pg_temp.q('authenticated', a, format('select public.recompute_campaign_scores(%L)', camp_a)) = '3', 'scored all campaign leads');
   perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = 100, 'no website + big business = 100');
-  perform pg_temp.ok((select score_reasons from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = '["مالوش موقع","بيزنس كبير أو عنده فروع"]'::jsonb, 'reasons ordered by contribution');
+  perform pg_temp.ok((select score_reasons from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = '["لا يملك موقعًا إلكترونيًا","نشاط كبير أو متعدد الفروع"]'::jsonb, 'reasons ordered by contribution');
+  perform pg_temp.ok((select score_reason_keys from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = '[{"k":"has_website","s":"low"},{"k":"size_proxy","s":"high"}]'::jsonb, 'reason keys are localizable');
   perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = lead2 and campaign_id = camp_a) = 0, 'has website + small = 0 for this campaign');
   perform pg_temp.ok((select score_reasons from public.campaign_leads where lead_id = lead2 and campaign_id = camp_a) = '[]'::jsonb, 'no favorable reasons');
   perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = lead_land and campaign_id = camp_a) = 90, 'custom label signal scores');
-  perform pg_temp.ok((select score_reasons ->> 0 from public.campaign_leads where lead_id = lead_land and campaign_id = camp_a) = 'الريفيوهات بتشتكي من التأخير', 'custom reason label used');
+  perform pg_temp.ok((select score_reasons ->> 0 from public.campaign_leads where lead_id = lead_land and campaign_id = camp_a) = 'التقييمات تشكو من التأخير', 'custom reason label used');
+  perform pg_temp.ok((select score_reason_keys -> 0 ->> 'label' from public.campaign_leads where lead_id = lead_land and campaign_id = camp_a) = 'التقييمات تشكو من التأخير', 'custom label kept in keys');
   -- Same signals, opposite offer: the weight sign flips the meaning
   perform pg_temp.q('authenticated', a, format('update public.campaigns set parameters = %L where id = %L', '{"signals":[{"key":"has_website","weight":60},{"key":"size_proxy","weight":30}]}', camp_a));
   perform pg_temp.q('authenticated', a, format('select public.recompute_campaign_scores(%L)', camp_a));

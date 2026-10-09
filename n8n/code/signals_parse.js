@@ -23,7 +23,7 @@ llmGroups.forEach((g, j) => {
   try { d = JSON.parse((r.body.choices[0]?.message?.content || '').replace(/^```(?:json)?/i, '').replace(/```$/, '').trim()); } catch (e) { return; }
   const top = typeof d.top_complaint_ar === 'string' && d.top_complaint_ar.trim() ? d.top_complaint_ar.trim().slice(0, 40) : null;
   const normalized = { value: Math.round(clamp01(d.complaint_level) * 1000) / 1000 };
-  if (top) normalized.label_ar = `الريفيوهات بتشتكي من ${top}`;
+  if (top) normalized.label_ar = `التقييمات تشكو من ${top}`;
   rows.push({
     organization_id: body.organization_id,
     lead_id: g.lead_id,

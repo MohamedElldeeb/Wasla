@@ -1,15 +1,13 @@
-import type { Metadata } from 'next';
 import { AuthForm } from '@/components/app/auth-form';
 import { signup } from '@/app/actions/auth';
-import { ar } from '@/lib/i18n/ar';
+import { getT } from '@/lib/i18n/server';
 
-export const metadata: Metadata = { title: ar.auth.signup };
-
-export default function SignupPage() {
+export default async function SignupPage() {
+  const { t } = await getT();
   return (
     <>
-      <h1 className="mb-1 text-xl">{ar.auth.signupTitle}</h1>
-      <p className="mb-5 text-sm text-muted-foreground">{ar.auth.signupSub}</p>
+      <h1 className="mb-1 text-2xl">{t.auth.signupTitle}</h1>
+      <p className="mb-6 text-sm text-muted-foreground">{t.auth.signupSub}</p>
       <AuthForm mode="signup" action={signup} />
     </>
   );

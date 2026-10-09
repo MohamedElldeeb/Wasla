@@ -1,6 +1,6 @@
 # USER_FLOW_UIUX.md — Wasla (وصلة)
 
-Companion to `specs.md` v2.0 §5, §10. All UI copy is Arabic (Egyptian colloquial, respectful, short). Examples below are illustrative; final strings live in `lib/i18n/ar.json`.
+Companion to `specs.md` v2.0 §5, §10. UI copy is bilingual: simple Modern Standard Arabic (default, RTL) and English (LTR), switched from the header. Outreach messages written for leads stay Egyptian Arabic. Final strings live in `lib/i18n/ar.ts` and `en.ts`.
 
 ## 1. End-to-end flow
 
@@ -20,11 +20,11 @@ Admin (separate): plan activation, credit adjustments, suspend
 3. Land on `/` dashboard with a single clear CTA: "ابدأ أول حملة".
 
 ### 1.2 Campaign setup and parameters (`/campaigns/new`)
-Stepper (one form, autosaved as `draft`):
+Three-step wizard (البداية / الجمهور المستهدف / التقييم والرسالة · Start / Target audience / Scoring and message), with Back/Next and validation per step:
 1. **Start**: name + either **"خلي وصلة تقترح"** (AI planner: one job, 2 credits, returns an editable draft of categories, keywords, locations, signals with weight + one-line reason, and 2–3 angles; every suggestion can be accepted, edited, or ignored; the planner never starts a campaign) or pick an example template (agency→restaurants, agency→clinics, packaging→cafes, accounting→small businesses) or blank.
 2. **Who to find**: keywords (tag input, Arabic/English), locations (governorate → city → district multi-select), filters (min rating, min reviews, must have phone / mobile / website, exclude closed, categories include/exclude), `max_results`, `enrich_emails` toggle.
 3. **How to write**: channel (واتساب / ماسنجر / إيميل; locked options show plan badge), tone (ودود / رسمي / مباشر), offer override (optional).
-**Signals** section: pick signals from the library with a weight slider (-100..100; negative rewards the opposite state, e.g. "مالوش موقع"); free signals are marked, paid ones show credits per lead.
+**Scoring** (step 3): for each signal the user picks the preferred state in plain words ("Doesn't matter" / the signal's high state / its low state, e.g. "has a website" vs "has no website") and an importance (low / medium / high). These map to the signed weights (±30/60/100) stored on the campaign. Free signals are marked, paid ones show credits per lead.
 A live **cost estimate panel** (sticky) shows: queries count (keywords × districts), expected leads cap, credits to reserve, current balance. "شغّل الحملة" is disabled when the reservation would make the balance negative, with an upgrade link.
 
 ### 1.3 Ingestion and enrichment (live)

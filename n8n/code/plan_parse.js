@@ -6,14 +6,14 @@ const body = $('Webhook').first().json.body;
 
 const fail = (msg) => ({ json: { ok: false, error: msg, job_id: body.job_id } });
 if (!res || res.statusCode < 200 || res.statusCode >= 300 || !res.body || !res.body.choices) {
-  return [fail('ماقدرناش نكلم الذكاء الاصطناعي دلوقتي. جرّب تاني بعد شوية.')];
+  return [fail('planner_unavailable')];
 }
 const raw = res.body.choices[0]?.message?.content || '';
 let data;
 try {
   data = JSON.parse(raw.replace(/^```(?:json)?/i, '').replace(/```$/, '').trim());
 } catch (e) {
-  return [fail('الخطة طلعت بشكل مش مفهوم. جرّب تاني.')];
+  return [fail('planner_bad_output')];
 }
 
 const str = (v, n) => (typeof v === 'string' ? v.trim().slice(0, n) : '');
@@ -44,7 +44,7 @@ const draft = {
     .filter((a) => a.title_ar)
     .slice(0, 3),
 };
-if (!draft.keywords.length) return [fail('الخطة مطلعتش كلمات بحث. جرّب تاني أو عدّل وصف اللي بتبيعه.')];
+if (!draft.keywords.length) return [fail('planner_no_keywords')];
 
 const u = res.body.usage || {};
 return [{

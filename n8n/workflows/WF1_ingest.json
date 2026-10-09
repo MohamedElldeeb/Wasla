@@ -408,7 +408,7 @@
         "sendHeaders": false,
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ p_job_id: $(\"Webhook\").first().json.body.job_id, p_credits_used: 0, p_status: $(\"Collect\").first().json.allFailed ? \"failed\" : \"succeeded\", p_error: $(\"Collect\").first().json.allFailed ? \"البحث على خرائط جوجل ماشتغلش. جرّب تاني بعد شوية.\" : null, p_counts: { found: 0, lead_cap: $(\"Plan queries\").first().json.leadCap } }) }}",
+        "jsonBody": "={{ JSON.stringify({ p_job_id: $(\"Webhook\").first().json.body.job_id, p_credits_used: 0, p_status: $(\"Collect\").first().json.allFailed ? \"failed\" : \"succeeded\", p_error: $(\"Collect\").first().json.allFailed ? \"maps_failed\" : null, p_counts: { found: 0, lead_cap: $(\"Plan queries\").first().json.leadCap } }) }}",
         "options": {
           "response": {
             "response": {
@@ -445,7 +445,7 @@
         "sendHeaders": false,
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ p_job_id: $(\"Webhook\").first().json.body.job_id, p_credits_used: 0, p_status: \"failed\", p_error: \"الحملة محتاجة كلمات بحث ومنطقة على الأقل.\" }) }}",
+        "jsonBody": "={{ JSON.stringify({ p_job_id: $(\"Webhook\").first().json.body.job_id, p_credits_used: 0, p_status: \"failed\", p_error: \"no_queries\" }) }}",
         "options": {
           "response": {
             "response": {

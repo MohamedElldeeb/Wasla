@@ -147,6 +147,7 @@
   }
   html {
     @apply font-sans;
+    font-size: 106.25%; /* 17px base: easier reading for Arabic */
   }
   h1, h2, h3, h4 {
     font-weight: 700;

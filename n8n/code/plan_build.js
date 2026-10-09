@@ -4,6 +4,7 @@ const body = $('Webhook').first().json.body;
 const org = $('Get org').first().json;
 const defs = $('Get signals').all().map((i) => i.json);
 
+const english = body.locale === 'en';
 const override = body.offer_override && String(body.offer_override).trim();
 const offer = override ? { offer_override: override, regions: (org.offer_profile || {}).regions || [] } : (org.offer_profile || {});
 
@@ -27,7 +28,10 @@ Signals you may use (use ONLY these keys):
 ${signalList}
 
 Signal weights are signed numbers from -100 to 100. A positive weight rewards leads where the signal value is HIGH; a negative weight rewards leads where it is LOW. Choose the sign according to this company's offer (the same signal can mean opposite things for different offers). reason_ar is one short Arabic sentence (max 70 characters) explaining why this signal about a prospect matters for THIS seller's offer.
-Write all Arabic in simple, natural Egyptian colloquial style. Output JSON only.`;
+${english
+  ? 'Write reason_ar, title_ar and description_ar in clear, simple English (the field names keep the _ar suffix for compatibility). Categories and keywords stay in Arabic or English as people would type them in Google Maps.'
+  : 'Write reason_ar, title_ar and description_ar and categories in clear, simple Modern Standard Arabic (no slang, no dialect). Keywords may mix Arabic and English as people would type them in Google Maps.'}
+Output JSON only.`;
 
 const user = `Company offer profile (JSON):\n${JSON.stringify(offer)}`;
 

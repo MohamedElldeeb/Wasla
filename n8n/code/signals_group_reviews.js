@@ -23,7 +23,7 @@ for (const r of res.body) {
 }
 
 const SYSTEM = `You summarize Google Maps reviews of a business. Return ONE JSON object only:
-{"summary_ar": string (max 160 chars, Egyptian colloquial Arabic), "praise": [string] (max 3, short Arabic), "complaints": [string] (max 3, short Arabic), "complaint_level": number 0..1 (0 = no complaints, 1 = mostly complaints), "top_complaint_ar": string|null (the single most repeated complaint as a short Arabic noun phrase of up to 4 words, or null if none)}.
+{"summary_ar": string (max 160 chars, simple Modern Standard Arabic), "praise": [string] (max 3, short Arabic), "complaints": [string] (max 3, short Arabic), "complaint_level": number 0..1 (0 = no complaints, 1 = mostly complaints), "top_complaint_ar": string|null (the single most repeated complaint as a short Modern Standard Arabic noun phrase of up to 4 words, or null if none)}.
 Use ONLY what the reviews say. Do not invent anything.`;
 
 const items = [];

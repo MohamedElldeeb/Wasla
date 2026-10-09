@@ -18,7 +18,7 @@ return [{
     job_id: body.job_id,
     status,
     credits_used: created,
-    error: status === 'failed' ? 'ماقدرناش نكتب الرسائل دلوقتي. جرّب تاني بعد شوية.' : null,
+    error: status === 'failed' ? 'generation_failed' : null,
     counts: { ...(job.counts || {}), generated: created, failed, failure_reasons: reasons },
     cost_usd: Math.round(cost * 1e6) / 1e6,
     model,
