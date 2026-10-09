@@ -18,6 +18,8 @@ Any B2B company that sells to other businesses can use Wasla (tax/accounting fir
 - Signal definitions, credit costs, and reason templates live in the `signal_definitions` table (config as data), not in code.
 - Prompts for the planner and the message writer must be offer-agnostic: no example inside a prompt may leak a segment into another org's output.
 
+> **Every UI change must follow [`DESIGN.md`](DESIGN.md).** It replaces all earlier styling decisions (colors, type, spacing, components, screens, RTL, motion) and has an acceptance checklist (section 9). Use its semantic tokens only; no hardcoded colors, font sizes, radii or shadows in components.
+
 ## 1. Hard rules (non-negotiable)
 
 1. No automated sending on WhatsApp/Messenger. No WhatsApp Web bridges, unofficial libraries, or WhatsApp MCP servers. The user's own tap sends.
