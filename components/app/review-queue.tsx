@@ -95,7 +95,7 @@ function MessageCard({ m, onSeen, onChanged }: { m: Message; onSeen: (id: string
         <div className="flex flex-col gap-2 rounded-lg bg-muted/60 p-3">
           <div className="flex flex-wrap gap-2">
             {r.chips.map((c) => (
-              <button key={c} type="button" onClick={() => setInstruction(c)} className="rounded-full border bg-background px-3 py-1.5 text-xs hover:bg-accent">{c}</button>
+              <button key={c} type="button" onClick={() => setInstruction(c)} className="rounded-full border bg-background px-3 py-1.5 text-xs hover:bg-primary-soft">{c}</button>
             ))}
           </div>
           <Input value={instruction} onChange={(e) => setInstruction(e.target.value)} placeholder={r.instruction} maxLength={200} dir="auto" />

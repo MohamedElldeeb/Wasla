@@ -30,7 +30,7 @@ export function OnboardingForm() {
             <button
               key={e.label}
               type="button"
-              className="rounded-full border bg-background px-3 py-1.5 text-xs hover:bg-accent"
+              className="rounded-full border bg-background px-3 py-1.5 text-xs hover:bg-primary-soft"
               onClick={() => {
                 if (sellRef.current) sellRef.current.value = e.sell;
                 if (buyerRef.current) buyerRef.current.value = e.buyer;

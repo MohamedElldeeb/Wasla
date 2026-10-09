@@ -41,7 +41,7 @@ function Segmented<T extends string | number>({ value, options, onChange, label 
           role="radio"
           aria-checked={value === o.v}
           onClick={() => onChange(o.v)}
-          className={cn('rounded-lg border px-3 py-2 text-sm transition-colors', value === o.v ? 'border-primary bg-primary text-primary-foreground' : 'bg-background hover:bg-accent')}
+          className={cn('rounded-lg border px-3 py-2 text-sm transition-colors', value === o.v ? 'border-primary bg-primary text-primary-foreground' : 'bg-background hover:bg-primary-soft')}
         >
           {o.label}
         </button>
@@ -216,7 +216,7 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
               <Input id="name" value={name} onChange={(e) => setName(e.target.value)} maxLength={120} placeholder={w.nameHint} className="h-11" />
             </div>
 
-            <div className="flex flex-col gap-3 rounded-xl bg-accent/50 p-4">
+            <div className="flex flex-col gap-3 rounded-xl bg-primary-soft p-4">
               <h2 className="flex items-center gap-2 text-base"><Sparkles className="size-5 text-cta" aria-hidden />{w.plannerTitle}</h2>
               <p className="text-sm text-muted-foreground">{w.plannerBody}</p>
               <div className="flex flex-wrap items-center gap-3">
@@ -232,7 +232,7 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-sm text-muted-foreground">{w.templates}</span>
                 {templates.map((tpl) => (
-                  <button key={tpl.code} type="button" onClick={() => applyTemplate(tpl)} className="rounded-full border bg-background px-3 py-1.5 text-sm hover:bg-accent">
+                  <button key={tpl.code} type="button" onClick={() => applyTemplate(tpl)} className="rounded-full border bg-background px-3 py-1.5 text-sm hover:bg-primary-soft">
                     {t.templates[tpl.code] ?? tpl.name_ar}
                   </button>
                 ))}
@@ -351,7 +351,7 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
                 <p className="text-sm text-muted-foreground">{w.anglesHint}</p>
                 {angles.map((a, i) => (
                   <button key={i} type="button" onClick={() => setAngleIdx(angleIdx === i ? null : i)} dir="auto"
-                    className={cn('rounded-lg border p-3 text-start text-sm transition', angleIdx === i ? 'border-primary bg-accent' : 'hover:bg-muted/60')}>
+                    className={cn('rounded-lg border p-3 text-start text-sm transition', angleIdx === i ? 'border-primary bg-primary-soft' : 'hover:bg-muted/60')}>
                     <strong>{a.title_ar}</strong>
                     <span className="block text-muted-foreground">{a.description_ar}</span>
                   </button>
@@ -365,7 +365,7 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
               <p className="text-xs text-muted-foreground">{w.offerOverrideHint}</p>
             </div>
 
-            <div className="flex flex-col gap-3 rounded-xl bg-accent/50 p-4">
+            <div className="flex flex-col gap-3 rounded-xl bg-primary-soft p-4">
               <h2 className="text-base">{w.estimate}</h2>
               <dl className="grid gap-1.5 text-sm">
                 <div className="flex justify-between"><dt className="text-muted-foreground">{w.estLeads}</dt><dd className="font-semibold">{num(maxResults)}</dd></div>
