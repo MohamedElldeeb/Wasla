@@ -5,9 +5,11 @@ import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 
 const code = (f) => {
-  let s = readFileSync(new URL(`./code/${f}`, import.meta.url), 'utf8');
+  // Normalize line endings so the generated JSON is identical on Windows and Linux (CI checks for drift).
+  const lf = (t) => t.replace(/\r\n/g, '\n');
+  let s = lf(readFileSync(new URL(`./code/${f}`, import.meta.url), 'utf8'));
   if (s.includes('/*__PHONE__*/')) {
-    const phone = readFileSync(new URL('../lib/phone/egypt.mjs', import.meta.url), 'utf8').replace(/^export /gm, '');
+    const phone = lf(readFileSync(new URL('../lib/phone/egypt.mjs', import.meta.url), 'utf8')).replace(/^export /gm, '');
     s = s.replace('/*__PHONE__*/', phone);
   }
   return s;
