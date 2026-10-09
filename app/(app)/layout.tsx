@@ -18,7 +18,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-30 border-b bg-sidebar text-sidebar-foreground">
         <div className="mx-auto flex h-16 w-full max-w-5xl items-center gap-2 px-4 sm:gap-3">
-          <Link href="/" aria-label={t.brand.name} className="shrink-0">
+          <Link href="/dashboard" aria-label={t.brand.name} className="shrink-0">
             <Image src="/brand/wasla-logo-mark.svg" alt="" width={36} height={36} className="size-9 rounded-lg" />
           </Link>
           <NavLinks />

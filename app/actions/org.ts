@@ -24,5 +24,5 @@ export async function createOrganization(_: OnboardingState, formData: FormData)
   const { data, error } = await supabase.rpc('create_organization', { p_name: name, p_offer_profile: profile });
   if (error || !data) return { error: t.onboarding.errorGeneric };
   (await cookies()).set('wasla_org', data as string, { path: '/', httpOnly: true, sameSite: 'lax', maxAge: 60 * 60 * 24 * 365 });
-  redirect('/');
+  redirect('/dashboard');
 }

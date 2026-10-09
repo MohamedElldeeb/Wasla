@@ -9,7 +9,7 @@ export function NavLinks() {
   const t = useT();
   const path = usePathname();
   const items = [
-    { href: '/', label: t.nav.dashboard, active: path === '/' },
+    { href: '/dashboard', label: t.nav.dashboard, active: path === '/dashboard' },
     { href: '/campaigns', label: t.nav.campaigns, active: path.startsWith('/campaigns') },
   ];
   return (

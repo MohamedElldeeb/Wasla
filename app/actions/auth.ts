@@ -14,7 +14,7 @@ export async function login(_: AuthState, formData: FormData): Promise<AuthState
     password: String(formData.get('password') ?? ''),
   });
   if (error) return { error: t.auth.badCredentials };
-  redirect('/');
+  redirect('/dashboard');
 }
 
 export async function signup(_: AuthState, formData: FormData): Promise<AuthState> {

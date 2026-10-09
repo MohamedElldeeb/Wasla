@@ -18,6 +18,9 @@ Items that are deliberately relaxed for the pilot and MUST be reverted or comple
 - [ ] Point n8n workflows at the production Supabase project (credentials in n8n's store) and redeploy with `npm run n8n:deploy`.
 - [ ] n8n: turn off saving of successful execution data / set pruning (executions contain lead data; Egypt PDPL).
 
+## Pilot-only features to remove or lock before launch
+- [ ] One-click **demo accounts** (`app/actions/demo.ts`, landing page button): throw-away `@demo.wasla.app` users, each gets 50 free credits (limited to `DEMO_MAX_PER_HOUR`, default 20). Set `DEMO_ENABLED=false` in Vercel (or delete the feature), and clean up old demo users and their organizations.
+
 ## Product
 - [ ] Fill the OPEN decisions: plan prices (EGP), final credit costs, Apollo key model, digits style, `WASLA_SALES_WHATSAPP`.
 - [ ] Confirm the default OpenRouter model after a quality comparison on Egyptian Arabic.
