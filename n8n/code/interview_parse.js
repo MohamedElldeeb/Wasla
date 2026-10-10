@@ -17,6 +17,8 @@ if (done) {
     problems_we_solve: str(p.problems_we_solve, 600),
     proof_points: str(p.proof_points, 600),
     regions: (Array.isArray(p.regions) ? p.regions : []).slice(0, 8).map((r) => ({ governorate: str(r && r.governorate, 60), city: str(r && r.city, 60) })).filter((r) => r.governorate || r.city),
+    cta_offer: str(p.cta_offer, 300),
+    sender_name: str(p.sender_name, 60),
     example_customers: (Array.isArray(p.example_customers) ? p.example_customers : []).slice(0, 6).map((x) => str(x, 80)).filter(Boolean),
   };
 }

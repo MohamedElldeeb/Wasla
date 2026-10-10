@@ -4,7 +4,7 @@
 // Usage: node --env-file=.env.local scripts/fixtures-run.mjs
 import { readFileSync, writeFileSync } from 'node:fs';
 import { PGlite } from '@electric-sql/pglite';
-import { runNode } from '../tests/helpers/n8n-sim.mjs';
+import { runNode, resetStatic } from '../tests/helpers/n8n-sim.mjs';
 import { computeFacts, signalValues, buildOpportunities, scoreLead, globalExclusion, categoryMatch, reviewInsightValue, SCORE } from '../lib/insights/core.mjs';
 
 const KEY = process.env.OPENROUTER_API_KEY;
@@ -19,6 +19,8 @@ const OFFER_PROFILE = {
   ideal_customer: 'وكالات تسويق ودعاية وإعلان ومستقلين في مصر',
   problems_we_solve: 'إن الوكالة تلاقي عملاء جدد ومناسبين وتتواصل معاهم بسرعة',
   proof_points: '',
+  cta_offer: 'أبعتلكم 10 شركات مناسبة لشغلكم ببلاش',
+  sender_name: 'محمد',
   regions: [{ governorate: 'القاهرة' }],
 };
 
@@ -61,9 +63,10 @@ const defs = (await db.query('select key,name_ar,reason_low_ar,reason_high_ar,ba
 
 // 2. the planner (real WF0 code, real LLM) ---------------------------------------------------------------
 console.log('planner…');
-const planBuilt = await runNode('plan_build.js', { nodes: { Webhook: [WEBHOOK], 'Get org': [{ name: 'Wasla', offer_profile: OFFER_PROFILE }], 'Get signals': defs, 'Get negatives': [] } });
+const planBuilt = await runNode('plan_build.js', { nodes: { Webhook: [WEBHOOK], 'Get org': [{ name: 'وصلة', offer_profile: OFFER_PROFILE }], 'Get signals': defs, 'Get negatives': [] } });
 const [planLlm] = await llm(planBuilt);
 const planned = await runNode('plan_parse.js', { nodes: { Webhook: [WEBHOOK], 'Get signals': defs }, input: [planLlm.json] });
+resetStatic();
 if (!planned[0].json.ok) throw new Error('planner failed: ' + planned[0].json.error);
 const draft = planned[0].json.draft;
 const params = {
@@ -72,7 +75,7 @@ const params = {
   channel: 'whatsapp', tone: 'friendly', max_results: 20, angle: draft.angles[0] || null,
 };
 const campaign = { id: 'camp', parameters: params };
-const org = { name: 'Wasla', offer_profile: OFFER_PROFILE };
+const org = { name: 'وصلة', offer_profile: OFFER_PROFILE };
 
 const results = { planner: { model: PLANNER, draft }, cities: {} };
 
@@ -100,19 +103,9 @@ async function runCity(city) {
   const kept = fitRun[0].json.p_leads; // passed gates and fit check (fit or maybe)
   const droppedFit = fitRun[0].json.dropped;
 
-  // second opinion on ALL places (including those the gates removed)
-  const askAll = places.map((p, i) => ({ i, name: p.title, categories: [p.categoryName, ...(p.categories || [])].filter(Boolean).slice(0, 5), website: p.website ? 'yes' : 'no', area: [p.neighborhood, p.city].filter(Boolean).join(', '), rating: p.totalScore ?? null, reviews: p.reviewsCount ?? null }));
-  const { fitSystemPrompt, llmRequest, parseLlm } = await import('../lib/insights/core.mjs');
-  const system = fitSystemPrompt({ ideal: params.ideal_lead_description, offerText: OFFER_PROFILE.what_we_sell, negatives: [] });
-  const labels = new Map();
-  for (let k = 0; k < askAll.length; k += 10) {
-    const part = askAll.slice(k, k + 10);
-    const r = await chat(llmRequest({ system, user: { places: part }, model: PLANNER, fallback: FALLBACK }));
-    calls.n++; calls.cost += Number(r.body?.usage?.cost) || 0;
-    const { data } = parseLlm(r);
-    for (const x of data?.results || []) labels.set(Number(x.i), x);
-  }
-  const placeTable = places.map((p, i) => ({ name: p.title, category: p.categoryName, rating: p.totalScore, reviews: p.reviewsCount, claim: p.claimThisBusiness, gate: gate.get(p.placeId), fit: labels.get(i) || null, placeId: p.placeId }));
+  // ONE source of truth: the label the pipeline itself used (fit_apply.judged). Places the gates removed never reached the fit check.
+  const judgedBy = new Map(fitRun[0].json.judged.map((x) => [x.place_id, x]));
+  const placeTable = places.map((p) => ({ name: p.title, category: p.categoryName, categories: p.categories || [], rating: p.totalScore, reviews: p.reviewsCount, claim: p.claimThisBusiness, gate: gate.get(p.placeId), decision: judgedBy.get(p.placeId) || null, placeId: p.placeId }));
 
   // 3b. signals, facts, opportunities for the kept leads (real WF2b nodes; real review analysis LLM)
   console.log(city, 'signals…');
@@ -152,18 +145,27 @@ async function runCity(city) {
   const genNodes = { Webhook: [WEBHOOK], 'Claim job': [{ credits_reserved: 100 }], 'Get campaign': [campaign], 'Get org': [org], 'Get campaign leads': genLinks, 'Get messages': [], 'Get insights': insightsForGen, 'Get cooldown': [] };
   const built = genLinks.length ? await runNode('gen_build.js', { nodes: genNodes }) : [];
   const messages = new Map();
-  for (let i = 0; i < built.length; i++) {
-    const item = built[i];
-    if (item.json.noop) continue;
+  // real WF3 order: build -> OpenRouter -> Validate message -> Dedupe openings (whole batch) -> one retry for rejected ones -> Validate retry
+  resetStatic();
+  const todo = built.filter((x) => !x.json.noop);
+  const first = [];
+  for (const item of todo) {
     const r1 = await chat(item.json.requestBody); calls.n++; calls.cost += Number(r1.body?.usage?.cost) || 0;
-    let v = await runNode('gen_validate.js', { nodes: { 'Select and build': [item.json] }, input: [r1], prev: 'OpenRouter' });
+    const v = await runNode('gen_validate.js', { nodes: { 'Select and build': [item.json] }, input: [r1], prev: 'OpenRouter' });
+    first.push(v.json);
+  }
+  const deduped = todo.length ? (await runNode('gen_dedupe.js', { nodes: { Webhook: [WEBHOOK], 'Select and build': todo.map((x) => x.json) }, input: first })).map((x) => x.json) : [];
+  for (let i = 0; i < todo.length; i++) {
+    const item = todo[i];
+    let v = deduped[i];
     let attempts = 1;
-    if (v.json.retry) {
-      const r2 = await chat(v.json.requestBody); calls.n++; calls.cost += Number(r2.body?.usage?.cost) || 0;
-      v = await runNode('gen_validate.js', { nodes: { 'Select and build': [item.json], 'Validate message': [v.json] }, input: [r2], prev: 'OpenRouter retry' });
+    if (v.retry) {
+      const r2 = await chat(v.requestBody); calls.n++; calls.cost += Number(r2.body?.usage?.cost) || 0;
+      const second = await runNode('gen_validate.js', { nodes: { 'Select and build': [item.json], 'Validate message': [v] }, input: [r2], prev: 'OpenRouter retry' });
+      v = second.json;
       attempts = 2;
     }
-    messages.set(item.json.lead_id, { ok: v.json.ok, message: v.json.message || null, reason: v.json.reason || null, attempts, opportunity: item.json.opportunity_type });
+    messages.set(item.json.lead_id, { ok: v.ok, message: v.message || null, angle: v.angle || null, reason: v.reason || null, attempts, opportunity: item.json.opportunity_type });
   }
 
   return { genLinks, insightsForGen, places: placeTable, funnel: { staged: places.length, ...norm[0].json.all.stats, judged: norm[0].json.all.toJudge.length, droppedFit, kept: kept.length }, kept, links, scored, insights: parsedJ.insightRows, opps: opps[0].json.rows, signalRows: Object.fromEntries(signalRows), messages: Object.fromEntries(messages) };

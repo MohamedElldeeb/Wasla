@@ -52,7 +52,10 @@ for (const o of Array.isArray(data.opportunities) ? data.opportunities : []) {
   const type = str(o?.type, 40);
   if (!OPPORTUNITY_TYPES.includes(type) || seenOpp.has(type)) continue;
   seenOpp.add(type);
-  opportunities.push({ type, angle_ar: str(o.angle_ar, 220) });
+  // Each opportunity must state the causal link to the offer; one without it (or without an angle) is dropped.
+  const why = str(o.why_it_means_they_need_the_offer, 240);
+  if (!why || !str(o.angle_ar, 220)) continue;
+  opportunities.push({ type, angle_ar: str(o.angle_ar, 220), why_it_means_they_need_the_offer: why });
 }
 const complaintRelevance = str(data.complaint_relevance, 300) || null;
 // A review-theme opportunity without a stated relevance would mention complaints the offer cannot help with.
@@ -63,7 +66,7 @@ const draft = {
   keywords: queries,
   ideal_lead_description: str(data.ideal_lead_description, 300),
   synonyms: strs(data.synonyms, 4, 60).filter((x) => !queries.some((q) => norm(q) === norm(x))),
-  categories: strs(data.categories, 14, 60),
+  categories: strs(data.categories, 20, 60),
   locations: loc(data.locations, 8),
   nearby_locations: loc(data.nearby_locations, 4),
   signals: signals.slice(0, 6),

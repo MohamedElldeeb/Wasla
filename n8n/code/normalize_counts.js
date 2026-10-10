@@ -47,7 +47,6 @@ const counts = {
   filtered_out: funnel.removed_closed + funnel.removed_global + funnel.removed_category + funnel.removed_landline + funnel.removed_filters + funnel.removed_not_fit,
   capped: (Number(prev.capped) || 0) + (Number(st.capped) || 0),
   fit_unchecked: (Number(prev.fit_unchecked) || 0) + (Number(st.fit_unchecked) || 0),
-  learned_categories: [...new Set([...(prev.learned_categories || []), ...(fit.learned_categories || [])])].slice(0, 30),
   mode: nx.mode,
   round,
   next_round: nx.next,

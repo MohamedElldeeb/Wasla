@@ -15,6 +15,7 @@ import { useT } from '@/components/app/i18n-provider';
 import { createClient } from '@/lib/supabase/client';
 import { whatsappLink, telLink } from '@/lib/phone/egypt.mjs';
 import { defaults } from '@/lib/config/defaults';
+import { learnCategoryFromSent } from '@/app/actions/campaigns';
 import { cn } from '@/lib/utils';
 import type { Message } from '@/lib/types';
 
@@ -61,6 +62,7 @@ export function SendList({ messages, sentToday, dailyCap }: { messages: Message[
       return;
     }
     if (win && url) win.location.href = url;
+    void learnCategoryFromSent(m.id); // a sent lead teaches the search its Maps category (user action, never the model)
     if (m.channel === 'whatsapp') setUsed((u) => u + 1);
     router.refresh();
     toast.custom(

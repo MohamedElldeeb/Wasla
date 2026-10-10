@@ -2,6 +2,9 @@
 import { code } from '../../n8n/inline.mjs';
 
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+const STATIC = {};
+/** Reset the simulated workflow static data (n8n keeps it per workflow). */
+export const resetStatic = () => { for (const k of Object.keys(STATIC)) delete STATIC[k]; };
 const items = (arr) => (arr || []).map((j) => ({ json: j }));
 
 /**
@@ -22,12 +25,12 @@ export async function runNode(file, ctx = {}) {
   };
   const inp = items(input);
   const $input = { all: () => inp, first: () => inp[0], item: inp[itemIndex] };
-  const fn = new AsyncFunction('$', '$input', '$prevNode', '$runIndex', src);
-  return fn($, $input, { name: prev }, 0);
+  const fn = new AsyncFunction('$', '$input', '$prevNode', '$runIndex', '$getWorkflowStaticData', src);
+  return fn($, $input, { name: prev }, 0, () => STATIC);
 }
 
 /** Compile-only check (syntax) of a code string as an n8n Code node. */
 export function compiles(jsCode) {
-  new AsyncFunction('$', '$input', '$prevNode', '$runIndex', jsCode);
+  new AsyncFunction('$', '$input', '$prevNode', '$runIndex', '$getWorkflowStaticData', jsCode);
   return true;
 }

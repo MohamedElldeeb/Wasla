@@ -32,7 +32,7 @@ const add = (x, plan, extra) => {
 if ((Number(body.round) || 1) === 1) {
   const pr = probeRows[0] && probeRows[0].result;
   for (const pl of (pr && pr.places) || []) {
-    if (pl && pl.raw && (pl.fit === 'fit' || pl.fit === 'maybe')) add(pl.raw, { district: pl.raw._district || null, city: pl.raw._city || null, governorate: pl.raw._governorate || null }, { _fit: { fit: pl.fit, reason: pl.reason || null } });
+    if (pl && pl.raw && (pl.fit === 'fit' || pl.fit === 'maybe')) add(pl.raw, { district: pl.raw._district || null, city: pl.raw._city || null, governorate: pl.raw._governorate || null }, { _fit: { fit: pl.fit, evidence: pl.evidence || null, reason: pl.reason || null } });
   }
 }
 

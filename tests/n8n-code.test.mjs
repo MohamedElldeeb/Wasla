@@ -65,20 +65,50 @@ test('Part 2c on the Cairo fixture: government, utilities and education never re
   assert.match(req.messages[0].content, /Ideal prospect: Marketing agencies/);
 });
 
-test('outside the allowed categories: kept only when judged clearly "fit" (and the category is learned); "maybe" and "not fit" are removed', async () => {
+test('round 2 fit: inside the categories fit or maybe is kept; outside only a "fit" backed by category/description/website; nothing is learned from the model', async () => {
   const out = await normalizeCairo();
-  const n = out[0].json.all.toJudge.length;
-  const labels = (i) => (out[0].json.all.toJudge[i].category_mismatch
-    ? (out[0].json.all.toJudge[i].lead.business_name.includes('TeleTarget') ? { fit: 'fit', reason: 'outsourced outreach service' } : { fit: 'maybe', reason: 'unclear' })
-    : { fit: 'fit', reason: 'agency' });
-  const llm = out.map((c) => llmItem({ results: c.json.idx.map((i) => ({ i, ...labels(i) })) }));
+  const toJudge = out[0].json.all.toJudge;
+  const by = (name) => toJudge.findIndex((c) => c.lead.business_name.includes(name));
+  const label = (c) => {
+    const n = c.lead.business_name;
+    if (!c.category_mismatch) return n.includes('Plus One') ? { fit: 'maybe', evidence: 'category', reason: 'adjacent' } : { fit: 'fit', evidence: 'category', reason: 'agency' };
+    if (n.includes('TeleTarget')) return { fit: 'fit', evidence: 'category', reason: 'outsourced outreach service' };
+    if (n.includes('B2B للاستشارات')) return { fit: 'fit', evidence: 'name_only', reason: 'B2B in the name' };
+    return { fit: 'maybe', evidence: 'none', reason: 'unclear' };
+  };
+  const llm = out.map((c) => llmItem({ results: c.json.idx.map((i) => ({ i, ...label(toJudge[i]) })) }));
   const res = (await runNode('fit_apply.js', { nodes: { Webhook: [WEBHOOK], Normalize: out.map((c) => c.json) }, input: llm }))[0].json;
   const names = res.p_leads.map((l) => l.business_name);
-  assert.ok(names.some((x) => x.includes('TeleTarget')), 'a clear fit outside the list is kept');
-  assert.equal(res.p_leads.length, 9);
-  assert.deepEqual(res.learned_categories, ['خدمة التسويق عبر الهاتف']);
-  assert.equal(res.stats.removed_category, n - 9);
-  assert.ok(!names.some((x) => x.includes('Cairo Marketing Company')));
+  assert.ok(names.some((x) => x.includes('TeleTarget')), 'outside the list, "fit" with category evidence is kept');
+  assert.ok(!names.some((x) => x.includes('B2B للاستشارات')), 'a "fit" that rests on the name alone is removed (the tax office with B2B in its name)');
+  assert.ok(!names.some((x) => x.includes('Cairo Marketing Company')), 'outside the list with "maybe" is removed');
+  assert.equal(res.p_leads.find((l) => l.business_name.includes('Plus One')).fit, 'maybe', 'inside the list "maybe" is kept as maybe');
+  assert.equal(res.learned_categories, undefined, 'the model never teaches a category');
+  const dec = (n) => res.judged.find((x) => x.name.includes(n));
+  assert.equal(dec('B2B للاستشارات').why, 'name_only_evidence');
+  assert.equal(dec('TeleTarget').keep, true);
+  assert.ok(by('TeleTarget') >= 0);
+});
+
+test('round 2 fit: decideFit rules, name-only evidence never counts, and the fit prompt teaches evidence and sector words', async () => {
+  const { decideFit, fitSystemPrompt, fitAsk } = await import('../lib/insights/core.mjs');
+  assert.deepEqual(decideFit({ label: { fit: 'fit', evidence: 'category' }, inside: true }), { keep: true, fit: 'fit' });
+  assert.deepEqual(decideFit({ label: { fit: 'maybe', evidence: 'none' }, inside: true }), { keep: true, fit: 'maybe' });
+  assert.equal(decideFit({ label: { fit: 'fit', evidence: 'name_only' }, inside: true }).fit, 'maybe', 'inside, a name-only fit is only a maybe');
+  assert.equal(decideFit({ label: { fit: 'not_fit' }, inside: true }).keep, false);
+  assert.equal(decideFit({ label: { fit: 'fit', evidence: 'website' }, inside: false }).keep, true);
+  assert.equal(decideFit({ label: { fit: 'fit', evidence: 'name_only' }, inside: false }).keep, false);
+  assert.equal(decideFit({ label: { fit: 'maybe', evidence: 'category' }, inside: false }).keep, false);
+  assert.equal(decideFit({ label: { fit: 'fit' }, inside: false }).keep, false, 'no stated evidence = no evidence');
+  const prompt = fitSystemPrompt({ ideal: 'x', offerText: 'y' });
+  assert.match(prompt, /NAME is context only/);
+  assert.match(prompt, /next to the word that names the kind of business/);
+  assert.match(prompt, /"evidence"/);
+  // the exact tax office from the review: the name is passed as context; categories, description and website host are the evidence
+  const ask = fitAsk({ title: 'B2B للاستشارات المالية وخدمات الضرائب', categoryName: 'مكتب الشركات', categories: ['مكتب الشركات', 'مستشار ضرائب'], description: 'استشارات ضرائب', website: 'https://www.example-tax.com/' }, 'Cairo');
+  assert.deepEqual(ask.categories, ['مكتب الشركات', 'مستشار ضرائب']);
+  assert.equal(ask.website, 'example-tax.com');
+  assert.equal(ask.description, 'استشارات ضرائب');
 });
 
 test('Part 3 fresh leads: known companies and companies in cooldown are skipped before the cap, unless included', async () => {
@@ -95,10 +125,11 @@ test('Part 3 fresh leads: known companies and companies in cooldown are skipped 
   assert.ok(inc[0].json.all.toJudge.some((c) => c.lead.business_name.includes('إنجاز')));
 });
 
-test('learned categories are accepted directly in the next round', async () => {
-  const out = await normalizeCairo({ counts: { learned_categories: ['خدمة التسويق عبر الهاتف'] } });
-  const mm = out[0].json.all.toJudge.find((c) => c.lead.business_name.includes('TeleTarget'));
-  assert.equal(mm.category_mismatch, false);
+test('categories learned from USER actions (probe "Looks right", sent leads) are accepted; the job counts of earlier rounds are not used', async () => {
+  const learned = await normalizeCairo({ params: { learned_categories: ['خدمة التسويق عبر الهاتف'] } });
+  assert.equal(learned[0].json.all.toJudge.find((c) => c.lead.business_name.includes('TeleTarget')).category_mismatch, false);
+  const fromCounts = await normalizeCairo({ counts: { learned_categories: ['خدمة التسويق عبر الهاتف'] } });
+  assert.equal(fromCounts[0].json.all.toJudge.find((c) => c.lead.business_name.includes('TeleTarget')).category_mismatch, true, 'a model-learned list in job counts is ignored');
 });
 
 test('1: requested count = delivered: the fit check drops "not fit", keeps "maybe", and the cap applies after it', async () => {
@@ -221,11 +252,15 @@ test('review analysis: no review text => no LLM call, recorded as skipped (never
   assert.equal(group[0].json.skipped, 'no_review_text');
 });
 
-const SEL = { lead_id: 'l1', message_id: null, regen_count: 0, channel: 'whatsapp', organization_id: 'o', campaign_id: 'c', job_id: 'j', total: 1, requestBody: JSON.stringify({ messages: [{ role: 'system', content: 's' }, { role: 'user', content: 'u' }], model: 'm' }), complaints: ['تأخير التسليم'], opportunity_type: 'unclaimed_listing' };
-const GOOD = 'أهلا، شفت إن عملاءكم بيحبوا التزامكم بالمواعيد وجودة الشغل. إحنا بنساعد الوكالات تلاقي عملاء جدد وتبعتلهم رسائل شخصية على واتساب بسهولة من غير ما تضيعوا وقت في البحث. ممكن نعرض عليكم الفكرة في دقيقتين؟';
+const CTA = 'أبعتلكم 10 شركات مناسبة لشغلكم ببلاش';
+const OFFER_TEXT = `وصلة: بتلاقي عملاء للوكالات وبتكتب رسالة واتساب شخصية لكل عميل. ${CTA}`;
+const QUOTE = 'بتلاقي عملاء للوكالات وبتكتب رسالة واتساب شخصية لكل عميل';
+const SEL = { lead_id: 'l1', message_id: null, regen_count: 0, channel: 'whatsapp', organization_id: 'o', campaign_id: 'c', job_id: 'j', total: 1, requestBody: JSON.stringify({ messages: [{ role: 'system', content: 's' }, { role: 'user', content: 'u' }], model: 'm' }), complaints: ['تأخير التسليم'], opportunity_type: 'unclaimed_listing',
+  offer_text: OFFER_TEXT, cta_offer: CTA, sender_name: 'محمد', areas: ['مدينة نصر'], city: 'القاهرة', used_openings: [] };
+const GOOD = 'أهلا يا فريق الإنجاز، عملاءكم دايما بيشكروا في التزامكم بالمواعيد. إحنا عاملين أداة اسمها وصلة بتلاقي عملاء للوكالات وبتكتب رسالة واتساب شخصية لكل عميل، من غير ما تضيعوا وقت في البحث والكتابة. لو حابين، أبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها بنفسكم. محمد من وصلة';
 const validate = (content, prev = 'OpenRouter', extra = {}) => runNode('gen_validate.js', {
   nodes: { 'Select and build': [SEL], ...extra },
-  input: [llmItem({ message: content, angle: 'التزام' })],
+  input: [llmItem({ message: content, angle: 'التزام', offer_quote: QUOTE, ...(extra.__raw || {}) })],
   prev,
 });
 
@@ -239,7 +274,7 @@ test('2c/5b: a tactful message passes; a message about complaints is rejected an
   assert.match(bad.reason, /^tact:/);
   const retryReq = JSON.parse(bad.requestBody);
   assert.equal(retryReq.messages.length, 4);
-  assert.match(retryReq.messages[3].content, /NEVER mention complaints/);
+  assert.match(retryReq.messages[3].content, /never mention complaints/);
   // second attempt: fixed => ok and marked retried; still bad => final failure, no further retry
   const fixed = (await validate(GOOD, 'OpenRouter retry', { 'Validate message': [bad] })).json;
   assert.equal(fixed.ok, true);
@@ -255,7 +290,7 @@ test('5b: invalid JSON and word-count violations are retryable once; http errors
   assert.equal(j.reason, 'bad_json');
   assert.equal(j.retry, true);
   const short = (await validate('أهلا، ممكن نتكلم؟')).json;
-  assert.match(short.reason, /^word_count_/);
+  assert.match(short.reason, /^style:word_count_/);
   assert.equal(short.retry, true);
   const http = (await runNode('gen_validate.js', { nodes: { 'Select and build': [SEL] }, input: [{ statusCode: 500, body: {} }], prev: 'OpenRouter' })).json;
   assert.equal(http.retry, false);
@@ -267,7 +302,7 @@ test('2c: the message prompt never contains complaints or weaknesses', async () 
     nodes: {
       Webhook: [WEBHOOK],
       'Claim job': [{ credits_reserved: 5 }],
-      'Get campaign': [{ parameters: { channel: 'whatsapp', opportunities: [{ type: 'review_theme', angle_ar: 'نساعدكم تردوا بسرعة' }] } }],
+      'Get campaign': [{ parameters: { channel: 'whatsapp', opportunities: [{ type: 'review_theme', angle_ar: 'نساعدكم تردوا بسرعة', why_it_means_they_need_the_offer: 'the offer answers reviews' }] } }],
       'Get org': [{ name: 'Wasla', offer_profile: { what_we_sell: 'tool' } }],
       'Get campaign leads': [{ opportunities: [{ type: 'review_theme', strength: 3, evidence: { theme: 'بطء الرد', count: 3 } }], selected_opportunity: 'review_theme', leads: lead }],
       'Get messages': [],
@@ -298,14 +333,15 @@ test('3: leads in the 30-day contact cooldown get no message', async () => {
 
 test('planner output: baseline signals are clamped, review_theme needs a stated relevance, queries are capped at 4', async () => {
   const defs = [{ key: 'has_website', baseline: true }, { key: 'activity', baseline: false }, { key: 'unclaimed_listing', baseline: false }];
-  const draft = { ideal_lead_description: 'x', queries: ['a', 'b', 'c', 'd', 'e'], synonyms: ['a', 'z'], categories: ['وكالة تسويق', 'Marketing agency', 'وكالة   تسويق'], locations: [], signals: [{ key: 'has_website', weight: 100, reason_ar: 'r' }, { key: 'activity', weight: -40, reason_ar: 'r' }, { key: 'bogus', weight: 50 }], opportunities: [{ type: 'review_theme', angle_ar: 'x' }, { type: 'unclaimed_listing', angle_ar: 'y' }, { type: 'nope', angle_ar: 'z' }], complaint_relevance: null };
+  const draft = { ideal_lead_description: 'x', queries: ['a', 'b', 'c', 'd', 'e'], synonyms: ['a', 'z'], categories: ['وكالة تسويق', 'Marketing agency', 'وكالة   تسويق'], locations: [], signals: [{ key: 'has_website', weight: 100, reason_ar: 'r' }, { key: 'activity', weight: -40, reason_ar: 'r' }, { key: 'bogus', weight: 50 }], opportunities: [{ type: 'review_theme', angle_ar: 'x', why_it_means_they_need_the_offer: 'w' }, { type: 'unclaimed_listing', angle_ar: 'y', why_it_means_they_need_the_offer: 'the offer claims listings' }, { type: 'nope', angle_ar: 'z', why_it_means_they_need_the_offer: 'w' }, { type: 'dormant_activity', angle_ar: 'q' }], complaint_relevance: null };
   const res = await runNode('plan_parse.js', { nodes: { 'Get signals': defs, Webhook: [WEBHOOK] }, input: [llmItem(draft)] });
   const d = res[0].json.draft;
   assert.equal(d.keywords.length, 4);
   assert.deepEqual(d.synonyms, ['z'], 'a synonym equal to a query is dropped');
   assert.equal(d.categories.length, 2, 'duplicates removed');
   assert.deepEqual(d.signals.map((s) => [s.key, s.weight]), [['has_website', 25], ['activity', -40]]);
-  assert.deepEqual(d.opportunities.map((o) => o.type), ['unclaimed_listing']);
+  assert.deepEqual(d.opportunities.map((o) => o.type), ['unclaimed_listing'], 'review_theme without relevance, unknown types and opportunities without a causal sentence are dropped');
+  assert.equal(d.opportunities[0].why_it_means_they_need_the_offer, 'the offer claims listings');
   const emph = await runNode('plan_parse.js', { nodes: { 'Get signals': defs, Webhook: [WEBHOOK] }, input: [llmItem({ ...draft, signals: [{ key: 'has_website', weight: 100, emphasis: true }] })] });
   assert.equal(emph[0].json.draft.signals[0].weight, 100);
   assert.equal(emph[0].json.draft.signals[0].emphasis, true);

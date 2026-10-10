@@ -24,6 +24,8 @@ export default async function SettingsPage() {
     [o.idealCustomer, p.ideal_customer],
     [o.problems, p.problems_we_solve],
     [o.proof, p.proof_points],
+    [o.ctaOffer, p.cta_offer],
+    [o.senderName, p.sender_name],
     [o.regions, regionsToText(p.regions)],
     [s.dailyCap, String(num(org.wa_daily_cap))],
   ];

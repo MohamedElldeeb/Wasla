@@ -6,12 +6,16 @@ export type OfferProfile = {
   proof_points?: string;
   regions?: { governorate?: string; city?: string; district?: string }[];
   example_customers?: string[];
+  /** One concrete, low-friction offer the first message ends with (e.g. a free sample). Optional. */
+  cta_offer?: string;
+  /** First name used to sign the first message ("name from company"). Optional. */
+  sender_name?: string;
 };
 
 export type CampaignSignal = { key: string; weight: number; emphasis?: boolean };
 export type Region3 = { governorate?: string; city?: string; district?: string };
 /** Planner output: an opportunity type this offer can help with, and the one-sentence angle for it. */
-export type OpportunityMapItem = { type: string; angle_ar: string };
+export type OpportunityMapItem = { type: string; angle_ar: string; why_it_means_they_need_the_offer?: string };
 
 export type CampaignParameters = {
   keywords?: string[];
@@ -19,6 +23,7 @@ export type CampaignParameters = {
   max_results?: number;
   /** Fresh leads across campaigns (spec 6.2): false by default; true also searches companies found in earlier campaigns. */
   include_previous_companies?: boolean;
+  learned_categories?: string[];
   /** One sentence describing the ideal prospect. Used by the probe and by the fit check on every delivered lead. */
   ideal_lead_description?: string;
   synonyms?: string[];
@@ -117,6 +122,7 @@ export type LeadFacts = {
   owner_reply_rate: number | null; low_reviews: number; unanswered_low_reviews: number;
   recent_avg_rating: number | null; rating_delta: number | null; unclaimed_listing: boolean;
   images_count: number; has_hours: boolean; has_website: boolean; branches: number;
+  website_social?: boolean; search_rank?: number | null; categories?: string[]; low_star_share?: number | null;
 };
 
 export type ReviewAnalysis = {
@@ -138,7 +144,7 @@ export type ProbeResult = {
 
 export type InterviewTurn = {
   reply: string; quick_replies: string[]; done: boolean; asked: number;
-  profile: null | { what_we_sell: string; ideal_customer: string; problems_we_solve: string; proof_points: string; regions: { governorate: string; city: string }[]; example_customers: string[] };
+  profile: null | { what_we_sell: string; ideal_customer: string; problems_we_solve: string; proof_points: string; regions: { governorate: string; city: string }[]; example_customers: string[]; cta_offer?: string; sender_name?: string };
 };
 
 export type SignalDefinition = {

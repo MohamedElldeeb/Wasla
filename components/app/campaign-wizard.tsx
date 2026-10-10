@@ -68,6 +68,13 @@ function Chip({ children, onRemove, removeLabel }: { children: React.ReactNode; 
 function ProbeSample({ probe, categories, onAddCategory }: { probe: ProbeResult; categories: string[]; onAddCategory: (c: string) => void }) {
   const t = useT();
   const k = t.targeting;
+  const [added, setAdded] = useState<number | null>(null);
+  const looksRight = () => {
+    // Learning from a user action only: the categories of the sample places judged "fit" join the allowed list when the user says the sample looks right.
+    const add = [...new Set(probe.places.filter((x) => x.fit === 'fit' && x.category).map((x) => x.category as string))].filter((c) => !categories.includes(c));
+    add.forEach(onAddCategory);
+    setAdded(add.length);
+  };
   const good = probe.judged > 0 && probe.fit_share >= 0.5;
   return (
     <div className="flex flex-col gap-3" aria-live="polite">
@@ -89,6 +96,12 @@ function ProbeSample({ probe, categories, onAddCategory }: { probe: ProbeResult;
             ))}
           </ul>
           <p className="text-caption text-fg-muted">{k.sampleKept}</p>
+          {probe.fit > 0 && (
+            <div className="flex flex-col gap-1">
+              <Button type="button" variant="secondary" className="self-start" onClick={looksRight} disabled={added !== null}>{k.looksRight}</Button>
+              <span className="text-caption text-fg-muted">{added === null ? k.looksRightHint : k.looksRightDone(added)}</span>
+            </div>
+          )}
           {probe.suggested_categories && probe.suggested_categories.filter((c) => !categories.includes(c)).length > 0 && (
             <div className="flex flex-col gap-2">
               <span className="text-body-sm font-medium text-fg">{k.suggestedCategories}</span>

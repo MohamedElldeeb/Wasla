@@ -15,7 +15,7 @@ const sum = (k) => j1.usage[k] + (j2 ? j2.usage[k] : 0) + (rw ? rw.usage[k] : 0)
 const usage = { in: sum('in'), out: sum('out'), cost: sum('cost'), model: j1.usage.model };
 const share = places.length ? fit / places.length : 0;
 const result = {
-  places: places.map((x) => ({ raw: x.raw, name: x.name, category: x.category, area: x.area, fit: x.fit, reason: x.reason })),
+  places: places.map((x) => ({ raw: x.raw, name: x.name, category: x.category, area: x.area, fit: x.fit, evidence: x.evidence || null, reason: x.reason })),
   fit_share: Math.round(share * 100) / 100,
   judged: places.length,
   fit,

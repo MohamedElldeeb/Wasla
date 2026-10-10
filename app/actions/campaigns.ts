@@ -29,10 +29,11 @@ const paramsSchema = z.object({
     })
     .default({}),
   include_previous_companies: z.boolean().default(false),
+  learned_categories: z.array(z.string().trim().min(1).max(60)).max(30).optional(),
   ideal_lead_description: z.string().trim().max(400).optional(),
   synonyms: z.array(z.string().trim().min(1).max(60)).max(6).optional(),
   nearby_locations: z.array(location).max(8).optional(),
-  opportunities: z.array(z.object({ type: z.string().max(40), angle_ar: z.string().max(240) })).max(8).optional(),
+  opportunities: z.array(z.object({ type: z.string().max(40), angle_ar: z.string().max(240), why_it_means_they_need_the_offer: z.string().max(260).optional() })).max(8).optional(),
   complaint_relevance: z.string().trim().max(300).nullable().optional(),
   enrich_emails: z.boolean().default(false),
   channel: z.enum(['whatsapp', 'messenger', 'email']).default('whatsapp'),
@@ -190,6 +191,24 @@ export async function markNotRelevant(campaignLeadId: string, reason: string): P
   if (error) return { error: error.message.includes('already_sent') ? t.insights.alreadySent : t.errors.generic };
   revalidatePath('/campaigns');
   return { refunded: Number((data as { refunded?: number } | null)?.refunded ?? 0) };
+}
+
+/**
+ * A category is "learned" ONLY from a user action. This one: the user sent a message to a lead, so that lead's Maps category is
+ * accepted directly in later searches of the same campaign. (The other one is "Looks right" on the probe sample, in the wizard.)
+ */
+export async function learnCategoryFromSent(messageId: string): Promise<void> {
+  const { supabase } = await requireOrg();
+  const { data: m } = await supabase.from('messages').select('campaign_id, leads(category)').eq('id', messageId).maybeSingle();
+  const lead = (m as { campaign_id?: string; leads?: { category?: string | null } | { category?: string | null }[] } | null)?.leads;
+  const cat = String((Array.isArray(lead) ? lead[0]?.category : lead?.category) ?? '').trim();
+  const campaignId = (m as { campaign_id?: string } | null)?.campaign_id;
+  if (!cat || !campaignId) return;
+  const { data: c } = await supabase.from('campaigns').select('parameters').eq('id', campaignId).maybeSingle();
+  const params = (c?.parameters ?? {}) as CampaignParameters;
+  const have = [...(params.filters?.categories_include ?? []), ...(params.learned_categories ?? [])].map((x) => x.toLowerCase());
+  if (have.includes(cat.toLowerCase())) return;
+  await supabase.from('campaigns').update({ parameters: { ...params, learned_categories: [...(params.learned_categories ?? []), cat].slice(-30) } }).eq('id', campaignId);
 }
 
 /** The user switches the angle a lead's message will be built on (only among the opportunities the lead really has). */

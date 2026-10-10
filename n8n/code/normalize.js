@@ -16,8 +16,9 @@ const p = campaign.parameters || {};
 const f = p.filters || {};
 const counts = job.counts || {};
 const includePrevious = p.include_previous_companies === true;
-// Allowed categories = the campaign's list plus categories learned in earlier rounds (places outside the list that the fit check judged clearly fit).
-const allowedCats = [...(Array.isArray(f.categories_include) ? f.categories_include : []), ...(Array.isArray(counts.learned_categories) ? counts.learned_categories : [])];
+// Allowed categories = the campaign's list plus categories LEARNED FROM USER ACTIONS ("Looks right" on the probe sample, leads the user approved and sent).
+// The model never adds a category by itself.
+const allowedCats = [...(Array.isArray(f.categories_include) ? f.categories_include : []), ...(Array.isArray(p.learned_categories) ? p.learned_categories : [])];
 const leadCap = Number(counts.lead_cap) || 100;
 const remaining = Math.max(0, leadCap - (Number(counts.delivered) || 0));
 
@@ -71,7 +72,7 @@ for (const row of staging) {
   candidates.push({
     category_mismatch,
     probe_fit: x._fit || null,
-    ask: { name, categories: cats.slice(0, 5), website: website ? 'yes' : 'no', area: [district, clean(x.city)].filter(Boolean).join(', '), rating: x.totalScore ?? null, reviews: x.reviewsCount ?? null },
+    ask: fitAsk(x, [district, clean(x.city)].filter(Boolean).join(', ')),
     lead: {
       business_name: name,
       category: clean(x.categoryName),

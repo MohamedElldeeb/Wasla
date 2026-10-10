@@ -10,7 +10,7 @@ const outs = $input.all();
 const p = campaign.parameters || {};
 const f = p.filters || {};
 
-const KEEP = ['title', 'categoryName', 'categories', 'address', 'neighborhood', 'street', 'city', 'state', 'countryCode', 'website', 'phone', 'phoneUnformatted', 'location', 'totalScore', 'reviewsCount', 'permanentlyClosed', 'temporarilyClosed', 'placeId', 'url', 'openingHours', 'claimThisBusiness', 'imagesCount'];
+const KEEP = ['title', 'categoryName', 'categories', 'address', 'neighborhood', 'street', 'city', 'state', 'countryCode', 'website', 'phone', 'phoneUnformatted', 'location', 'totalScore', 'reviewsCount', 'permanentlyClosed', 'temporarilyClosed', 'placeId', 'url', 'openingHours', 'claimThisBusiness', 'imagesCount', 'description', 'ownerDescription', 'subTitle', 'rank', 'reviewsDistribution'];
 const seen = new Map();
 const removed = { closed: 0, global: 0, category: 0 };
 let raw = 0;

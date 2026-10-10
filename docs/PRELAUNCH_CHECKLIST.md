@@ -35,3 +35,10 @@ Items that are deliberately relaxed for the pilot and MUST be reverted or comple
 - [ ] Onboarding changed: the old form was replaced by the AI interview; check it with a real new user before launch.
 - [ ] Re-run `scripts/live-checks.mjs` against the deployed site after deploy (shortcuts, mobile filter sheet, Google redirect). Full Google sign-in needs a real Google account and was not tested.
 - [ ] `PREVIEW_ROUTES` must stay unset in Vercel (it enables the `/preview` sample-data route used only to take landing page screenshots).
+
+## Round 2 (fit logic, opportunities, messages)
+- [ ] Set `OPENROUTER_PLANNER_MODEL=google/gemini-2.5-flash` in Vercel and in the n8n environment (decided in round 2). Choose `OPENROUTER_MODEL` (writer) from `docs/MODEL_COMPARISON.md`.
+- [ ] Redeploy WF0, WF0b, WF_interview, WF1, WF2, WF3 (new Code nodes: `Dedupe openings`, the new generation prompt and validator). WF3 now reads `raw->categories` and `raw->>description` through PostgREST JSON paths in the `Get campaign leads` node; this select was not tested against the live API (offline tests only), so check it once after deploy.
+- [ ] Existing organizations have no `cta_offer` / `sender_name`; messages work without them (those two checks are skipped) but are better with them. Ask users to re-run the profile interview.
+- [ ] The generation prompt contains two example messages written for a different seller (style references, as requested). They are marked "copy only the tone and shape"; watch the first live campaigns for leaked wording.
+- [ ] Learned categories now come only from user actions (probe "Looks right", sent leads, stored in `campaigns.parameters.learned_categories`). No migration needed.

@@ -55,6 +55,8 @@ const profileSchema = z.object({
   ideal_customer: z.string().trim().max(2000).default(''),
   problems_we_solve: z.string().trim().max(2000).default(''),
   proof_points: z.string().trim().max(2000).default(''),
+  cta_offer: z.string().trim().max(300).default(''),
+  sender_name: z.string().trim().max(60).default(''),
   regions: z.array(z.object({ governorate: z.string().max(60).optional(), city: z.string().max(60).optional(), district: z.string().max(60).optional() })).max(20).default([]),
   example_customers: z.array(z.string().trim().min(1).max(80)).max(10).default([]),
 });

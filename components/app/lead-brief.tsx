@@ -30,7 +30,8 @@ export function evidenceChips(t: Dict, item: CampaignLead, insight?: LeadInsight
   if (l.rating != null) out.push(c.rating(l.rating, l.reviews_count ?? 0));
   if (f && f.n_reviews_fetched >= 5 && f.owner_reply_rate != null) out.push(c.replyRate(Math.round(f.owner_reply_rate * 100)));
   if (f && f.n_reviews_fetched >= 5 && f.rating_delta != null && Math.abs(f.rating_delta) >= 0.3) out.push(c.trend(f.rating_delta));
-  out.push(l.website ? c.website : c.noWebsite);
+  out.push(f?.website_social ? c.socialWebsite : l.website ? c.website : c.noWebsite);
+  if (f?.search_rank != null && f.search_rank >= 5) out.push(c.rank(f.search_rank));
   if (f?.unclaimed_listing) out.push(c.unclaimed);
   if (f && f.images_count != null && f.images_count <= 5) out.push(c.photos(f.images_count));
   if (f?.is_new_business) out.push(c.newBusiness);
