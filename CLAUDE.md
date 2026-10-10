@@ -18,7 +18,7 @@ Any B2B company that sells to other businesses can use Wasla (tax/accounting fir
 - Signal definitions, credit costs, and reason templates live in the `signal_definitions` table (config as data), not in code.
 - Prompts for the planner and the message writer must be offer-agnostic: no example inside a prompt may leak a segment into another org's output.
 
-> **Every UI change must follow [`DESIGN.md`](DESIGN.md).** It replaces all earlier styling decisions (colors, type, spacing, components, screens, RTL, motion) and has an acceptance checklist (section 9). Use its semantic tokens only; no hardcoded colors, font sizes, radii or shadows in components.
+> **Every UI change must follow [`DESIGN.md`](DESIGN.md) (v2, "Midnight precision", Wasla edition).** It replaces all earlier styling decisions (colors, type, spacing, components, screens, RTL, motion) and has an acceptance checklist (section 10). v1 is kept in `docs/design-reference/DESIGN-v1.md` and the visual reference in `docs/design-reference/linear-style.md` (aesthetic only: never copy its colors, fonts or logos). `scripts/design-verify.mjs` checks contrast and hardcoded values. Use its semantic tokens only; no hardcoded colors, font sizes, radii or shadows in components.
 
 ## 1. Hard rules (non-negotiable)
 
@@ -72,7 +72,8 @@ Any B2B company that sells to other businesses can use Wasla (tax/accounting fir
 /n8n                  build.mjs (generates workflows), code/ (Code-node sources), deploy.mjs (REST deploy), workflows/ (exported JSON, placeholders only)
 /scripts              dev tools: apify-schema, apify-sample (capped), e2e-pipeline (full backend run)
 /docs                 PHASE_X_REPORT.md, samples/ (actor outputs), decisions
-/public/brand         wasla-logo.svg, wasla-logo-mark.svg (untouched), derived icons
+/public/brand         wasla-logo.svg, wasla-logo-mark.svg (untouched), wasla-logo-on-dark.svg (same logo, white wordmark), derived icons
+/public/landing       landing page screenshots made by scripts/landing-shots.mjs from the real components at /preview
 /tests                Playwright (Phase 5) and unit tests
 ```
 
@@ -83,8 +84,8 @@ Any B2B company that sells to other businesses can use Wasla (tax/accounting fir
 - **Time**: store `timestamptz` UTC; daily caps and sending windows use `Africa/Cairo`.
 - **Phones**: store `+201XXXXXXXXX` (E.164); wa.me uses `201XXXXXXXXX`. WhatsApp-eligible only for mobile prefixes 010/011/012/015; landlines get a `tel:` "اتصال" action, never WhatsApp.
 - **UI copy**: two locales, `ar` (default) and `en`, both in `lib/i18n/` with the same typed shape (`Dict`). The Arabic UI is **simple Modern Standard Arabic** (clear, short, no slang, no dialect); English is plain and short. Switch with the header toggle (cookie `wasla_locale`, `<html lang dir>` follows it). Server code uses `await getT()`, client code uses `useT()`; no hardcoded strings in components. Data shown to users is localized by key (job errors are codes mapped in `jobErrors`; score reasons are `{k,s}` keys mapped via `signals`). **Egyptian colloquial Arabic is used only for the outreach messages written for leads** (WF3), never for UI text. Western digits by default (OPEN: digits style).
-- **Styling**: logical properties only (`ms-`, `me-`, `ps-`, `pe-`, `start-`, `end-`), never `left/right` or `ml/mr`. Tokens as CSS variables with dark variants. Orange `#F27A1A` never as small text on white (2.7:1); use it as CTA background with petrol text, or large elements/icons. Do not use WhatsApp green as a brand color. Do not redraw the logo.
-- **Fonts**: Readex Pro via `next/font/google` (600–700 headings, 400 body); fallback IBM Plex Sans Arabic.
+- **Styling**: logical properties only (`ms-`, `me-`, `ps-`, `pe-`, `start-`, `end-`), never `left/right` or `ml/mr`. Tokens as CSS variables; dark is the default theme and light is fully designed. Orange `#F27A1A` (`primary`) is the one action color: one orange button per view, text on it is always `primary-fg`, never as small text on white (2.7:1). Petrol is `brand` (links, info, progress). Radii 4/6/12/full only. Do not use WhatsApp green as a brand color. Do not redraw the logo.
+- **Fonts**: Inter (Latin, headings 510, negative tracking) and Readex Pro (Arabic, headings 600, no letter spacing) plus JetBrains Mono for counters, via `next/font/google`; fallback IBM Plex Sans Arabic.
 - **Four states** on every data screen: loading (skeleton), empty (clear next action), error (retry), active pipeline (Realtime progress).
 - **Commits**: Conventional Commits (`feat:`, `fix:`, `chore:`, `docs:`, `db:`, `n8n:`), small and scoped, one concern each. Never commit `.env*` (except `.env.example`), exported n8n credentials, or Apify/LLM samples containing personal data beyond what is needed. Only commit when the user asks.
 - **Branches**: `main` protected; work on `feat/<slug>`.
