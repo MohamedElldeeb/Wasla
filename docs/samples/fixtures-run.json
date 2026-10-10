@@ -4,34 +4,37 @@
   "draft": {
    "keywords": [
     "وكالة تسويق",
-    "وكالة دعاية وإعلان",
+    "شركات دعاية واعلان",
     "Marketing agency",
     "Advertising agency"
    ],
-   "ideal_lead_description": "وكالة تسويق أو دعاية وإعلان تبحث عن عملاء B2B جدد ومناسبين لتنمية أعمالها.",
+   "ideal_lead_description": "وكالة تسويق أو دعاية وإعلان أو مستقل في مصر يبحث عن عملاء B2B جدد ومناسبين لتوسيع أعماله.",
    "synonyms": [
-    "شركة تسويق",
     "مستشار تسويق",
     "Digital marketing agency",
-    "Creative agency"
+    "Marketing consultant",
+    "وكالة إعلانات"
    ],
    "categories": [
     "وكالة تسويق",
     "Marketing Agency",
     "وكالة إعلانات",
     "Advertising Agency",
-    "خدمة تسويق عبر الإنترنت",
-    "Internet Marketing Service",
-    "مستشار تسويق",
+    "وكالة دعاية وإعلان",
     "Marketing Consultant",
-    "وكالة إبداعية",
-    "Creative Agency",
-    "وكالة علاقات عامة",
+    "مستشار تسويق",
+    "Digital Marketing Agency",
+    "وكالة تسويق رقمي",
+    "Internet Marketing Service",
+    "خدمة تسويق عبر الإنترنت",
     "Public Relations Agency",
-    "مصمم جرافيك",
+    "وكالة علاقات عامة",
+    "Media Agency",
+    "وكالة إعلامية",
     "Graphic Designer",
-    "خدمات تصميم مواقع الويب",
-    "Website Designer"
+    "مصمم جرافيك",
+    "Web Designer",
+    "مصمم مواقع ويب"
    ],
    "locations": [
     {
@@ -47,7 +50,7 @@
     {
      "governorate": "القاهرة",
      "city": "القاهرة",
-     "district": "التجمع الخامس"
+     "district": "مصر الجديدة"
     },
     {
      "governorate": "القاهرة",
@@ -57,7 +60,7 @@
     {
      "governorate": "القاهرة",
      "city": "القاهرة",
-     "district": "مصر الجديدة"
+     "district": "التجمع الخامس"
     },
     {
      "governorate": "القاهرة",
@@ -79,51 +82,61 @@
    "signals": [
     {
      "key": "new_business",
+     "weight": 70,
+     "reason_ar": "الوكالات الجديدة تحتاج عملاء لبناء محفظتها بسرعة."
+    },
+    {
+     "key": "unclaimed_listing",
      "weight": 50,
-     "reason_ar": "الوكالات الجديدة تحتاج عملاء لتأسيس أعمالها."
+     "reason_ar": "الوكالة التي لا تدير صفحتها قد تحتاج مساعدة في التسويق."
+    },
+    {
+     "key": "profile_completeness",
+     "weight": 40,
+     "reason_ar": "صفحة غير مكتملة قد تشير إلى نقص في التسويق الذاتي."
     },
     {
      "key": "activity",
-     "weight": 30,
-     "reason_ar": "الوكالات النشطة تبحث دائمًا عن فرص نمو جديدة."
-    },
-    {
-     "key": "size_proxy",
-     "weight": 40,
-     "reason_ar": "الوكالات الكبيرة والمتعددة الفروع لديها قدرة أكبر على استيعاب عملاء جدد."
+     "weight": -30,
+     "reason_ar": "الوكالات غير النشطة على الخرائط قد تحتاج عملاء جدد."
     },
     {
      "key": "has_website",
-     "weight": 10,
-     "reason_ar": "وجود موقع إلكتروني يدل على احترافية الوكالة وجاهزيتها للعمل."
+     "weight": -20,
+     "reason_ar": "الوكالة التي لا تملك موقعًا قد تحتاج مساعدة في التواجد الرقمي."
     }
    ],
    "opportunities": [
     {
      "type": "new_business",
-     "angle_ar": "نساعد الوكالات الجديدة على بناء قاعدة عملائها الأولية بسرعة.",
-     "why_it_means_they_need_the_offer": "الوكالات الجديدة تحتاج إلى عملاء B2B لتأسيس أعمالها، وعرضنا يوفر لهم هذه الفرصة."
+     "angle_ar": "نساعد الوكالات الجديدة على بناء قاعدة عملاء قوية بسرعة.",
+     "why_it_means_they_need_the_offer": "الوكالات الجديدة تحتاج إلى تدفق مستمر من العملاء لبدء أعمالها وتنميتها، وعرضنا يوفر لهم ذلك."
     },
     {
-     "type": "multi_branch",
-     "angle_ar": "ندعم الوكالات متعددة الفروع في توسيع نطاق عملائها عبر فروعها المختلفة.",
-     "why_it_means_they_need_the_offer": "الوكالات ذات الفروع المتعددة غالبًا ما تسعى لتوسيع قاعدة عملائها لتغطية جميع فروعها، وعرضنا يساعدهم في ذلك."
+     "type": "unclaimed_listing",
+     "angle_ar": "نقدم للوكالات عملاء محتملين جاهزين للتواصل.",
+     "why_it_means_they_need_the_offer": "الوكالة التي لا تدير صفحتها على خرائط جوجل قد لا تكون نشطة في التسويق لنفسها، وبالتالي تحتاج إلى عملاء جدد."
+    },
+    {
+     "type": "thin_profile",
+     "angle_ar": "نوفر للوكالات فرصًا للتواصل مع عملاء محتملين مهتمين.",
+     "why_it_means_they_need_the_offer": "الملف غير المكتمل على خرائط جوجل قد يشير إلى أن الوكالة لا تستثمر في تسويقها الخاص، وبالتالي تحتاج إلى مساعدة في جذب العملاء."
     },
     {
      "type": "dormant_activity",
-     "angle_ar": "نعيد إحياء النشاط التسويقي للوكالات ونوفر لها تدفقًا مستمرًا من العملاء المحتملين.",
-     "why_it_means_they_need_the_offer": "الوكالات ذات النشاط الخامل تحتاج إلى عملاء جدد لإعادة تنشيط أعمالها، وعرضنا يوفر لهم فرصًا للنمو."
+     "angle_ar": "نمكن الوكالات من التواصل الفعال مع عملاء B2B.",
+     "why_it_means_they_need_the_offer": "قلة النشاط على خرائط جوجل قد تعني أن الوكالة لا تجذب عملاء جدد عبر الإنترنت، مما يجعلها بحاجة إلى أداة للعثور على العملاء."
     }
    ],
    "complaint_relevance": null,
    "angles": [
     {
-     "title_ar": "عملاء B2B جدد لوكالتك",
-     "description_ar": "هل تبحث وكالتك عن عملاء B2B جدد ومناسبين؟ وصلة توفر لك قائمة بالشركات المحتملة وتساعدك على التواصل معهم بفاعلية."
+     "title_ar": "عملاء B2B جاهزين لوكالتك",
+     "description_ar": "نساعد وكالات التسويق في العثور على عملاء B2B محتملين وتجهيز رسائل واتساب شخصية لكل منهم لزيادة فرص التعاقد."
     },
     {
-     "title_ar": "تواصل فعال مع عملائك المحتملين",
-     "description_ar": "مع وصلة، لن تكتشف العملاء المحتملين فقط، بل ستحصل أيضًا على رسائل واتساب مخصصة لتبدأ محادثات ناجحة معهم."
+     "title_ar": "توسع وكالتك أسرع مع وصلة",
+     "description_ar": "نقدم لوكالتك قائمة بالشركات التي تحتاج خدماتها، مع رسائل مخصصة لتبدأ محادثات تؤدي إلى عملاء جدد."
     }
    ]
   }
@@ -132,10 +145,20 @@
   "alexandria": {
    "genLinks": [
     {
-     "opportunity_score": 46,
+     "opportunity_score": 16,
      "score_reasons": [],
-     "opportunities": [],
-     "selected_opportunity": null,
+     "opportunities": [
+      {
+       "type": "thin_profile",
+       "strength": 1,
+       "evidence": {
+        "photos": 3,
+        "hours": true
+       },
+       "angle": "نوفر للوكالات فرصًا للتواصل مع عملاء محتملين مهتمين."
+      }
+     ],
+     "selected_opportunity": "thin_profile",
      "fit": "fit",
      "leads": {
       "id": "l0",
@@ -261,10 +284,20 @@
      }
     },
     {
-     "opportunity_score": 36,
+     "opportunity_score": 13,
      "score_reasons": [],
-     "opportunities": [],
-     "selected_opportunity": null,
+     "opportunities": [
+      {
+       "type": "thin_profile",
+       "strength": 2,
+       "evidence": {
+        "photos": 1,
+        "hours": true
+       },
+       "angle": "نوفر للوكالات فرصًا للتواصل مع عملاء محتملين مهتمين."
+      }
+     ],
+     "selected_opportunity": "thin_profile",
      "fit": "fit",
      "leads": {
       "id": "l1",
@@ -383,7 +416,7 @@
      }
     },
     {
-     "opportunity_score": 17,
+     "opportunity_score": 64,
      "score_reasons": [],
      "opportunities": [
       {
@@ -393,7 +426,7 @@
         "days": 798,
         "last": "2024-08-03T11:39:51.861Z"
        },
-       "angle": "نعيد إحياء النشاط التسويقي للوكالات ونوفر لها تدفقًا مستمرًا من العملاء المحتملين."
+       "angle": "نمكن الوكالات من التواصل الفعال مع عملاء B2B."
       }
      ],
      "selected_opportunity": "dormant_activity",
@@ -586,19 +619,20 @@
      }
     },
     {
-     "opportunity_score": 62,
+     "opportunity_score": 11,
      "score_reasons": [],
      "opportunities": [
       {
-       "type": "multi_branch",
+       "type": "thin_profile",
        "strength": 3,
        "evidence": {
-        "branches": 5
+        "photos": 0,
+        "hours": true
        },
-       "angle": "ندعم الوكالات متعددة الفروع في توسيع نطاق عملائها عبر فروعها المختلفة."
+       "angle": "نوفر للوكالات فرصًا للتواصل مع عملاء محتملين مهتمين."
       }
      ],
-     "selected_opportunity": "multi_branch",
+     "selected_opportunity": "thin_profile",
      "fit": "fit",
      "leads": {
       "id": "l3",
@@ -720,10 +754,20 @@
      }
     },
     {
-     "opportunity_score": 19,
+     "opportunity_score": 25,
      "score_reasons": [],
-     "opportunities": [],
-     "selected_opportunity": null,
+     "opportunities": [
+      {
+       "type": "thin_profile",
+       "strength": 1,
+       "evidence": {
+        "photos": 4,
+        "hours": false
+       },
+       "angle": "نوفر للوكالات فرصًا للتواصل مع عملاء محتملين مهتمين."
+      }
+     ],
+     "selected_opportunity": "thin_profile",
      "fit": "fit",
      "leads": {
       "id": "l4",
@@ -812,7 +856,7 @@
      }
     },
     {
-     "opportunity_score": 68,
+     "opportunity_score": 21,
      "score_reasons": [],
      "opportunities": [],
      "selected_opportunity": null,
@@ -949,10 +993,20 @@
      }
     },
     {
-     "opportunity_score": 36,
+     "opportunity_score": 11,
      "score_reasons": [],
-     "opportunities": [],
-     "selected_opportunity": null,
+     "opportunities": [
+      {
+       "type": "thin_profile",
+       "strength": 3,
+       "evidence": {
+        "photos": 0,
+        "hours": true
+       },
+       "angle": "نوفر للوكالات فرصًا للتواصل مع عملاء محتملين مهتمين."
+      }
+     ],
+     "selected_opportunity": "thin_profile",
      "fit": "fit",
      "leads": {
       "id": "l6",
@@ -1071,17 +1125,9 @@
      }
     },
     {
-     "opportunity_score": 58,
+     "opportunity_score": 39,
      "score_reasons": [],
      "opportunities": [
-      {
-       "type": "multi_branch",
-       "strength": 3,
-       "evidence": {
-        "branches": 5
-       },
-       "angle": "ندعم الوكالات متعددة الفروع في توسيع نطاق عملائها عبر فروعها المختلفة."
-      },
       {
        "type": "dormant_activity",
        "strength": 1,
@@ -1089,10 +1135,10 @@
         "days": 363,
         "last": "2025-10-12T17:58:19.239Z"
        },
-       "angle": "نعيد إحياء النشاط التسويقي للوكالات ونوفر لها تدفقًا مستمرًا من العملاء المحتملين."
+       "angle": "نمكن الوكالات من التواصل الفعال مع عملاء B2B."
       }
      ],
-     "selected_opportunity": "multi_branch",
+     "selected_opportunity": "dormant_activity",
      "fit": "fit",
      "leads": {
       "id": "l7",
@@ -1211,10 +1257,20 @@
      }
     },
     {
-     "opportunity_score": 60,
+     "opportunity_score": 10,
      "score_reasons": [],
-     "opportunities": [],
-     "selected_opportunity": null,
+     "opportunities": [
+      {
+       "type": "thin_profile",
+       "strength": 2,
+       "evidence": {
+        "photos": 1,
+        "hours": true
+       },
+       "angle": "نوفر للوكالات فرصًا للتواصل مع عملاء محتملين مهتمين."
+      }
+     ],
+     "selected_opportunity": "thin_profile",
      "fit": "maybe",
      "leads": {
       "id": "l8",
@@ -1389,11 +1445,11 @@
       "praised": [
        {
         "theme": "التعامل الرائع",
-        "count": 2
+        "count": 1
        },
        {
-        "theme": "جودة العمل",
-        "count": 3
+        "theme": "العمل الممتاز",
+        "count": 2
        },
        {
         "theme": "الالتزام بالمواعيد",
@@ -1405,9 +1461,9 @@
        }
       ],
       "complaints": [],
-      "customer_values": "Customers value professionalism, high-quality work, punctuality, and innovative ideas in digital marketing services.",
-      "summary_ar": "يثني العملاء على شركة لافينوس للتسويق الإلكتروني لتعاملها الرائع وجودة عملها والتزامها بالمواعيد وأفكارها الإبداعية.",
-      "summary_en": "Customers praise Lavenus for its excellent service, high-quality work, punctuality, and innovative ideas.",
+      "customer_values": "Customers value professionalism, excellent work quality, punctuality, and innovative ideas in digital marketing services.",
+      "summary_ar": "يثني العملاء على شركة لافينوس للتسويق الإلكتروني لتعاملها الرائع، وجودة عملها الممتازة، والالتزام بالمواعيد، والأفكار الإبداعية.",
+      "summary_en": "Customers praise Lavenus for their excellent service, high-quality work, punctuality, and innovative ideas.",
       "confidence": "high",
       "n_texts": 6
      }
@@ -1469,9 +1525,9 @@
        }
       ],
       "complaints": [],
-      "customer_values": "Customers value professionalism, experience, and innovative thinking.",
-      "summary_ar": "العملاء يثنون على وكالة Jenica لفريقها المحترف وذو الخبرة، وجودة عملها، وتفكيرها الإبداعي.",
-      "summary_en": "Customers praise Jenica Agency for its professional and experienced team, quality work, and creative thinking.",
+      "customer_values": "Customers value professionalism, experience, high-quality work, and innovative thinking.",
+      "summary_ar": "وكالة Jenica تحظى بتقدير كبير لفريقها المحترف وذو الخبرة، وجودة عملها الممتازة، وتفكيرها الإبداعي.",
+      "summary_en": "Jenica Agency is highly regarded for its professional and experienced team, excellent work quality, and creative thinking.",
       "confidence": "medium",
       "n_texts": 3
      }
@@ -1521,8 +1577,8 @@
       ],
       "complaints": [],
       "customer_values": "Customers value creativity and strong teams in a digital marketing agency.",
-      "summary_ar": "تُشيد المراجعات بالتفكير الإبداعي وفرق العمل الرائعة للوكالة.",
-      "summary_en": "Reviews praise the agency's creative thinking and incredible teams.",
+      "summary_ar": "العملاء يثنون على الإبداع وفرق العمل الرائعة في هذه الوكالة.",
+      "summary_en": "Customers praise the creativity and incredible teams of this agency.",
       "confidence": "low",
       "n_texts": 2
      }
@@ -1569,8 +1625,8 @@
      "analysis": {
       "praised": [
        {
-        "theme": "سرعة الاستجابة",
-        "count": 3
+        "theme": "سرعة الرد",
+        "count": 2
        },
        {
         "theme": "الاحترافية",
@@ -1581,14 +1637,14 @@
         "count": 4
        },
        {
-        "theme": "جودة الخدمات",
-        "count": 3
+        "theme": "الأمانة",
+        "count": 2
        }
       ],
       "complaints": [],
-      "customer_values": "Customers value professionalism, fast and supportive service, and high-quality work.",
-      "summary_ar": "يثني العملاء على احترافية AIT Systems وسرعة استجابتهم ودعمهم الفني الممتاز وجودة خدماتهم العالية.",
-      "summary_en": "Customers praise AIT Systems for their professionalism, fast response, excellent technical support, and high-quality services.",
+      "customer_values": "Customers value professionalism, quick and exceptional support, and integrity in service providers.",
+      "summary_ar": "يثني العملاء على احترافية AIT Systems وسرعة استجابتهم ودعمهم الفني المميز، بالإضافة إلى أمانتهم في التعامل.",
+      "summary_en": "Customers praise AIT Systems for their professionalism, quick response, exceptional technical support, and integrity in dealings.",
       "confidence": "high",
       "n_texts": 10
      }
@@ -1615,7 +1671,7 @@
       "inside": true,
       "fit": "fit",
       "evidence": "category",
-      "reason": "وكالة تسويق تبحث عن عملاء B2B.",
+      "reason": "وكالة تسويق هي عميل مثالي.",
       "keep": true,
       "why": null
      },
@@ -1642,7 +1698,7 @@
       "inside": false,
       "fit": "not_fit",
       "evidence": "category",
-      "reason": "خدمة وسائل النقل ليست وكالة تسويق.",
+      "reason": "خدمة وسائل النقل ليست عميلًا مناسبًا.",
       "keep": false,
       "why": "not_fit"
      },
@@ -1668,7 +1724,7 @@
       "inside": true,
       "fit": "fit",
       "evidence": "category",
-      "reason": "وكالة تسويق تبحث عن عملاء B2B.",
+      "reason": "وكالة تسويق هي عميل مثالي.",
       "keep": true,
       "why": null
      },
@@ -1694,7 +1750,7 @@
       "inside": true,
       "fit": "fit",
       "evidence": "category",
-      "reason": "وكالة تسويق تبحث عن عملاء B2B.",
+      "reason": "وكالة تسويق هي عميل مثالي.",
       "keep": true,
       "why": null
      },
@@ -1723,7 +1779,7 @@
       "inside": true,
       "fit": "fit",
       "evidence": "category",
-      "reason": "وكالة تسويق تبحث عن عملاء B2B.",
+      "reason": "وكالة تسويق وإعلانات هي عميل مثالي.",
       "keep": true,
       "why": null
      },
@@ -1749,7 +1805,7 @@
       "inside": true,
       "fit": "fit",
       "evidence": "category",
-      "reason": "وكالة تسويق تبحث عن عملاء B2B.",
+      "reason": "وكالة تسويق هي عميل مثالي.",
       "keep": true,
       "why": null
      },
@@ -1830,7 +1886,7 @@
       "inside": false,
       "fit": "not_fit",
       "evidence": "category",
-      "reason": "مكتب محاماة ليس وكالة تسويق.",
+      "reason": "مكتب الشركات ليس وكالة تسويق.",
       "keep": false,
       "why": "not_fit"
      },
@@ -1903,11 +1959,11 @@
       "category": "خدمة إدارة الأعمال",
       "place_id": "ChIJD3ToEJTD9RQRFzq8n9_LXUE",
       "inside": false,
-      "fit": "maybe",
+      "fit": "not_fit",
       "evidence": "category",
-      "reason": "خدمة إدارة الأعمال قد تحتاج عملاء B2B.",
+      "reason": "خدمة إدارة الأعمال ليست وكالة تسويق.",
       "keep": false,
-      "why": "outside_categories"
+      "why": "not_fit"
      },
      "placeId": "ChIJD3ToEJTD9RQRFzq8n9_LXUE"
     },
@@ -2019,7 +2075,7 @@
       "inside": true,
       "fit": "fit",
       "evidence": "category",
-      "reason": "وكالة تسويق تبحث عن عملاء B2B.",
+      "reason": "وكالة تسويق وإعلانات هي عميل مثالي.",
       "keep": true,
       "why": null
      },
@@ -2046,7 +2102,7 @@
       "inside": false,
       "fit": "not_fit",
       "evidence": "category",
-      "reason": "مكتب شركات (تنمية عقارية) ليس وكالة تسويق.",
+      "reason": "مكتب الشركات ليس وكالة تسويق.",
       "keep": false,
       "why": "not_fit"
      },
@@ -2073,7 +2129,7 @@
       "inside": false,
       "fit": "not_fit",
       "evidence": "category",
-      "reason": "مكتب شركات (إسكان وتعـمير) ليس وكالة تسويق.",
+      "reason": "مكتب الشركات ليس وكالة تسويق.",
       "keep": false,
       "why": "not_fit"
      },
@@ -2100,7 +2156,7 @@
       "inside": false,
       "fit": "not_fit",
       "evidence": "category",
-      "reason": "مكتب شركات (تجارة) ليس وكالة تسويق.",
+      "reason": "مكتب الشركات ليس وكالة تسويق.",
       "keep": false,
       "why": "not_fit"
      },
@@ -2126,7 +2182,7 @@
       "inside": true,
       "fit": "fit",
       "evidence": "category",
-      "reason": "وكالة إعلانية تبحث عن عملاء B2B.",
+      "reason": "وكالة إعلانية هي عميل مثالي.",
       "keep": true,
       "why": null
      },
@@ -2152,7 +2208,7 @@
       "inside": true,
       "fit": "fit",
       "evidence": "category",
-      "reason": "وكالة تسويق تبحث عن عملاء B2B.",
+      "reason": "وكالة تسويق هي عميل مثالي.",
       "keep": true,
       "why": null
      },
@@ -2203,7 +2259,7 @@
       "inside": true,
       "fit": "maybe",
       "evidence": "category",
-      "reason": "وكالة تجارة إلكترونية وخدمة تسويق عبر الإنترنت.",
+      "reason": "تقدم خدمات تسويق عبر الإنترنت، قد تكون عميلًا.",
       "keep": true,
       "why": null
      },
@@ -2226,7 +2282,7 @@
     "droppedFit": [
      {
       "name": "سنجر سابقا",
-      "reason": "خدمة وسائل النقل ليست وكالة تسويق."
+      "reason": "خدمة وسائل النقل ليست عميلًا مناسبًا."
      },
      {
       "name": "مكتب الاسكندرية للاستشارات القانونية",
@@ -2238,7 +2294,11 @@
      },
      {
       "name": "مكتب المستشار /عصام حمزه الاسيوطي للمحاماة و الاستشارات القانونية",
-      "reason": "مكتب محاماة ليس وكالة تسويق."
+      "reason": "مكتب الشركات ليس وكالة تسويق."
+     },
+     {
+      "name": "ALSHEHAB لخدمات رجال الأعمال",
+      "reason": "خدمة إدارة الأعمال ليست وكالة تسويق."
      },
      {
       "name": "Icons Co-working Space",
@@ -2254,15 +2314,15 @@
      },
      {
       "name": "بالم هيلز للتنمية",
-      "reason": "مكتب شركات (تنمية عقارية) ليس وكالة تسويق."
+      "reason": "مكتب الشركات ليس وكالة تسويق."
      },
      {
       "name": "المتحدة للاسكان والتعمير",
-      "reason": "مكتب شركات (إسكان وتعـمير) ليس وكالة تسويق."
+      "reason": "مكتب الشركات ليس وكالة تسويق."
      },
      {
       "name": "Carnival Trading",
-      "reason": "مكتب شركات (تجارة) ليس وكالة تسويق."
+      "reason": "مكتب الشركات ليس وكالة تسويق."
      }
     ],
     "kept": 9
@@ -2436,7 +2496,7 @@
      },
      "dedupe_key": "place:ChIJkQMfib3E9RQRTJlLwZ05JXI",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B."
+     "fit_reason": "وكالة تسويق هي عميل مثالي."
     },
     {
      "business_name": "The Marketing house",
@@ -2599,7 +2659,7 @@
      },
      "dedupe_key": "place:ChIJx5xkpJSvLK4RfBJX5onUPjQ",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B."
+     "fit_reason": "وكالة تسويق هي عميل مثالي."
     },
     {
      "business_name": "شركة لافينوس للتسويق الالكتروني",
@@ -2833,7 +2893,7 @@
      },
      "dedupe_key": "place:ChIJS__tAITF9RQRIzI_5iRU3XU",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B."
+     "fit_reason": "وكالة تسويق هي عميل مثالي."
     },
     {
      "business_name": "Promo Marketing Agency",
@@ -2999,7 +3059,7 @@
      },
      "dedupe_key": "place:ChIJp3tw0cvD9RQR08H7F5nQ2Gs",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B."
+     "fit_reason": "وكالة تسويق وإعلانات هي عميل مثالي."
     },
     {
      "business_name": "Ocd",
@@ -3103,7 +3163,7 @@
      },
      "dedupe_key": "place:ChIJI2fQOwrD9RQR4GGOMSu1xaU",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B."
+     "fit_reason": "وكالة تسويق هي عميل مثالي."
     },
     {
      "business_name": "Jenica Agency",
@@ -3281,7 +3341,7 @@
      },
      "dedupe_key": "place:ChIJ9wtfnqbF9RQRc81NHO3TkRQ",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B."
+     "fit_reason": "وكالة تسويق وإعلانات هي عميل مثالي."
     },
     {
      "business_name": "Talent Idea Advertising Agency",
@@ -3444,7 +3504,7 @@
      },
      "dedupe_key": "place:ChIJc_GamxzF9RQRDE9OZGHDybQ",
      "fit": "fit",
-     "fit_reason": "وكالة إعلانية تبحث عن عملاء B2B."
+     "fit_reason": "وكالة إعلانية هي عميل مثالي."
     },
     {
      "business_name": "Digitopia Agency",
@@ -3607,7 +3667,7 @@
      },
      "dedupe_key": "place:ChIJa5ibMk_F9RQRFn1jfw9ZZ1Y",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B."
+     "fit_reason": "وكالة تسويق هي عميل مثالي."
     },
     {
      "business_name": "AIT Systems",
@@ -3789,14 +3849,14 @@
      },
      "dedupe_key": "place:ChIJlTcuapDE9RQRyfj8QgAGOOU",
      "fit": "maybe",
-     "fit_reason": "وكالة تجارة إلكترونية وخدمة تسويق عبر الإنترنت."
+     "fit_reason": "تقدم خدمات تسويق عبر الإنترنت، قد تكون عميلًا."
     }
    ],
    "links": [
     {
      "lead_id": "l0",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B.",
+     "fit_reason": "وكالة تسويق هي عميل مثالي.",
      "leads": {
       "id": "l0",
       "business_name": "Scitecs",
@@ -3918,7 +3978,7 @@
     {
      "lead_id": "l1",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B.",
+     "fit_reason": "وكالة تسويق هي عميل مثالي.",
      "leads": {
       "id": "l1",
       "business_name": "The Marketing house",
@@ -4033,7 +4093,7 @@
     {
      "lead_id": "l2",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B.",
+     "fit_reason": "وكالة تسويق هي عميل مثالي.",
      "leads": {
       "id": "l2",
       "business_name": "شركة لافينوس للتسويق الالكتروني",
@@ -4219,7 +4279,7 @@
     {
      "lead_id": "l3",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B.",
+     "fit_reason": "وكالة تسويق وإعلانات هي عميل مثالي.",
      "leads": {
       "id": "l3",
       "business_name": "Promo Marketing Agency",
@@ -4337,7 +4397,7 @@
     {
      "lead_id": "l4",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B.",
+     "fit_reason": "وكالة تسويق هي عميل مثالي.",
      "leads": {
       "id": "l4",
       "business_name": "Ocd",
@@ -4422,7 +4482,7 @@
     {
      "lead_id": "l5",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B.",
+     "fit_reason": "وكالة تسويق وإعلانات هي عميل مثالي.",
      "leads": {
       "id": "l5",
       "business_name": "Jenica Agency",
@@ -4552,7 +4612,7 @@
     {
      "lead_id": "l6",
      "fit": "fit",
-     "fit_reason": "وكالة إعلانية تبحث عن عملاء B2B.",
+     "fit_reason": "وكالة إعلانية هي عميل مثالي.",
      "leads": {
       "id": "l6",
       "business_name": "Talent Idea Advertising Agency",
@@ -4667,7 +4727,7 @@
     {
      "lead_id": "l7",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B.",
+     "fit_reason": "وكالة تسويق هي عميل مثالي.",
      "leads": {
       "id": "l7",
       "business_name": "Digitopia Agency",
@@ -4782,7 +4842,7 @@
     {
      "lead_id": "l8",
      "fit": "maybe",
-     "fit_reason": "وكالة تجارة إلكترونية وخدمة تسويق عبر الإنترنت.",
+     "fit_reason": "تقدم خدمات تسويق عبر الإنترنت، قد تكون عميلًا.",
      "leads": {
       "id": "l8",
       "business_name": "AIT Systems",
@@ -4917,27 +4977,28 @@
    "scored": [
     {
      "lead_id": "l0",
-     "score": 46,
+     "score": 16,
      "relevant": 0,
      "capped_by": null,
-     "favorable": [
-      {
-       "key": "has_website",
-       "side": "high",
-       "contribution": 10
-      }
-     ],
+     "favorable": [],
      "sigs": [
       {
-       "key": "size_proxy",
+       "key": "unclaimed_listing",
+       "weight": 50,
+       "value": 0,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
+       "key": "profile_completeness",
        "weight": 40,
-       "value": 0.319,
+       "value": 0.44,
        "baseline": false,
        "emphasis": false
       },
       {
        "key": "has_website",
-       "weight": 10,
+       "weight": -20,
        "value": 1,
        "baseline": true,
        "emphasis": false
@@ -4946,27 +5007,28 @@
     },
     {
      "lead_id": "l1",
-     "score": 36,
+     "score": 13,
      "relevant": 0,
      "capped_by": null,
-     "favorable": [
-      {
-       "key": "has_website",
-       "side": "high",
-       "contribution": 10
-      }
-     ],
+     "favorable": [],
      "sigs": [
       {
-       "key": "size_proxy",
+       "key": "unclaimed_listing",
+       "weight": 50,
+       "value": 0,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
+       "key": "profile_completeness",
        "weight": 40,
-       "value": 0.205,
+       "value": 0.347,
        "baseline": false,
        "emphasis": false
       },
       {
        "key": "has_website",
-       "weight": 10,
+       "weight": -20,
        "value": 1,
        "baseline": true,
        "emphasis": false
@@ -4975,28 +5037,51 @@
     },
     {
      "lead_id": "l2",
-     "score": 17,
-     "relevant": 0,
+     "score": 64,
+     "relevant": 2,
      "capped_by": null,
-     "favorable": [],
-     "sigs": [
+     "favorable": [
+      {
+       "key": "profile_completeness",
+       "side": "high",
+       "contribution": 40
+      },
       {
        "key": "activity",
-       "weight": 30,
+       "side": "low",
+       "contribution": 30
+      },
+      {
+       "key": "has_website",
+       "side": "low",
+       "contribution": 20
+      }
+     ],
+     "sigs": [
+      {
+       "key": "unclaimed_listing",
+       "weight": 50,
        "value": 0,
        "baseline": false,
        "emphasis": false
       },
       {
-       "key": "size_proxy",
+       "key": "profile_completeness",
        "weight": 40,
-       "value": 0.346,
+       "value": 1,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
+       "key": "activity",
+       "weight": -30,
+       "value": 0,
        "baseline": false,
        "emphasis": false
       },
       {
        "key": "has_website",
-       "weight": 10,
+       "weight": -20,
        "value": 0,
        "baseline": true,
        "emphasis": false
@@ -5005,27 +5090,28 @@
     },
     {
      "lead_id": "l3",
-     "score": 62,
+     "score": 11,
      "relevant": 0,
      "capped_by": null,
-     "favorable": [
-      {
-       "key": "has_website",
-       "side": "high",
-       "contribution": 10
-      }
-     ],
+     "favorable": [],
      "sigs": [
       {
-       "key": "size_proxy",
+       "key": "unclaimed_listing",
+       "weight": 50,
+       "value": 0,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
+       "key": "profile_completeness",
        "weight": 40,
-       "value": 0.527,
+       "value": 0.3,
        "baseline": false,
        "emphasis": false
       },
       {
        "key": "has_website",
-       "weight": 10,
+       "weight": -20,
        "value": 1,
        "baseline": true,
        "emphasis": false
@@ -5034,21 +5120,34 @@
     },
     {
      "lead_id": "l4",
-     "score": 19,
+     "score": 25,
      "relevant": 0,
      "capped_by": null,
-     "favorable": [],
+     "favorable": [
+      {
+       "key": "has_website",
+       "side": "low",
+       "contribution": 20
+      }
+     ],
      "sigs": [
       {
-       "key": "size_proxy",
+       "key": "unclaimed_listing",
+       "weight": 50,
+       "value": 0,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
+       "key": "profile_completeness",
        "weight": 40,
-       "value": 0.237,
+       "value": 0.187,
        "baseline": false,
        "emphasis": false
       },
       {
        "key": "has_website",
-       "weight": 10,
+       "weight": -20,
        "value": 0,
        "baseline": true,
        "emphasis": false
@@ -5057,39 +5156,41 @@
     },
     {
      "lead_id": "l5",
-     "score": 68,
+     "score": 21,
      "relevant": 1,
      "capped_by": null,
      "favorable": [
       {
-       "key": "activity",
+       "key": "profile_completeness",
        "side": "high",
-       "contribution": 30
-      },
-      {
-       "key": "has_website",
-       "side": "high",
-       "contribution": 10
+       "contribution": 28.799999999999997
       }
      ],
      "sigs": [
       {
+       "key": "unclaimed_listing",
+       "weight": 50,
+       "value": 0,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
+       "key": "profile_completeness",
+       "weight": 40,
+       "value": 0.72,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
        "key": "activity",
-       "weight": 30,
+       "weight": -30,
        "value": 1,
        "baseline": false,
        "emphasis": false
       },
       {
-       "key": "size_proxy",
-       "weight": 40,
-       "value": 0.359,
-       "baseline": false,
-       "emphasis": false
-      },
-      {
        "key": "has_website",
-       "weight": 10,
+       "weight": -20,
        "value": 1,
        "baseline": true,
        "emphasis": false
@@ -5098,27 +5199,28 @@
     },
     {
      "lead_id": "l6",
-     "score": 36,
+     "score": 11,
      "relevant": 0,
      "capped_by": null,
-     "favorable": [
-      {
-       "key": "has_website",
-       "side": "high",
-       "contribution": 10
-      }
-     ],
+     "favorable": [],
      "sigs": [
       {
-       "key": "size_proxy",
+       "key": "unclaimed_listing",
+       "weight": 50,
+       "value": 0,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
+       "key": "profile_completeness",
        "weight": 40,
-       "value": 0.205,
+       "value": 0.3,
        "baseline": false,
        "emphasis": false
       },
       {
        "key": "has_website",
-       "weight": 10,
+       "weight": -20,
        "value": 1,
        "baseline": true,
        "emphasis": false
@@ -5127,34 +5229,41 @@
     },
     {
      "lead_id": "l7",
-     "score": 58,
-     "relevant": 0,
+     "score": 39,
+     "relevant": 1,
      "capped_by": null,
      "favorable": [
       {
-       "key": "has_website",
+       "key": "profile_completeness",
        "side": "high",
-       "contribution": 10
+       "contribution": 40
       }
      ],
      "sigs": [
       {
+       "key": "unclaimed_listing",
+       "weight": 50,
+       "value": 0,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
+       "key": "profile_completeness",
+       "weight": 40,
+       "value": 1,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
        "key": "activity",
-       "weight": 30,
+       "weight": -30,
        "value": 0.5,
        "baseline": false,
        "emphasis": false
       },
       {
-       "key": "size_proxy",
-       "weight": 40,
-       "value": 0.534,
-       "baseline": false,
-       "emphasis": false
-      },
-      {
        "key": "has_website",
-       "weight": 10,
+       "weight": -20,
        "value": 1,
        "baseline": true,
        "emphasis": false
@@ -5163,39 +5272,35 @@
     },
     {
      "lead_id": "l8",
-     "score": 60,
-     "relevant": 1,
-     "capped_by": "maybe_fit",
-     "favorable": [
-      {
-       "key": "activity",
-       "side": "high",
-       "contribution": 30
-      },
-      {
-       "key": "has_website",
-       "side": "high",
-       "contribution": 10
-      }
-     ],
+     "score": 10,
+     "relevant": 0,
+     "capped_by": null,
+     "favorable": [],
      "sigs": [
       {
+       "key": "unclaimed_listing",
+       "weight": 50,
+       "value": 0,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
+       "key": "profile_completeness",
+       "weight": 40,
+       "value": 0.347,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
        "key": "activity",
-       "weight": 30,
+       "weight": -30,
        "value": 1,
        "baseline": false,
        "emphasis": false
       },
       {
-       "key": "size_proxy",
-       "weight": 40,
-       "value": 0.437,
-       "baseline": false,
-       "emphasis": false
-      },
-      {
        "key": "has_website",
-       "weight": 10,
+       "weight": -20,
        "value": 1,
        "baseline": true,
        "emphasis": false
@@ -5241,11 +5346,11 @@
       "praised": [
        {
         "theme": "التعامل الرائع",
-        "count": 2
+        "count": 1
        },
        {
-        "theme": "جودة العمل",
-        "count": 3
+        "theme": "العمل الممتاز",
+        "count": 2
        },
        {
         "theme": "الالتزام بالمواعيد",
@@ -5257,14 +5362,14 @@
        }
       ],
       "complaints": [],
-      "customer_values": "Customers value professionalism, high-quality work, punctuality, and innovative ideas in digital marketing services.",
-      "summary_ar": "يثني العملاء على شركة لافينوس للتسويق الإلكتروني لتعاملها الرائع وجودة عملها والتزامها بالمواعيد وأفكارها الإبداعية.",
-      "summary_en": "Customers praise Lavenus for its excellent service, high-quality work, punctuality, and innovative ideas.",
+      "customer_values": "Customers value professionalism, excellent work quality, punctuality, and innovative ideas in digital marketing services.",
+      "summary_ar": "يثني العملاء على شركة لافينوس للتسويق الإلكتروني لتعاملها الرائع، وجودة عملها الممتازة، والالتزام بالمواعيد، والأفكار الإبداعية.",
+      "summary_en": "Customers praise Lavenus for their excellent service, high-quality work, punctuality, and innovative ideas.",
       "confidence": "high",
       "n_texts": 6
      },
      "job_id": "job",
-     "computed_at": "2026-10-10T17:25:01.172Z"
+     "computed_at": "2026-10-10T17:41:54.468Z"
     },
     {
      "organization_id": "org",
@@ -5324,14 +5429,14 @@
        }
       ],
       "complaints": [],
-      "customer_values": "Customers value professionalism, experience, and innovative thinking.",
-      "summary_ar": "العملاء يثنون على وكالة Jenica لفريقها المحترف وذو الخبرة، وجودة عملها، وتفكيرها الإبداعي.",
-      "summary_en": "Customers praise Jenica Agency for its professional and experienced team, quality work, and creative thinking.",
+      "customer_values": "Customers value professionalism, experience, high-quality work, and innovative thinking.",
+      "summary_ar": "وكالة Jenica تحظى بتقدير كبير لفريقها المحترف وذو الخبرة، وجودة عملها الممتازة، وتفكيرها الإبداعي.",
+      "summary_en": "Jenica Agency is highly regarded for its professional and experienced team, excellent work quality, and creative thinking.",
       "confidence": "medium",
       "n_texts": 3
      },
      "job_id": "job",
-     "computed_at": "2026-10-10T17:25:01.172Z"
+     "computed_at": "2026-10-10T17:41:54.468Z"
     },
     {
      "organization_id": "org",
@@ -5379,13 +5484,13 @@
       ],
       "complaints": [],
       "customer_values": "Customers value creativity and strong teams in a digital marketing agency.",
-      "summary_ar": "تُشيد المراجعات بالتفكير الإبداعي وفرق العمل الرائعة للوكالة.",
-      "summary_en": "Reviews praise the agency's creative thinking and incredible teams.",
+      "summary_ar": "العملاء يثنون على الإبداع وفرق العمل الرائعة في هذه الوكالة.",
+      "summary_en": "Customers praise the creativity and incredible teams of this agency.",
       "confidence": "low",
       "n_texts": 2
      },
      "job_id": "job",
-     "computed_at": "2026-10-10T17:25:01.172Z"
+     "computed_at": "2026-10-10T17:41:54.468Z"
     },
     {
      "organization_id": "org",
@@ -5430,8 +5535,8 @@
      "analysis": {
       "praised": [
        {
-        "theme": "سرعة الاستجابة",
-        "count": 3
+        "theme": "سرعة الرد",
+        "count": 2
        },
        {
         "theme": "الاحترافية",
@@ -5442,19 +5547,19 @@
         "count": 4
        },
        {
-        "theme": "جودة الخدمات",
-        "count": 3
+        "theme": "الأمانة",
+        "count": 2
        }
       ],
       "complaints": [],
-      "customer_values": "Customers value professionalism, fast and supportive service, and high-quality work.",
-      "summary_ar": "يثني العملاء على احترافية AIT Systems وسرعة استجابتهم ودعمهم الفني الممتاز وجودة خدماتهم العالية.",
-      "summary_en": "Customers praise AIT Systems for their professionalism, fast response, excellent technical support, and high-quality services.",
+      "customer_values": "Customers value professionalism, quick and exceptional support, and integrity in service providers.",
+      "summary_ar": "يثني العملاء على احترافية AIT Systems وسرعة استجابتهم ودعمهم الفني المميز، بالإضافة إلى أمانتهم في التعامل.",
+      "summary_en": "Customers praise AIT Systems for their professionalism, quick response, exceptional technical support, and integrity in dealings.",
       "confidence": "high",
       "n_texts": 10
      },
      "job_id": "job",
-     "computed_at": "2026-10-10T17:25:01.172Z"
+     "computed_at": "2026-10-10T17:41:54.468Z"
     }
    ],
    "opps": [
@@ -5462,15 +5567,35 @@
      "organization_id": "org",
      "campaign_id": "camp",
      "lead_id": "l0",
-     "opportunities": [],
-     "selected_opportunity": null
+     "opportunities": [
+      {
+       "type": "thin_profile",
+       "strength": 1,
+       "evidence": {
+        "photos": 3,
+        "hours": true
+       },
+       "angle": "نوفر للوكالات فرصًا للتواصل مع عملاء محتملين مهتمين."
+      }
+     ],
+     "selected_opportunity": "thin_profile"
     },
     {
      "organization_id": "org",
      "campaign_id": "camp",
      "lead_id": "l1",
-     "opportunities": [],
-     "selected_opportunity": null
+     "opportunities": [
+      {
+       "type": "thin_profile",
+       "strength": 2,
+       "evidence": {
+        "photos": 1,
+        "hours": true
+       },
+       "angle": "نوفر للوكالات فرصًا للتواصل مع عملاء محتملين مهتمين."
+      }
+     ],
+     "selected_opportunity": "thin_profile"
     },
     {
      "organization_id": "org",
@@ -5484,7 +5609,7 @@
         "days": 798,
         "last": "2024-08-03T11:39:51.861Z"
        },
-       "angle": "نعيد إحياء النشاط التسويقي للوكالات ونوفر لها تدفقًا مستمرًا من العملاء المحتملين."
+       "angle": "نمكن الوكالات من التواصل الفعال مع عملاء B2B."
       }
      ],
      "selected_opportunity": "dormant_activity"
@@ -5495,22 +5620,33 @@
      "lead_id": "l3",
      "opportunities": [
       {
-       "type": "multi_branch",
+       "type": "thin_profile",
        "strength": 3,
        "evidence": {
-        "branches": 5
+        "photos": 0,
+        "hours": true
        },
-       "angle": "ندعم الوكالات متعددة الفروع في توسيع نطاق عملائها عبر فروعها المختلفة."
+       "angle": "نوفر للوكالات فرصًا للتواصل مع عملاء محتملين مهتمين."
       }
      ],
-     "selected_opportunity": "multi_branch"
+     "selected_opportunity": "thin_profile"
     },
     {
      "organization_id": "org",
      "campaign_id": "camp",
      "lead_id": "l4",
-     "opportunities": [],
-     "selected_opportunity": null
+     "opportunities": [
+      {
+       "type": "thin_profile",
+       "strength": 1,
+       "evidence": {
+        "photos": 4,
+        "hours": false
+       },
+       "angle": "نوفر للوكالات فرصًا للتواصل مع عملاء محتملين مهتمين."
+      }
+     ],
+     "selected_opportunity": "thin_profile"
     },
     {
      "organization_id": "org",
@@ -5523,8 +5659,18 @@
      "organization_id": "org",
      "campaign_id": "camp",
      "lead_id": "l6",
-     "opportunities": [],
-     "selected_opportunity": null
+     "opportunities": [
+      {
+       "type": "thin_profile",
+       "strength": 3,
+       "evidence": {
+        "photos": 0,
+        "hours": true
+       },
+       "angle": "نوفر للوكالات فرصًا للتواصل مع عملاء محتملين مهتمين."
+      }
+     ],
+     "selected_opportunity": "thin_profile"
     },
     {
      "organization_id": "org",
@@ -5532,31 +5678,33 @@
      "lead_id": "l7",
      "opportunities": [
       {
-       "type": "multi_branch",
-       "strength": 3,
-       "evidence": {
-        "branches": 5
-       },
-       "angle": "ندعم الوكالات متعددة الفروع في توسيع نطاق عملائها عبر فروعها المختلفة."
-      },
-      {
        "type": "dormant_activity",
        "strength": 1,
        "evidence": {
         "days": 363,
         "last": "2025-10-12T17:58:19.239Z"
        },
-       "angle": "نعيد إحياء النشاط التسويقي للوكالات ونوفر لها تدفقًا مستمرًا من العملاء المحتملين."
+       "angle": "نمكن الوكالات من التواصل الفعال مع عملاء B2B."
       }
      ],
-     "selected_opportunity": "multi_branch"
+     "selected_opportunity": "dormant_activity"
     },
     {
      "organization_id": "org",
      "campaign_id": "camp",
      "lead_id": "l8",
-     "opportunities": [],
-     "selected_opportunity": null
+     "opportunities": [
+      {
+       "type": "thin_profile",
+       "strength": 2,
+       "evidence": {
+        "photos": 1,
+        "hours": true
+       },
+       "angle": "نوفر للوكالات فرصًا للتواصل مع عملاء محتملين مهتمين."
+      }
+     ],
+     "selected_opportunity": "thin_profile"
     }
    ],
    "signalRows": {
@@ -5564,24 +5712,33 @@
      "has_website": {
       "value": 1
      },
-     "size_proxy": {
-      "value": 0.319
+     "unclaimed_listing": {
+      "value": 0
+     },
+     "profile_completeness": {
+      "value": 0.44
      }
     },
     "l1": {
      "has_website": {
       "value": 1
      },
-     "size_proxy": {
-      "value": 0.205
+     "unclaimed_listing": {
+      "value": 0
+     },
+     "profile_completeness": {
+      "value": 0.347
      }
     },
     "l2": {
      "has_website": {
       "value": 0
      },
-     "size_proxy": {
-      "value": 0.346
+     "unclaimed_listing": {
+      "value": 0
+     },
+     "profile_completeness": {
+      "value": 1
      },
      "activity": {
       "value": 0
@@ -5591,24 +5748,33 @@
      "has_website": {
       "value": 1
      },
-     "size_proxy": {
-      "value": 0.527
+     "unclaimed_listing": {
+      "value": 0
+     },
+     "profile_completeness": {
+      "value": 0.3
      }
     },
     "l4": {
      "has_website": {
       "value": 0
      },
-     "size_proxy": {
-      "value": 0.237
+     "unclaimed_listing": {
+      "value": 0
+     },
+     "profile_completeness": {
+      "value": 0.187
      }
     },
     "l5": {
      "has_website": {
       "value": 1
      },
-     "size_proxy": {
-      "value": 0.359
+     "unclaimed_listing": {
+      "value": 0
+     },
+     "profile_completeness": {
+      "value": 0.72
      },
      "activity": {
       "value": 1
@@ -5618,16 +5784,22 @@
      "has_website": {
       "value": 1
      },
-     "size_proxy": {
-      "value": 0.205
+     "unclaimed_listing": {
+      "value": 0
+     },
+     "profile_completeness": {
+      "value": 0.3
      }
     },
     "l7": {
      "has_website": {
       "value": 1
      },
-     "size_proxy": {
-      "value": 0.534
+     "unclaimed_listing": {
+      "value": 0
+     },
+     "profile_completeness": {
+      "value": 1
      },
      "activity": {
       "value": 0.5
@@ -5637,8 +5809,11 @@
      "has_website": {
       "value": 1
      },
-     "size_proxy": {
-      "value": 0.437
+     "unclaimed_listing": {
+      "value": 0
+     },
+     "profile_completeness": {
+      "value": 0.347
      },
      "activity": {
       "value": 1
@@ -5648,25 +5823,25 @@
    "messages": {
     "l0": {
      "ok": true,
-     "message": "أهلا يا فريق Scitecs، إحنا بنساعد شركات التسويق تلاقي زباين جداد ومناسبين ليها. وصلة بتجيب ليكم شركات ممكن تحتاج شغلكم وتجهز رسايل واتساب مخصوصة لكل شركة. تحبوا نبعتلكم 10 شركات متظبطة على شغلكم تجربوها ببلاش؟\nمحمد من وصلة",
-     "angle": "عملاء B2B جدد لوكالتك",
+     "message": "أهلا يا فريق Scitecs، إحنا في وصلة بنساعد وكالات التسويق تلاقي شركات محتاجة خدماتها. بنوفر ليكم عملاء جدد ومناسبين ونجهز رسايل واتساب شخصية لكل عميل. تحبوا نبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها؟\nمحمد من وصلة",
+     "angle": "توفير عملاء B2B جاهزين للوكالة برسائل مخصصة",
      "reason": null,
-     "attempts": 2,
-     "opportunity": null
+     "attempts": 1,
+     "opportunity": "thin_profile"
     },
     "l1": {
      "ok": true,
-     "message": "سؤال سريع: بتجيبوا عملاء جدد لوكالتكم إزاي دلوقتي؟ \"وصلة\" بتلاقي شركات محتاجة خدمات التسويق، وكمان بتجهز لكل شركة رسالة واتساب جاهزة. ده بيخليكم تلاقوا عملاء مناسبين وتتواصلوا معاهم بسرعة. تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها؟ محمد من وصلة",
-     "angle": "عملاء B2B جدد لوكالتك",
+     "message": "سؤال سريع: بتوصلوا لعملاء جدد لوكالتكم إزاي دلوقتي؟ إحنا في وصلة بنلاقي لوكالات التسويق شركات محتاجة خدماتهم، وبنكتب رسايل واتساب شخصية لكل شركة عشان التواصل يكون أسهل. تحبوا نبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها؟ محمد من وصلة",
+     "angle": "إيجاد عملاء للوكالات مع رسائل واتساب جاهزة",
      "reason": null,
-     "attempts": 1,
-     "opportunity": null
+     "attempts": 2,
+     "opportunity": "thin_profile"
     },
     "l2": {
-     "ok": false,
-     "message": null,
-     "angle": null,
-     "reason": "style:invented_benefit:جوده العمل",
+     "ok": true,
+     "message": "لو بتدوروا على شركات ممكن تحتاج خدماتكم، إحنا في وصلة بنلاقي وكالات التسويق شركات مناسبة وبنجهز رسايل واتساب مخصوصة لكل شركة. عملاءكم دايما بيشكروا في التعامل الرائع والعمل الممتاز. ممكن نبعتلكم 10 شركات مناسبة لشغلكم من غير أي مقابل؟ محمد من وصلة",
+     "angle": "إيجاد شركات مناسبة لوكالات التسويق ورسايل واتساب مخصصة",
+     "reason": null,
      "attempts": 2,
      "opportunity": "dormant_activity"
     },
@@ -5676,54 +5851,54 @@
      "angle": null,
      "reason": "style:assumes_need",
      "attempts": 2,
-     "opportunity": "multi_branch"
+     "opportunity": "thin_profile"
     },
     "l4": {
      "ok": true,
-     "message": "فكرة سريعة: ممكن نلاقي لوكالتكم شركات محتاجة خدمات التسويق بتاعتكم. إحنا في وصلة بنجهز رسايل واتساب مخصصة لكل عميل عشان تتواصلوا معاهم بسرعة. إزاي بتلاقوا عملاء جدد دلوقتي؟ تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش؟ محمد من وصلة",
-     "angle": "عملاء B2B جدد لوكالتك",
+     "message": "فكرة سريعة: \"وصلة\" بتلاقي لوكالات التسويق زي \"Ocd\" شركات محتاجة خدماتها بالظبط وتكتبلهم رسايل واتساب لكل شركة. ده بيوفر عليكم مجهود كبير في إنكم تلاقوا عملاء جداد وتتواصلوا معاهم بسرعة. تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها بنفسكم؟\nمحمد من وصلة",
+     "angle": "بنوفر عليكم مجهود إيجاد عملاء جدد والتواصل معاهم بسرعة",
      "reason": null,
-     "attempts": 1,
-     "opportunity": null
+     "attempts": 2,
+     "opportunity": "thin_profile"
     },
     "l5": {
      "ok": true,
-     "message": "أهلا بفريق Jenica Agency، عملاءكم دايمًا بيشكروا في خبرتكم في التسويق. عشان كده، إحنا بنوفر ليستة شركات محتاجة خدمات تسويقية، ومعاها رسايل واتساب جاهزة لكل عميل. تحبوا نبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها بنفسكم؟ محمد من وصلة",
-     "angle": "عملاء جدد للوكالة مع رسائل واتساب جاهزة",
+     "message": "أهلا يا جماعة، عملاءكم دايماً بيشكروا في فريقكم المحترف وخبرتكم، وعشان كده إحنا في وصلة بنلاقي وكالات التسويق عملاء جداد ومناسبين ونتواصل معاهم بسرعة. تحبوا نبعتلكم 10 شركات مناسبة لشغلكم تشوفوها بنفسكم؟\nمحمد من وصلة",
+     "angle": "ربطنا خبرتهم بشغلنا في توفير عملاء جدد",
      "reason": null,
      "attempts": 1,
      "opportunity": null
     },
     "l6": {
-     "ok": true,
-     "message": "بعد إذنكم، معاكم محمد من وصلة، بنساعد وكالات الإعلانات تلاقي عملاء جدد ومناسبين ليها. إحنا بنلاقي الشركات دي ونجهز كمان رسايل واتساب شخصية عشان التواصل يكون أسهل. تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها بنفسكم؟ محمد من وصلة",
-     "angle": "بنجيب عملاء B2B جدد ومناسبين للوكالة",
-     "reason": null,
-     "attempts": 1,
-     "opportunity": null
+     "ok": false,
+     "message": null,
+     "angle": null,
+     "reason": "style:word_count_31",
+     "attempts": 2,
+     "opportunity": "thin_profile"
     },
     "l7": {
      "ok": true,
-     "message": "أهلا يا فريق Digitopia Agency، إحنا بنبعت ليكم لأن مجالكم هو بالظبط اللي وصلة معمولة علشانه. إحنا بنساعد وكالات التسويق تلاقي شركات محتاجة خدماتها وتتواصل معاهم برسالة واتساب مظبوطة. ده بيخليكم تلاقوا عملاء جدد بسرعة وسهولة. تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها؟\nمحمد من وصلة",
-     "angle": "مجالهم هو بالظبط اللي الخدمة معمولة علشانه",
+     "message": "أهلا يا فريق Digitopia Agency، أنا بكلمكم عشان شغلكم كوكالة تسويق هو بالظبط اللي \"وصلة\" معمولة علشانه. إحنا بنلاقي لوكالات التسويق عملاء جدد ومناسبين ليهم، وبنجهز لكل عميل رسالة واتساب مخصصة. تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش؟\nمحمد من وصلة",
+     "angle": "عرض عملاء B2B لوكالة تسويق",
      "reason": null,
      "attempts": 1,
-     "opportunity": "multi_branch"
+     "opportunity": "dormant_activity"
     },
     "l8": {
      "ok": true,
-     "message": "أهلا يا فريق AIT Systems، إحنا عارفين إن شغلكم في خدمة أمان الكمبيوتر بيحتاج سرعة استجابة عالية. وصلة بتساعد الشركات اللي زيكم تلاقي عملاء جدد ومناسبين، وبنجهز لكل عميل رسالة واتساب شخصية. تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها؟ محمد من وصلة",
-     "angle": "عملاء جدد لخدمة أمان الكمبيوتر ورسائل واتساب شخصية",
+     "message": "أهلا يا فريق AIT Systems، عملاءكم دايما بيشكروا في سرعة الرد عندكم. إحنا بنلاقي شركات مناسبة لوكالات زيكم، وبنجهز لكل شركة رسالة واتساب مظبوطة. تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوا بيها الشغل؟\nمحمد من وصلة",
+     "angle": "مدخل شخصي: سرعة الرد من تقييمات العملاء",
      "reason": null,
      "attempts": 1,
-     "opportunity": null
+     "opportunity": "thin_profile"
     }
    }
   },
   "cairo": {
    "genLinks": [
     {
-     "opportunity_score": 56,
+     "opportunity_score": 39,
      "score_reasons": [],
      "opportunities": [
       {
@@ -5733,7 +5908,7 @@
         "days": 163,
         "last": "2026-04-30T08:36:15.011Z"
        },
-       "angle": "نعيد إحياء النشاط التسويقي للوكالات ونوفر لها تدفقًا مستمرًا من العملاء المحتملين."
+       "angle": "نمكن الوكالات من التواصل الفعال مع عملاء B2B."
       }
      ],
      "selected_opportunity": "dormant_activity",
@@ -5865,7 +6040,7 @@
      }
     },
     {
-     "opportunity_score": 51,
+     "opportunity_score": 39,
      "score_reasons": [],
      "opportunities": [
       {
@@ -5875,7 +6050,7 @@
         "days": 243,
         "last": "2026-02-09T13:29:01.110Z"
        },
-       "angle": "نعيد إحياء النشاط التسويقي للوكالات ونوفر لها تدفقًا مستمرًا من العملاء المحتملين."
+       "angle": "نمكن الوكالات من التواصل الفعال مع عملاء B2B."
       }
      ],
      "selected_opportunity": "dormant_activity",
@@ -5997,7 +6172,7 @@
      }
     },
     {
-     "opportunity_score": 69,
+     "opportunity_score": 18,
      "score_reasons": [],
      "opportunities": [],
      "selected_opportunity": null,
@@ -6122,7 +6297,7 @@
      }
     },
     {
-     "opportunity_score": 54,
+     "opportunity_score": 39,
      "score_reasons": [],
      "opportunities": [
       {
@@ -6132,7 +6307,7 @@
         "days": 212,
         "last": "2026-03-12T14:57:17.162Z"
        },
-       "angle": "نعيد إحياء النشاط التسويقي للوكالات ونوفر لها تدفقًا مستمرًا من العملاء المحتملين."
+       "angle": "نمكن الوكالات من التواصل الفعال مع عملاء B2B."
       }
      ],
      "selected_opportunity": "dormant_activity",
@@ -6273,7 +6448,7 @@
      }
     },
     {
-     "opportunity_score": 69,
+     "opportunity_score": 21,
      "score_reasons": [],
      "opportunities": [],
      "selected_opportunity": null,
@@ -6436,9 +6611,18 @@
      }
     },
     {
-     "opportunity_score": 50,
+     "opportunity_score": 26,
      "score_reasons": [],
      "opportunities": [
+      {
+       "type": "thin_profile",
+       "strength": 1,
+       "evidence": {
+        "photos": 5,
+        "hours": true
+       },
+       "angle": "نوفر للوكالات فرصًا للتواصل مع عملاء محتملين مهتمين."
+      },
       {
        "type": "dormant_activity",
        "strength": 1,
@@ -6446,10 +6630,10 @@
         "days": 147,
         "last": "2026-05-16T19:04:31.770Z"
        },
-       "angle": "نعيد إحياء النشاط التسويقي للوكالات ونوفر لها تدفقًا مستمرًا من العملاء المحتملين."
+       "angle": "نمكن الوكالات من التواصل الفعال مع عملاء B2B."
       }
      ],
-     "selected_opportunity": "dormant_activity",
+     "selected_opportunity": "thin_profile",
      "fit": "fit",
      "leads": {
       "id": "l5",
@@ -6568,7 +6752,7 @@
      }
     },
     {
-     "opportunity_score": 52,
+     "opportunity_score": 21,
      "score_reasons": [],
      "opportunities": [],
      "selected_opportunity": null,
@@ -6691,7 +6875,7 @@
      }
     },
     {
-     "opportunity_score": 48,
+     "opportunity_score": 39,
      "score_reasons": [],
      "opportunities": [
       {
@@ -6701,7 +6885,7 @@
         "days": 119,
         "last": "2026-06-14T02:44:47.765Z"
        },
-       "angle": "نعيد إحياء النشاط التسويقي للوكالات ونوفر لها تدفقًا مستمرًا من العملاء المحتملين."
+       "angle": "نمكن الوكالات من التواصل الفعال مع عملاء B2B."
       }
      ],
      "selected_opportunity": "dormant_activity",
@@ -6863,22 +7047,22 @@
         "count": 1
        },
        {
-        "theme": "احترافية في تنفيذ التطبيقات",
+        "theme": "نتائج السوشيال ميديا",
+        "count": 1
+       },
+       {
+        "theme": "تنفيذ احترافي للتطبيق",
         "count": 1
        },
        {
         "theme": "فهم السيو",
         "count": 1
-       },
-       {
-        "theme": "متابعة بعد التسليم",
-        "count": 1
        }
       ],
       "complaints": [],
-      "customer_values": "Customers value professionalism, effective communication, and good post-delivery support.",
-      "summary_ar": "العملاء يثنون على احترافية الشركة في تنفيذ المشاريع، تعاون الفريق، وفهمهم الجيد للسيو، بالإضافة إلى المتابعة الجيدة بعد التسليم.",
-      "summary_en": "Customers praise the company's professionalism in project execution, team cooperation, good understanding of SEO, and good follow-up after delivery.",
+      "customer_values": "Customers value professional execution, effective results, and good communication from their marketing and web development partners.",
+      "summary_ar": "يثني العملاء على احترافية الشركة في تنفيذ التطبيقات وفهمها الجيد للسيو، بالإضافة إلى النتائج الإيجابية في السوشيال ميديا والفريق المتعاون.",
+      "summary_en": "Customers praise the company's professional app execution, good understanding of SEO, positive social media results, and cooperative team.",
       "confidence": "high",
       "n_texts": 9
      }
@@ -6918,22 +7102,22 @@
      "analysis": {
       "praised": [
        {
-        "theme": "فريق العمل",
-        "count": 4
-       },
-       {
-        "theme": "الاحترافية",
+        "theme": "فريق متعاون",
         "count": 3
        },
        {
-        "theme": "الالتزام",
+        "theme": "احترافية",
+        "count": 2
+       },
+       {
+        "theme": "التزام",
         "count": 2
        }
       ],
       "complaints": [],
       "customer_values": "Customers value professionalism, teamwork, and commitment in a marketing company.",
-      "summary_ar": "يثني العملاء على فريق العمل المحترف والملتزم لشركة ماركترمارت، مشيدين بجهودهم وتعاونهم.",
-      "summary_en": "Customers praise MarketerMart's professional and committed team, commending their efforts and cooperation.",
+      "summary_ar": "يثني العملاء على ماركترمارت لامتلاكها فريق عمل متعاون ومحترف وملتزم.",
+      "summary_en": "Customers praise MarketerMart for its cooperative, professional, and committed team.",
       "confidence": "medium",
       "n_texts": 5
      }
@@ -6988,14 +7172,14 @@
         "count": 2
        },
        {
-        "theme": "فريق عمل متعاون",
-        "count": 2
+        "theme": "فريق العمل",
+        "count": 1
        }
       ],
       "complaints": [
        {
         "theme": "سوء الإدارة",
-        "count": 2,
+        "count": 1,
         "offer_can_help": false
        },
        {
@@ -7004,19 +7188,19 @@
         "offer_can_help": false
        },
        {
-        "theme": "قلة الخبرة",
+        "theme": "عدم الخبرة",
         "count": 1,
         "offer_can_help": false
        },
        {
-        "theme": "سوء التعامل",
+        "theme": "قلة الذوق",
         "count": 1,
         "offer_can_help": false
        }
       ],
-      "customer_values": "Customers value professional and effective digital marketing services, especially in website design, SEO, and Google ad campaigns, that lead to tangible busines",
-      "summary_ar": "تُشيد المراجعات الإيجابية بالشركة في تصميم المواقع وتحسين محركات البحث وحملات جوجل الإعلانية، بينما تشكو المراجعات السلبية من سوء الإدارة وعدم وجود كيان شركة حقيقي.",
-      "summary_en": "Positive reviews praise the company for website design, SEO, and Google ad campaigns, while negative reviews complain about poor management and the lack of a real company entity.",
+      "customer_values": "Customers value professional website design, effective SEO, successful Google ad campaigns, and a responsive team.",
+      "summary_ar": "تُشيد المراجعات الإيجابية بتصميم المواقع الاحترافي وحملات جوجل الناجحة وتحسين محركات البحث. بينما تشير المراجعات السلبية إلى سوء الإدارة وعدم وجود شركة حقيقية.",
+      "summary_en": "Positive reviews praise professional website design, successful Google campaigns, and SEO. Negative reviews point to poor management and the perception of not being a real company.",
       "confidence": "high",
       "n_texts": 9
      }
@@ -7064,15 +7248,19 @@
         "count": 2
        },
        {
-        "theme": "المكان المنظم والنظيف",
+        "theme": "المساحات المنظمة",
+        "count": 1
+       },
+       {
+        "theme": "النظافة",
         "count": 1
        }
       ],
       "complaints": [],
       "customer_values": "Customers value professionalism, high quality, and a clean, organized environment.",
-      "summary_ar": "يشيد العملاء بالاحترافية والجودة العالية للمكان، ويصفونه بأنه الأفضل في السوق.",
-      "summary_en": "Customers praise the professionalism and high quality of the place, describing it as the best in the market.",
-      "confidence": "low",
+      "summary_ar": "العملاء يثنون على احترافية المكان، ويعتبرونه الأفضل في السوق، ويقدرون المساحات المنظمة والنظيفة.",
+      "summary_en": "Customers praise the professionalism of the place, consider it the best in the market, and appreciate the organized and clean spaces.",
+      "confidence": "medium",
       "n_texts": 4
      }
     },
@@ -7180,14 +7368,14 @@
         "count": 1
        },
        {
-        "theme": "مؤهلات عالية",
+        "theme": "تجاوز الوكالات الدولية",
         "count": 1
        }
       ],
       "complaints": [],
-      "customer_values": "Customers value a highly qualified, creative, and evolving team.",
-      "summary_ar": "يشيد العملاء بفريق العمل المتميز والمبدع في Plus One Up، ويذكرون أنهم يقدمون أفكارًا متطورة.",
-      "summary_en": "Customers praise Plus One Up's excellent and creative team, mentioning that they offer evolving ideas.",
+      "customer_values": "Customers value a highly skilled, creative, and evolving team.",
+      "summary_ar": "يثني العملاء على فريق العمل المتميز والمبدع في Plus One Up، مشيرين إلى أفكارهم المتطورة وقدرتهم على تجاوز التوقعات.",
+      "summary_en": "Customers praise Plus One Up's outstanding and creative team, highlighting their evolving ideas and ability to exceed expectations.",
       "confidence": "high",
       "n_texts": 6
      }
@@ -7244,9 +7432,9 @@
        }
       ],
       "complaints": [],
-      "customer_values": "Customers value professionalism, excellent results, and high-quality leads from their partners.",
-      "summary_ar": "يثني العملاء على فريق TeleTarget المحترف ونتائجهم الممتازة وجودة العملاء المحتملين.",
-      "summary_en": "Customers praise TeleTarget's professional team, excellent results, and high-quality leads.",
+      "customer_values": "Customers value professionalism, excellent results, and high-quality leads.",
+      "summary_ar": "يثني العملاء على TeleTarget لفريقهم المحترف ونتائجهم الممتازة وجودة العملاء المحتملين.",
+      "summary_en": "Customers praise TeleTarget for their professional team, excellent results, and high-quality leads.",
       "confidence": "high",
       "n_texts": 6
      }
@@ -7273,7 +7461,7 @@
       "inside": true,
       "fit": "fit",
       "evidence": "category",
-      "reason": "وكالة تسويق تبحث عن عملاء B2B.",
+      "reason": "وكالة تسويق تبحث عن عملاء B2B جدد.",
       "keep": true,
       "why": null
      },
@@ -7299,7 +7487,7 @@
       "inside": true,
       "fit": "fit",
       "evidence": "category",
-      "reason": "خدمة التسويق عبر الإنترنت تبحث عن عملاء B2B.",
+      "reason": "خدمة التسويق عبر الإنترنت تبحث عن عملاء B2B جدد.",
       "keep": true,
       "why": null
      },
@@ -7328,7 +7516,7 @@
       "inside": true,
       "fit": "fit",
       "evidence": "category",
-      "reason": "وكالة تسويق وتصميم تبحث عن عملاء B2B.",
+      "reason": "وكالة تسويق وتصميم تبحث عن عملاء B2B جدد.",
       "keep": true,
       "why": null
      },
@@ -7355,7 +7543,7 @@
       "inside": false,
       "fit": "not_fit",
       "evidence": "category",
-      "reason": "هيئة حكومية لتنمية المشروعات، ليست وكالة تسويق.",
+      "reason": "جهاز حكومي لتنمية المشروعات، ليس وكالة تسويق.",
       "keep": false,
       "why": "not_fit"
      },
@@ -7396,11 +7584,11 @@
       "category": "خدمة تطوير أعمال",
       "place_id": "ChIJSSTRlDpBWBQRwftoV-RZJ0c",
       "inside": false,
-      "fit": "not_fit",
+      "fit": "maybe",
       "evidence": "category",
-      "reason": "خدمة تطوير أعمال عامة، ليست وكالة تسويق.",
+      "reason": "خدمة تطوير أعمال قد تشمل التسويق.",
       "keep": false,
-      "why": "not_fit"
+      "why": "outside_categories"
      },
      "placeId": "ChIJSSTRlDpBWBQRwftoV-RZJ0c"
     },
@@ -7430,8 +7618,8 @@
       "place_id": "ChIJxVvF2c0_WBQRrZz0gAZjKZI",
       "inside": false,
       "fit": "not_fit",
-      "evidence": "category",
-      "reason": "تبيع معدات، ليست وكالة تسويق.",
+      "evidence": "website",
+      "reason": "الشركة تبيع معدات وليس خدمات تسويق.",
       "keep": false,
       "why": "not_fit"
      },
@@ -7456,8 +7644,8 @@
       "place_id": "ChIJgyHDvMs8WBQR4wWFkJqG46A",
       "inside": true,
       "fit": "not_fit",
-      "evidence": "name_only",
-      "reason": "تسويق عقاري ليس مجال الوكالة المستهدفة.",
+      "evidence": "category",
+      "reason": "مستشار تسويق عقاري، ليس وكالة تسويق عامة.",
       "keep": false,
       "why": "not_fit"
      },
@@ -7483,7 +7671,7 @@
       "inside": true,
       "fit": "fit",
       "evidence": "category",
-      "reason": "وكالة إعلانية تبحث عن عملاء B2B.",
+      "reason": "وكالة إعلانية تبحث عن عملاء B2B جدد.",
       "keep": true,
       "why": null
      },
@@ -7510,7 +7698,7 @@
       "inside": false,
       "fit": "not_fit",
       "evidence": "category",
-      "reason": "خدمة شحن، ليست وكالة تسويق.",
+      "reason": "الشركة تقدم خدمات شحن وليست تسويق.",
       "keep": false,
       "why": "not_fit"
      },
@@ -7537,7 +7725,7 @@
       "inside": false,
       "fit": "not_fit",
       "evidence": "category",
-      "reason": "استشارات مالية وضرائب، ليست وكالة تسويق.",
+      "reason": "الشركة تقدم استشارات مالية وضرائب وليست تسويق.",
       "keep": false,
       "why": "not_fit"
      },
@@ -7564,7 +7752,7 @@
       "inside": false,
       "fit": "not_fit",
       "evidence": "category",
-      "reason": "تاجر سيارات، ليست وكالة تسويق.",
+      "reason": "الشركة تبيع سيارات وليست خدمات تسويق.",
       "keep": false,
       "why": "not_fit"
      },
@@ -7592,7 +7780,7 @@
       "inside": true,
       "fit": "fit",
       "evidence": "category",
-      "reason": "وكالة تسويق وإعلانات تبحث عن عملاء B2B.",
+      "reason": "وكالة تسويق وإعلانات تبحث عن عملاء B2B جدد.",
       "keep": true,
       "why": null
      },
@@ -7618,7 +7806,7 @@
       "inside": true,
       "fit": "fit",
       "evidence": "category",
-      "reason": "وكالة تسويق تبحث عن عملاء B2B.",
+      "reason": "وكالة تسويق تبحث عن عملاء B2B جدد.",
       "keep": true,
       "why": null
      },
@@ -7645,7 +7833,7 @@
       "inside": true,
       "fit": "fit",
       "evidence": "category",
-      "reason": "وكالة تسويق تبحث عن عملاء B2B.",
+      "reason": "وكالة تسويق تبحث عن عملاء B2B جدد.",
       "keep": true,
       "why": null
      },
@@ -7672,7 +7860,7 @@
       "inside": false,
       "fit": "not_fit",
       "evidence": "category",
-      "reason": "متجر أجهزة إلكترونية، ليست وكالة تسويق.",
+      "reason": "الشركة تبيع أجهزة إلكترونية وليست خدمات تسويق.",
       "keep": false,
       "why": "not_fit"
      },
@@ -7699,7 +7887,7 @@
       "inside": false,
       "fit": "not_fit",
       "evidence": "category",
-      "reason": "مركز اتصالات، ليست وكالة تسويق.",
+      "reason": "الشركة مركز اتصالات وليست وكالة تسويق.",
       "keep": false,
       "why": "not_fit"
      },
@@ -7726,7 +7914,7 @@
       "inside": false,
       "fit": "fit",
       "evidence": "category",
-      "reason": "خدمة تسويق عبر الهاتف، وكالة تسويق.",
+      "reason": "الشركة تقدم خدمة التسويق عبر الهاتف.",
       "keep": true,
       "why": null
      },
@@ -7753,7 +7941,7 @@
       "inside": false,
       "fit": "not_fit",
       "evidence": "category",
-      "reason": "مكتب شركات، ليست وكالة تسويق.",
+      "reason": "الشركة مكتب شركات وليست وكالة تسويق.",
       "keep": false,
       "why": "not_fit"
      },
@@ -7793,43 +7981,39 @@
     "droppedFit": [
      {
       "name": "المصرى للتسويق العقارى بالقاهرة الجديدة",
-      "reason": "تسويق عقاري ليس مجال الوكالة المستهدفة."
+      "reason": "مستشار تسويق عقاري، ليس وكالة تسويق عامة."
      },
      {
       "name": "جهاز تنمية المشروعات الصغيرة والمتوسطة والمتناهية الصغر",
-      "reason": "هيئة حكومية لتنمية المشروعات، ليست وكالة تسويق."
-     },
-     {
-      "name": "Asd Business Solutions",
-      "reason": "خدمة تطوير أعمال عامة، ليست وكالة تسويق."
+      "reason": "جهاز حكومي لتنمية المشروعات، ليس وكالة تسويق."
      },
      {
       "name": "Cairo Marketing Company CMC",
-      "reason": "تبيع معدات، ليست وكالة تسويق."
+      "reason": "الشركة تبيع معدات وليس خدمات تسويق."
      },
      {
       "name": "B2B Shipping Services",
-      "reason": "خدمة شحن، ليست وكالة تسويق."
+      "reason": "الشركة تقدم خدمات شحن وليست تسويق."
      },
      {
       "name": "B2B للاستشارات المالية وخدمات الضرائب",
-      "reason": "استشارات مالية وضرائب، ليست وكالة تسويق."
+      "reason": "الشركة تقدم استشارات مالية وضرائب وليست تسويق."
      },
      {
       "name": "BDR auto",
-      "reason": "تاجر سيارات، ليست وكالة تسويق."
+      "reason": "الشركة تبيع سيارات وليست خدمات تسويق."
      },
      {
       "name": "2B",
-      "reason": "متجر أجهزة إلكترونية، ليست وكالة تسويق."
+      "reason": "الشركة تبيع أجهزة إلكترونية وليست خدمات تسويق."
      },
      {
       "name": "iCall Outsourcing",
-      "reason": "مركز اتصالات، ليست وكالة تسويق."
+      "reason": "الشركة مركز اتصالات وليست وكالة تسويق."
      },
      {
       "name": "BD Scientific Office - Egypt",
-      "reason": "مكتب شركات، ليست وكالة تسويق."
+      "reason": "الشركة مكتب شركات وليست وكالة تسويق."
      }
     ],
     "kept": 8
@@ -8006,7 +8190,7 @@
      },
      "dedupe_key": "place:ChIJO-4MMwQ_WBQR5C9XpNip3M4",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B."
+     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B جدد."
     },
     {
      "business_name": "ماركترمارت",
@@ -8169,7 +8353,7 @@
      },
      "dedupe_key": "place:ChIJpfWT97Q_WBQRkG-OQmx-gFc",
      "fit": "fit",
-     "fit_reason": "خدمة التسويق عبر الإنترنت تبحث عن عملاء B2B."
+     "fit_reason": "خدمة التسويق عبر الإنترنت تبحث عن عملاء B2B جدد."
     },
     {
      "business_name": "شركة إنجاز ميديا للتسويق الإلكتروني و تصميم المواقع",
@@ -8335,7 +8519,7 @@
      },
      "dedupe_key": "place:ChIJD9Hhkts9WBQRByPEH8XnOLc",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق وتصميم تبحث عن عملاء B2B."
+     "fit_reason": "وكالة تسويق وتصميم تبحث عن عملاء B2B جدد."
     },
     {
      "business_name": "The Creative Zone",
@@ -8517,7 +8701,7 @@
      },
      "dedupe_key": "place:ChIJ6zEAW7U8WBQReQ1JfGQossI",
      "fit": "fit",
-     "fit_reason": "وكالة إعلانية تبحث عن عملاء B2B."
+     "fit_reason": "وكالة إعلانية تبحث عن عملاء B2B جدد."
     },
     {
      "business_name": "Essence Adverts",
@@ -8721,7 +8905,7 @@
      },
      "dedupe_key": "place:ChIJHQecVo1HWBQRvhTCr8nM5TA",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق وإعلانات تبحث عن عملاء B2B."
+     "fit_reason": "وكالة تسويق وإعلانات تبحث عن عملاء B2B جدد."
     },
     {
      "business_name": "Plus One Up",
@@ -8884,7 +9068,7 @@
      },
      "dedupe_key": "place:ChIJQcI7wds3WBQRvxyAU_eMePs",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B."
+     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B جدد."
     },
     {
      "business_name": "ripplemark Egypt",
@@ -9048,7 +9232,7 @@
      },
      "dedupe_key": "place:ChIJJejrEW04WBQRDTtRGZIRvsE",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B."
+     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B جدد."
     },
     {
      "business_name": "TeleTarget",
@@ -9211,14 +9395,14 @@
      },
      "dedupe_key": "place:ChIJac_FRBg_WBQRqnOJKfBgAic",
      "fit": "fit",
-     "fit_reason": "خدمة تسويق عبر الهاتف، وكالة تسويق."
+     "fit_reason": "الشركة تقدم خدمة التسويق عبر الهاتف."
     }
    ],
    "links": [
     {
      "lead_id": "l0",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B.",
+     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B جدد.",
      "leads": {
       "id": "l0",
       "business_name": "فيرست ماركتس - أفضل شركة تسويق إلكتروني وتصميم مواقع ومتاجر إلكترونية",
@@ -9343,7 +9527,7 @@
     {
      "lead_id": "l1",
      "fit": "fit",
-     "fit_reason": "خدمة التسويق عبر الإنترنت تبحث عن عملاء B2B.",
+     "fit_reason": "خدمة التسويق عبر الإنترنت تبحث عن عملاء B2B جدد.",
      "leads": {
       "id": "l1",
       "business_name": "ماركترمارت",
@@ -9458,7 +9642,7 @@
     {
      "lead_id": "l2",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق وتصميم تبحث عن عملاء B2B.",
+     "fit_reason": "وكالة تسويق وتصميم تبحث عن عملاء B2B جدد.",
      "leads": {
       "id": "l2",
       "business_name": "شركة إنجاز ميديا للتسويق الإلكتروني و تصميم المواقع",
@@ -9576,7 +9760,7 @@
     {
      "lead_id": "l3",
      "fit": "fit",
-     "fit_reason": "وكالة إعلانية تبحث عن عملاء B2B.",
+     "fit_reason": "وكالة إعلانية تبحث عن عملاء B2B جدد.",
      "leads": {
       "id": "l3",
       "business_name": "The Creative Zone",
@@ -9710,7 +9894,7 @@
     {
      "lead_id": "l4",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق وإعلانات تبحث عن عملاء B2B.",
+     "fit_reason": "وكالة تسويق وإعلانات تبحث عن عملاء B2B جدد.",
      "leads": {
       "id": "l4",
       "business_name": "Essence Adverts",
@@ -9866,7 +10050,7 @@
     {
      "lead_id": "l5",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B.",
+     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B جدد.",
      "leads": {
       "id": "l5",
       "business_name": "Plus One Up",
@@ -9981,7 +10165,7 @@
     {
      "lead_id": "l6",
      "fit": "fit",
-     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B.",
+     "fit_reason": "وكالة تسويق تبحث عن عملاء B2B جدد.",
      "leads": {
       "id": "l6",
       "business_name": "ripplemark Egypt",
@@ -10097,7 +10281,7 @@
     {
      "lead_id": "l7",
      "fit": "fit",
-     "fit_reason": "خدمة تسويق عبر الهاتف، وكالة تسويق.",
+     "fit_reason": "الشركة تقدم خدمة التسويق عبر الهاتف.",
      "leads": {
       "id": "l7",
       "business_name": "TeleTarget",
@@ -10213,34 +10397,41 @@
    "scored": [
     {
      "lead_id": "l0",
-     "score": 56,
-     "relevant": 0,
+     "score": 39,
+     "relevant": 1,
      "capped_by": null,
      "favorable": [
       {
-       "key": "has_website",
+       "key": "profile_completeness",
        "side": "high",
-       "contribution": 10
+       "contribution": 40
       }
      ],
      "sigs": [
       {
+       "key": "unclaimed_listing",
+       "weight": 50,
+       "value": 0,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
+       "key": "profile_completeness",
+       "weight": 40,
+       "value": 1,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
        "key": "activity",
-       "weight": 30,
+       "weight": -30,
        "value": 0.5,
        "baseline": false,
        "emphasis": false
       },
       {
-       "key": "size_proxy",
-       "weight": 40,
-       "value": 0.485,
-       "baseline": false,
-       "emphasis": false
-      },
-      {
        "key": "has_website",
-       "weight": 10,
+       "weight": -20,
        "value": 1,
        "baseline": true,
        "emphasis": false
@@ -10249,34 +10440,41 @@
     },
     {
      "lead_id": "l1",
-     "score": 51,
-     "relevant": 0,
+     "score": 39,
+     "relevant": 1,
      "capped_by": null,
      "favorable": [
       {
-       "key": "has_website",
+       "key": "profile_completeness",
        "side": "high",
-       "contribution": 10
+       "contribution": 40
       }
      ],
      "sigs": [
       {
+       "key": "unclaimed_listing",
+       "weight": 50,
+       "value": 0,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
+       "key": "profile_completeness",
+       "weight": 40,
+       "value": 1,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
        "key": "activity",
-       "weight": 30,
+       "weight": -30,
        "value": 0.5,
        "baseline": false,
        "emphasis": false
       },
       {
-       "key": "size_proxy",
-       "weight": 40,
-       "value": 0.401,
-       "baseline": false,
-       "emphasis": false
-      },
-      {
        "key": "has_website",
-       "weight": 10,
+       "weight": -20,
        "value": 1,
        "baseline": true,
        "emphasis": false
@@ -10285,39 +10483,35 @@
     },
     {
      "lead_id": "l2",
-     "score": 69,
-     "relevant": 1,
-     "capped_by": "needs_two_signals",
-     "favorable": [
-      {
-       "key": "activity",
-       "side": "high",
-       "contribution": 30
-      },
-      {
-       "key": "has_website",
-       "side": "high",
-       "contribution": 10
-      }
-     ],
+     "score": 18,
+     "relevant": 0,
+     "capped_by": null,
+     "favorable": [],
      "sigs": [
       {
+       "key": "unclaimed_listing",
+       "weight": 50,
+       "value": 0,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
+       "key": "profile_completeness",
+       "weight": 40,
+       "value": 0.627,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
        "key": "activity",
-       "weight": 30,
+       "weight": -30,
        "value": 1,
        "baseline": false,
        "emphasis": false
       },
       {
-       "key": "size_proxy",
-       "weight": 40,
-       "value": 0.447,
-       "baseline": false,
-       "emphasis": false
-      },
-      {
        "key": "has_website",
-       "weight": 10,
+       "weight": -20,
        "value": 1,
        "baseline": true,
        "emphasis": false
@@ -10326,34 +10520,41 @@
     },
     {
      "lead_id": "l3",
-     "score": 54,
-     "relevant": 0,
+     "score": 39,
+     "relevant": 1,
      "capped_by": null,
      "favorable": [
       {
-       "key": "has_website",
+       "key": "profile_completeness",
        "side": "high",
-       "contribution": 10
+       "contribution": 40
       }
      ],
      "sigs": [
       {
+       "key": "unclaimed_listing",
+       "weight": 50,
+       "value": 0,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
+       "key": "profile_completeness",
+       "weight": 40,
+       "value": 1,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
        "key": "activity",
-       "weight": 30,
+       "weight": -30,
        "value": 0.5,
        "baseline": false,
        "emphasis": false
       },
       {
-       "key": "size_proxy",
-       "weight": 40,
-       "value": 0.451,
-       "baseline": false,
-       "emphasis": false
-      },
-      {
        "key": "has_website",
-       "weight": 10,
+       "weight": -20,
        "value": 1,
        "baseline": true,
        "emphasis": false
@@ -10362,39 +10563,41 @@
     },
     {
      "lead_id": "l4",
-     "score": 69,
+     "score": 21,
      "relevant": 1,
-     "capped_by": "needs_two_signals",
+     "capped_by": null,
      "favorable": [
       {
-       "key": "activity",
+       "key": "profile_completeness",
        "side": "high",
-       "contribution": 30
-      },
-      {
-       "key": "has_website",
-       "side": "high",
-       "contribution": 10
+       "contribution": 28.799999999999997
       }
      ],
      "sigs": [
       {
+       "key": "unclaimed_listing",
+       "weight": 50,
+       "value": 0,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
+       "key": "profile_completeness",
+       "weight": 40,
+       "value": 0.72,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
        "key": "activity",
-       "weight": 30,
+       "weight": -30,
        "value": 1,
        "baseline": false,
        "emphasis": false
       },
       {
-       "key": "size_proxy",
-       "weight": 40,
-       "value": 0.429,
-       "baseline": false,
-       "emphasis": false
-      },
-      {
        "key": "has_website",
-       "weight": 10,
+       "weight": -20,
        "value": 1,
        "baseline": true,
        "emphasis": false
@@ -10403,34 +10606,35 @@
     },
     {
      "lead_id": "l5",
-     "score": 50,
+     "score": 26,
      "relevant": 0,
      "capped_by": null,
-     "favorable": [
-      {
-       "key": "has_website",
-       "side": "high",
-       "contribution": 10
-      }
-     ],
+     "favorable": [],
      "sigs": [
       {
+       "key": "unclaimed_listing",
+       "weight": 50,
+       "value": 0,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
+       "key": "profile_completeness",
+       "weight": 40,
+       "value": 0.533,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
        "key": "activity",
-       "weight": 30,
+       "weight": -30,
        "value": 0.5,
        "baseline": false,
        "emphasis": false
       },
       {
-       "key": "size_proxy",
-       "weight": 40,
-       "value": 0.374,
-       "baseline": false,
-       "emphasis": false
-      },
-      {
        "key": "has_website",
-       "weight": 10,
+       "weight": -20,
        "value": 1,
        "baseline": true,
        "emphasis": false
@@ -10439,27 +10643,28 @@
     },
     {
      "lead_id": "l6",
-     "score": 52,
+     "score": 21,
      "relevant": 0,
      "capped_by": null,
-     "favorable": [
-      {
-       "key": "has_website",
-       "side": "high",
-       "contribution": 10
-      }
-     ],
+     "favorable": [],
      "sigs": [
       {
-       "key": "size_proxy",
+       "key": "unclaimed_listing",
+       "weight": 50,
+       "value": 0,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
+       "key": "profile_completeness",
        "weight": 40,
-       "value": 0.394,
+       "value": 0.58,
        "baseline": false,
        "emphasis": false
       },
       {
        "key": "has_website",
-       "weight": 10,
+       "weight": -20,
        "value": 1,
        "baseline": true,
        "emphasis": false
@@ -10468,34 +10673,41 @@
     },
     {
      "lead_id": "l7",
-     "score": 48,
-     "relevant": 0,
+     "score": 39,
+     "relevant": 1,
      "capped_by": null,
      "favorable": [
       {
-       "key": "has_website",
+       "key": "profile_completeness",
        "side": "high",
-       "contribution": 10
+       "contribution": 40
       }
      ],
      "sigs": [
       {
+       "key": "unclaimed_listing",
+       "weight": 50,
+       "value": 0,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
+       "key": "profile_completeness",
+       "weight": 40,
+       "value": 1,
+       "baseline": false,
+       "emphasis": false
+      },
+      {
        "key": "activity",
-       "weight": 30,
+       "weight": -30,
        "value": 0.5,
        "baseline": false,
        "emphasis": false
       },
       {
-       "key": "size_proxy",
-       "weight": 40,
-       "value": 0.334,
-       "baseline": false,
-       "emphasis": false
-      },
-      {
        "key": "has_website",
-       "weight": 10,
+       "weight": -20,
        "value": 1,
        "baseline": true,
        "emphasis": false
@@ -10544,27 +10756,27 @@
         "count": 1
        },
        {
-        "theme": "احترافية في تنفيذ التطبيقات",
+        "theme": "نتائج السوشيال ميديا",
+        "count": 1
+       },
+       {
+        "theme": "تنفيذ احترافي للتطبيق",
         "count": 1
        },
        {
         "theme": "فهم السيو",
         "count": 1
-       },
-       {
-        "theme": "متابعة بعد التسليم",
-        "count": 1
        }
       ],
       "complaints": [],
-      "customer_values": "Customers value professionalism, effective communication, and good post-delivery support.",
-      "summary_ar": "العملاء يثنون على احترافية الشركة في تنفيذ المشاريع، تعاون الفريق، وفهمهم الجيد للسيو، بالإضافة إلى المتابعة الجيدة بعد التسليم.",
-      "summary_en": "Customers praise the company's professionalism in project execution, team cooperation, good understanding of SEO, and good follow-up after delivery.",
+      "customer_values": "Customers value professional execution, effective results, and good communication from their marketing and web development partners.",
+      "summary_ar": "يثني العملاء على احترافية الشركة في تنفيذ التطبيقات وفهمها الجيد للسيو، بالإضافة إلى النتائج الإيجابية في السوشيال ميديا والفريق المتعاون.",
+      "summary_en": "Customers praise the company's professional app execution, good understanding of SEO, positive social media results, and cooperative team.",
       "confidence": "high",
       "n_texts": 9
      },
      "job_id": "job",
-     "computed_at": "2026-10-10T17:25:41.129Z"
+     "computed_at": "2026-10-10T17:42:40.291Z"
     },
     {
      "organization_id": "org",
@@ -10602,27 +10814,27 @@
      "analysis": {
       "praised": [
        {
-        "theme": "فريق العمل",
-        "count": 4
-       },
-       {
-        "theme": "الاحترافية",
+        "theme": "فريق متعاون",
         "count": 3
        },
        {
-        "theme": "الالتزام",
+        "theme": "احترافية",
+        "count": 2
+       },
+       {
+        "theme": "التزام",
         "count": 2
        }
       ],
       "complaints": [],
       "customer_values": "Customers value professionalism, teamwork, and commitment in a marketing company.",
-      "summary_ar": "يثني العملاء على فريق العمل المحترف والملتزم لشركة ماركترمارت، مشيدين بجهودهم وتعاونهم.",
-      "summary_en": "Customers praise MarketerMart's professional and committed team, commending their efforts and cooperation.",
+      "summary_ar": "يثني العملاء على ماركترمارت لامتلاكها فريق عمل متعاون ومحترف وملتزم.",
+      "summary_en": "Customers praise MarketerMart for its cooperative, professional, and committed team.",
       "confidence": "medium",
       "n_texts": 5
      },
      "job_id": "job",
-     "computed_at": "2026-10-10T17:25:41.129Z"
+     "computed_at": "2026-10-10T17:42:40.291Z"
     },
     {
      "organization_id": "org",
@@ -10675,14 +10887,14 @@
         "count": 2
        },
        {
-        "theme": "فريق عمل متعاون",
-        "count": 2
+        "theme": "فريق العمل",
+        "count": 1
        }
       ],
       "complaints": [
        {
         "theme": "سوء الإدارة",
-        "count": 2,
+        "count": 1,
         "offer_can_help": false
        },
        {
@@ -10691,24 +10903,24 @@
         "offer_can_help": false
        },
        {
-        "theme": "قلة الخبرة",
+        "theme": "عدم الخبرة",
         "count": 1,
         "offer_can_help": false
        },
        {
-        "theme": "سوء التعامل",
+        "theme": "قلة الذوق",
         "count": 1,
         "offer_can_help": false
        }
       ],
-      "customer_values": "Customers value professional and effective digital marketing services, especially in website design, SEO, and Google ad campaigns, that lead to tangible busines",
-      "summary_ar": "تُشيد المراجعات الإيجابية بالشركة في تصميم المواقع وتحسين محركات البحث وحملات جوجل الإعلانية، بينما تشكو المراجعات السلبية من سوء الإدارة وعدم وجود كيان شركة حقيقي.",
-      "summary_en": "Positive reviews praise the company for website design, SEO, and Google ad campaigns, while negative reviews complain about poor management and the lack of a real company entity.",
+      "customer_values": "Customers value professional website design, effective SEO, successful Google ad campaigns, and a responsive team.",
+      "summary_ar": "تُشيد المراجعات الإيجابية بتصميم المواقع الاحترافي وحملات جوجل الناجحة وتحسين محركات البحث. بينما تشير المراجعات السلبية إلى سوء الإدارة وعدم وجود شركة حقيقية.",
+      "summary_en": "Positive reviews praise professional website design, successful Google campaigns, and SEO. Negative reviews point to poor management and the perception of not being a real company.",
       "confidence": "high",
       "n_texts": 9
      },
      "job_id": "job",
-     "computed_at": "2026-10-10T17:25:41.129Z"
+     "computed_at": "2026-10-10T17:42:40.291Z"
     },
     {
      "organization_id": "org",
@@ -10754,19 +10966,23 @@
         "count": 2
        },
        {
-        "theme": "المكان المنظم والنظيف",
+        "theme": "المساحات المنظمة",
+        "count": 1
+       },
+       {
+        "theme": "النظافة",
         "count": 1
        }
       ],
       "complaints": [],
       "customer_values": "Customers value professionalism, high quality, and a clean, organized environment.",
-      "summary_ar": "يشيد العملاء بالاحترافية والجودة العالية للمكان، ويصفونه بأنه الأفضل في السوق.",
-      "summary_en": "Customers praise the professionalism and high quality of the place, describing it as the best in the market.",
-      "confidence": "low",
+      "summary_ar": "العملاء يثنون على احترافية المكان، ويعتبرونه الأفضل في السوق، ويقدرون المساحات المنظمة والنظيفة.",
+      "summary_en": "Customers praise the professionalism of the place, consider it the best in the market, and appreciate the organized and clean spaces.",
+      "confidence": "medium",
       "n_texts": 4
      },
      "job_id": "job",
-     "computed_at": "2026-10-10T17:25:41.129Z"
+     "computed_at": "2026-10-10T17:42:40.291Z"
     },
     {
      "organization_id": "org",
@@ -10826,7 +11042,7 @@
       "n_texts": 2
      },
      "job_id": "job",
-     "computed_at": "2026-10-10T17:25:41.129Z"
+     "computed_at": "2026-10-10T17:42:40.291Z"
     },
     {
      "organization_id": "org",
@@ -10876,19 +11092,19 @@
         "count": 1
        },
        {
-        "theme": "مؤهلات عالية",
+        "theme": "تجاوز الوكالات الدولية",
         "count": 1
        }
       ],
       "complaints": [],
-      "customer_values": "Customers value a highly qualified, creative, and evolving team.",
-      "summary_ar": "يشيد العملاء بفريق العمل المتميز والمبدع في Plus One Up، ويذكرون أنهم يقدمون أفكارًا متطورة.",
-      "summary_en": "Customers praise Plus One Up's excellent and creative team, mentioning that they offer evolving ideas.",
+      "customer_values": "Customers value a highly skilled, creative, and evolving team.",
+      "summary_ar": "يثني العملاء على فريق العمل المتميز والمبدع في Plus One Up، مشيرين إلى أفكارهم المتطورة وقدرتهم على تجاوز التوقعات.",
+      "summary_en": "Customers praise Plus One Up's outstanding and creative team, highlighting their evolving ideas and ability to exceed expectations.",
       "confidence": "high",
       "n_texts": 6
      },
      "job_id": "job",
-     "computed_at": "2026-10-10T17:25:41.129Z"
+     "computed_at": "2026-10-10T17:42:40.291Z"
     },
     {
      "organization_id": "org",
@@ -10943,14 +11159,14 @@
        }
       ],
       "complaints": [],
-      "customer_values": "Customers value professionalism, excellent results, and high-quality leads from their partners.",
-      "summary_ar": "يثني العملاء على فريق TeleTarget المحترف ونتائجهم الممتازة وجودة العملاء المحتملين.",
-      "summary_en": "Customers praise TeleTarget's professional team, excellent results, and high-quality leads.",
+      "customer_values": "Customers value professionalism, excellent results, and high-quality leads.",
+      "summary_ar": "يثني العملاء على TeleTarget لفريقهم المحترف ونتائجهم الممتازة وجودة العملاء المحتملين.",
+      "summary_en": "Customers praise TeleTarget for their professional team, excellent results, and high-quality leads.",
       "confidence": "high",
       "n_texts": 6
      },
      "job_id": "job",
-     "computed_at": "2026-10-10T17:25:41.129Z"
+     "computed_at": "2026-10-10T17:42:40.291Z"
     }
    ],
    "opps": [
@@ -10966,7 +11182,7 @@
         "days": 163,
         "last": "2026-04-30T08:36:15.011Z"
        },
-       "angle": "نعيد إحياء النشاط التسويقي للوكالات ونوفر لها تدفقًا مستمرًا من العملاء المحتملين."
+       "angle": "نمكن الوكالات من التواصل الفعال مع عملاء B2B."
       }
      ],
      "selected_opportunity": "dormant_activity"
@@ -10983,7 +11199,7 @@
         "days": 243,
         "last": "2026-02-09T13:29:01.110Z"
        },
-       "angle": "نعيد إحياء النشاط التسويقي للوكالات ونوفر لها تدفقًا مستمرًا من العملاء المحتملين."
+       "angle": "نمكن الوكالات من التواصل الفعال مع عملاء B2B."
       }
      ],
      "selected_opportunity": "dormant_activity"
@@ -11007,7 +11223,7 @@
         "days": 212,
         "last": "2026-03-12T14:57:17.162Z"
        },
-       "angle": "نعيد إحياء النشاط التسويقي للوكالات ونوفر لها تدفقًا مستمرًا من العملاء المحتملين."
+       "angle": "نمكن الوكالات من التواصل الفعال مع عملاء B2B."
       }
      ],
      "selected_opportunity": "dormant_activity"
@@ -11025,16 +11241,25 @@
      "lead_id": "l5",
      "opportunities": [
       {
+       "type": "thin_profile",
+       "strength": 1,
+       "evidence": {
+        "photos": 5,
+        "hours": true
+       },
+       "angle": "نوفر للوكالات فرصًا للتواصل مع عملاء محتملين مهتمين."
+      },
+      {
        "type": "dormant_activity",
        "strength": 1,
        "evidence": {
         "days": 147,
         "last": "2026-05-16T19:04:31.770Z"
        },
-       "angle": "نعيد إحياء النشاط التسويقي للوكالات ونوفر لها تدفقًا مستمرًا من العملاء المحتملين."
+       "angle": "نمكن الوكالات من التواصل الفعال مع عملاء B2B."
       }
      ],
-     "selected_opportunity": "dormant_activity"
+     "selected_opportunity": "thin_profile"
     },
     {
      "organization_id": "org",
@@ -11055,7 +11280,7 @@
         "days": 119,
         "last": "2026-06-14T02:44:47.765Z"
        },
-       "angle": "نعيد إحياء النشاط التسويقي للوكالات ونوفر لها تدفقًا مستمرًا من العملاء المحتملين."
+       "angle": "نمكن الوكالات من التواصل الفعال مع عملاء B2B."
       }
      ],
      "selected_opportunity": "dormant_activity"
@@ -11066,8 +11291,11 @@
      "has_website": {
       "value": 1
      },
-     "size_proxy": {
-      "value": 0.485
+     "unclaimed_listing": {
+      "value": 0
+     },
+     "profile_completeness": {
+      "value": 1
      },
      "activity": {
       "value": 0.5
@@ -11077,8 +11305,11 @@
      "has_website": {
       "value": 1
      },
-     "size_proxy": {
-      "value": 0.401
+     "unclaimed_listing": {
+      "value": 0
+     },
+     "profile_completeness": {
+      "value": 1
      },
      "activity": {
       "value": 0.5
@@ -11088,8 +11319,11 @@
      "has_website": {
       "value": 1
      },
-     "size_proxy": {
-      "value": 0.447
+     "unclaimed_listing": {
+      "value": 0
+     },
+     "profile_completeness": {
+      "value": 0.627
      },
      "activity": {
       "value": 1
@@ -11099,8 +11333,11 @@
      "has_website": {
       "value": 1
      },
-     "size_proxy": {
-      "value": 0.451
+     "unclaimed_listing": {
+      "value": 0
+     },
+     "profile_completeness": {
+      "value": 1
      },
      "activity": {
       "value": 0.5
@@ -11110,8 +11347,11 @@
      "has_website": {
       "value": 1
      },
-     "size_proxy": {
-      "value": 0.429
+     "unclaimed_listing": {
+      "value": 0
+     },
+     "profile_completeness": {
+      "value": 0.72
      },
      "activity": {
       "value": 1
@@ -11121,8 +11361,11 @@
      "has_website": {
       "value": 1
      },
-     "size_proxy": {
-      "value": 0.374
+     "unclaimed_listing": {
+      "value": 0
+     },
+     "profile_completeness": {
+      "value": 0.533
      },
      "activity": {
       "value": 0.5
@@ -11132,16 +11375,22 @@
      "has_website": {
       "value": 1
      },
-     "size_proxy": {
-      "value": 0.394
+     "unclaimed_listing": {
+      "value": 0
+     },
+     "profile_completeness": {
+      "value": 0.58
      }
     },
     "l7": {
      "has_website": {
       "value": 1
      },
-     "size_proxy": {
-      "value": 0.334
+     "unclaimed_listing": {
+      "value": 0
+     },
+     "profile_completeness": {
+      "value": 1
      },
      "activity": {
       "value": 0.5
@@ -11151,64 +11400,64 @@
    "messages": {
     "l0": {
      "ok": true,
-     "message": "أهلا يا فريق فيرست ماركتس، عملاءكم دايما بيشكروا في احترافيتكم في تنفيذ التطبيقات. إحنا في وصلة بنساعد وكالات التسويق تلاقي شركات محتاجة خدماتها، وبنجهز لكل شركة رسالة جاهزة تتبعت على واتساب. تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها بنفسكم؟ محمد من وصلة",
-     "angle": "ربطنا المديح الخاص بالعملاء مع عرض جلب العملاء الجدد للوكالة",
+     "message": "أهلا يا فريق فيرست ماركتس، عملاءكم دايماً بيشكروا في نتائج السوشيال ميديا اللي بتقدموها. إحنا في وصلة بنساعد وكالات التسويق تلاقي عملاء جدد ومناسبين ليها. لو حابين تشوفوا إزاي، ممكن أبعتلكم 10 شركات مناسبة لشغلكم ببلاش؟ محمد من وصلة",
+     "angle": "الحصول على عملاء B2B",
      "reason": null,
      "attempts": 1,
      "opportunity": "dormant_activity"
     },
     "l1": {
      "ok": true,
-     "message": "سؤال سريع: إزاي بتلاقوا شركات جديدة محتاجة خدماتكم دلوقتي؟ إحنا في وصلة بنساعد شركات التسويق إنها تلاقي شركات مناسبة وتتواصل معاهم برسالة واتساب مخصصة. عملاءكم دايماً بيشكروا في احترافيتكم. تحبوا نبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها بنفسكم؟\nمحمد من وصلة",
-     "angle": "عملاء B2B جدد لوكالتك",
+     "message": "سؤال سريع: إزاي بتلاقوا عملاء جدد لوكالتكم دلوقتي؟ إحنا في وصلة بنساعد الوكالات تلاقي عملاء جدد ومناسبين، وبنجهز رسائل واتساب مخصوصة لكل عميل. ده بيخلي التواصل أسرع وأسهل مع الشركات اللي ممكن تشتغلوا معاها. تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش؟ محمد من وصلة",
+     "angle": "إيجاد عملاء B2B للوكالات مع رسائل واتساب جاهزة",
      "reason": null,
      "attempts": 2,
      "opportunity": "dormant_activity"
     },
     "l2": {
-     "ok": false,
-     "message": null,
-     "angle": null,
-     "reason": "bad_json",
-     "attempts": 2,
+     "ok": true,
+     "message": "لو بتدوروا على عملاء جدد ومناسبين لنشاطكم، إحنا في وصلة بنساعد وكالات التسويق تلاقي الشركات دي. بنجهز كمان رسايل واتساب شخصية لكل عميل عشان توصلوا أسرع. تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش؟ محمد من وصلة",
+     "angle": "عملاء B2B جاهزين لوكالتك",
+     "reason": null,
+     "attempts": 1,
      "opportunity": null
     },
     "l3": {
      "ok": true,
-     "message": "وصلة بتلاقي لوكالات الإعلانات زيكم شركات محتاجة خدماتها بالظبط، وبتجهز لكل شركة رسالة واتساب مخصوصة. ده بيخلي التواصل أسهل وأسرع عشان تلاقوا عملاء جداد باستمرار. تحبوا نبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها بنفسكم؟\nمحمد من وصلة",
-     "angle": "الحصول على عملاء B2B جدد ومناسبين للوكالات",
+     "message": "أهلا بفريق The Creative Zone، وصلة بتساعد الوكالات إنها تلاقي عملاء جدد وتتواصل معاهم برسالة واتساب مخصصة. بما إن عملاءكم دايما بيشكروا في الأفضل في السوق، الأداة دي هتخليكم توصلوا لشركات محتاجة خدماتكم. ممكن نبعتلكم 10 شركات مناسبة لشغلكم ببلاش؟\nمحمد من وصلة",
+     "angle": "إيجاد عملاء B2B لوكالة إعلانية",
      "reason": null,
-     "attempts": 1,
+     "attempts": 2,
      "opportunity": "dormant_activity"
     },
     "l4": {
      "ok": true,
-     "message": "فكرة سريعة: \"وصلة\" بتلاقي عملاء جدد ومناسبين لوكالة إعلانية زي \"Essence Adverts\"، وتساعدكم تتواصلوا معاهم بسرعة برسالة واتساب جاهزة لكل عميل. ده بيخليكم تلاقوا عملاء جدد وتتواصلوا معاهم أسرع. تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها؟\nمحمد من وصلة",
-     "angle": "الحصول على عملاء B2B جدد لوكالتهم",
+     "message": "فكرة سريعة: \"وصلة\" بتلاقي لوكالة زي \"Essence Adverts\" شركات تحتاج شغلكم، وبتكتب لكل واحدة رسالة واتساب مظبوطة. ده بيوفر عليكم وقت ومجهود كبير في البحث والتواصل. لو تحبوا، أبعتلكم 10 شركات مناسبة لشغلكم ببلاش؟ محمد من وصلة",
+     "angle": "توفير وقت ومجهود البحث عن عملاء جدد",
      "reason": null,
-     "attempts": 2,
+     "attempts": 1,
      "opportunity": null
     },
     "l5": {
      "ok": true,
-     "message": "أهلا بفريق Plus One Up، عملاءكم دايما بيشكروا في أفكاركم المختلفة. عشان كده، إحنا عاملين أداة اسمها وصلة بتجيب لوكالات التسويق شركات محتاجة خدماتها فعلاً، ومع كل شركة رسالة جاهزة تتبعت على واتساب. تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها بنفسكم؟ محمد من وصلة",
-     "angle": "بناءً على إشادة العملاء بالأفكار المختلفة",
+     "message": "أهلا بفريق Plus One Up، عملاءكم دايمًا بيشكروا في أفكاركم المختلفة. عشان كده، إحنا عاملين أداة بتلاقي لوكالات التسويق شركات محتاجة خدماتها فعلاً، ومع كل شركة رسالة جاهزة على واتساب. تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش؟ محمد من وصلة",
+     "angle": "عملاء الشركة يثنون على أفكارهم المختلفة، وهذا يفتح بابًا لعرض خدماتنا.",
      "reason": null,
      "attempts": 1,
-     "opportunity": "dormant_activity"
+     "opportunity": "thin_profile"
     },
     "l6": {
      "ok": true,
-     "message": "بعد إذنكم، معاكم محمد من وصلة، إحنا بنساعد وكالات التسويق تلاقي شركات محتاجة خدماتها. شغلكم في التسويق عبر الإنترنت بيوصل لعملاء كتير. إحنا بنوفر لوكالات زيكم عملاء جداد ومناسبين، وبنجهز لكل عميل رسالة واتساب شخصية. لو تحبوا، ممكن نبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها. محمد من وصلة",
-     "angle": "عملاء B2B جدد و رسائل واتساب جاهزة لوكالات التسويق",
+     "message": "بعد إذنكم، إحنا فريق وصلة وبنساعد وكالات التسويق تلاقي عملاء شركات جدد. شغلكم في التسويق الأونلاين واضح إنه قوي ومحتاج شركات تستفيد منه. إحنا ممكن نوفرلكم الشركات دي برسالة واتساب جاهزة لكل واحدة. تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش؟\nمحمد من وصلة",
+     "angle": "توفير عملاء B2B لوكالات التسويق",
      "reason": null,
-     "attempts": 2,
+     "attempts": 1,
      "opportunity": null
     },
     "l7": {
      "ok": true,
-     "message": "أهلا بفريق TeleTarget، إحنا بنبعتلكم عشان شغلكم في التسويق عبر الهاتف بالظبط هو اللي خدمتنا متخصصة فيه. إحنا بنوفر للوكالات عملاء جدد ومناسبين، ونجهز كمان رسالة واتساب مخصوصة لكل عميل. تحبوا نبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها بنفسكم؟\nمحمد من وصلة",
-     "angle": "بناءً على تخصصهم في التسويق عبر الهاتف",
+     "message": "أهلا يا فريق TeleTarget، أنا بكلمكم عشان مجالكم هو بالظبط اللي خدمتنا معموله عشانه. إحنا في وصلة بنلاقي وكالات التسويق عملاء جداد ومناسبين، وبنجهز رسالة واتساب مخصوصة لكل عميل. تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش؟ محمد من وصلة",
+     "angle": "عرض عملاء B2B جاهزين لوكالتهم مع رسائل مجهزة",
      "reason": null,
      "attempts": 1,
      "opportunity": "dormant_activity"
@@ -11218,7 +11467,7 @@
  },
  "llm": {
   "calls": 40,
-  "cost_usd": 0.03622,
+  "cost_usd": 0.03599,
   "models": {
    "writer": "google/gemini-2.5-flash",
    "planner": "google/gemini-2.5-flash"
