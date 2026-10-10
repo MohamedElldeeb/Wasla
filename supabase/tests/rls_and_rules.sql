@@ -286,6 +286,13 @@ begin
   perform pg_temp.ok(pg_temp.q('authenticated', a, format('select sent || %L || replied from public.opportunity_stats(%L)', '/', org_a)) = '1/1', 'opportunity stats: 1 sent, 1 replied');
   perform pg_temp.ok(pg_temp.q('authenticated', b, format('select count(*) from public.opportunity_stats(%L)', org_a)) = '0', 'B cannot read A opportunity stats');
 
+  -- Angle switching: only an opportunity the lead has, only by members
+  perform pg_temp.q('postgres', null, format('update public.campaign_leads set opportunities = %L where id = %L', '[{"type":"unclaimed_listing","strength":2,"evidence":{},"angle":"x"},{"type":"dormant_activity","strength":1,"evidence":{},"angle":"y"}]', cl_a));
+  perform pg_temp.q('authenticated', a, format('select public.set_selected_opportunity(%L, %L)', cl_a, 'dormant_activity'));
+  perform pg_temp.ok((select selected_opportunity from public.campaign_leads where id = cl_a) = 'dormant_activity', 'angle switched');
+  perform pg_temp.ok(pg_temp.err('authenticated', a, format('select public.set_selected_opportunity(%L, %L)', cl_a, 'new_business')) like '%unknown_opportunity%', 'cannot pick an opportunity the lead does not have');
+  perform pg_temp.ok(pg_temp.err('authenticated', b, format('select public.set_selected_opportunity(%L, %L)', cl_a, 'unclaimed_listing')) like 'P0002%', 'B cannot switch A angle');
+
   -- Planner / signal job types
   perform pg_temp.ok(pg_temp.err('authenticated', a, format('select public.create_job(%L, null, %L, 2, %L)', org_a, 'plan', 'plan-1')) = 'OK', 'planner job allowed');
   perform pg_temp.ok(pg_temp.err('authenticated', a, format('select public.create_job(%L, null, %L, 0, %L)', org_a, 'bogus', 'bad-1')) like '23514%', 'unknown job type rejected');

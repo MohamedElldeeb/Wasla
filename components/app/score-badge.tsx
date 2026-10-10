@@ -43,13 +43,13 @@ export function ReasonChips({ reasons, max = 3, className }: { reasons: string[]
   );
 }
 
-/** A score is never shown without its reasons (DESIGN.md 5). */
+/** A score is always shown when it exists; reasons are added when there are favorable ones (a low score may have none). */
 export function ScoreWithReasons({ score, reasons, max = 3 }: { score: number | null; reasons: string[]; max?: number }) {
-  if (score == null || reasons.length === 0) return null;
+  if (score == null) return null;
   return (
     <div className="flex items-start gap-3">
       <ScoreBadge score={score} />
-      <ReasonChips reasons={reasons} max={max} className="min-w-0 flex-1 pt-1" />
+      {reasons.length > 0 && <ReasonChips reasons={reasons} max={max} className="min-w-0 flex-1 pt-1" />}
     </div>
   );
 }

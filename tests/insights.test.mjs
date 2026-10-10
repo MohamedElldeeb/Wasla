@@ -204,3 +204,10 @@ test('2b: zero-result fallback is city level with the simplest keywords', () => 
   assert.equal(r.searches.length, 2);
   assert.equal(r.searches[0].locationQuery, 'القاهرة, Egypt');
 });
+
+test('interview: only public http(s) URLs are fetched (the page is read by our n8n server)', async () => {
+  const { safePublicUrl } = await import('../lib/safe-url.mjs');
+  assert.equal(safePublicUrl('example.com/about'), 'https://example.com/about');
+  assert.equal(safePublicUrl('https://www.facebook.com/somepage'), 'https://www.facebook.com/somepage');
+  for (const bad of ['http://localhost:3000', 'http://127.0.0.1', 'http://10.0.0.5/admin', 'ftp://example.com', 'javascript:alert(1)', 'https://user:pw@example.com', 'http://[::1]/', 'http://intranet', 'http://printer.local', '', '   ']) assert.equal(safePublicUrl(bad), null, bad);
+});

@@ -5,14 +5,26 @@ export type OfferProfile = {
   problems_we_solve?: string;
   proof_points?: string;
   regions?: { governorate?: string; city?: string; district?: string }[];
+  example_customers?: string[];
 };
 
-export type CampaignSignal = { key: string; weight: number };
+export type CampaignSignal = { key: string; weight: number; emphasis?: boolean };
+export type Region3 = { governorate?: string; city?: string; district?: string };
+/** Planner output: an opportunity type this offer can help with, and the one-sentence angle for it. */
+export type OpportunityMapItem = { type: string; angle_ar: string };
 
 export type CampaignParameters = {
   keywords?: string[];
-  locations?: { governorate?: string; city?: string; district?: string }[];
+  locations?: Region3[];
   max_results?: number;
+  /** Fresh leads across campaigns (spec 6.2): false by default; true also searches companies found in earlier campaigns. */
+  include_previous_companies?: boolean;
+  /** One sentence describing the ideal prospect. Used by the probe and by the fit check on every delivered lead. */
+  ideal_lead_description?: string;
+  synonyms?: string[];
+  nearby_locations?: Region3[];
+  opportunities?: OpportunityMapItem[];
+  complaint_relevance?: string | null;
   filters?: {
     min_rating?: number;
     min_reviews?: number;
@@ -20,6 +32,9 @@ export type CampaignParameters = {
     must_have_mobile?: boolean;
     must_have_website?: boolean;
     exclude_closed?: boolean;
+    /** Allowed Google Maps categories, Arabic and English. Matched by Wasla, never by the actor. */
+    categories_include?: string[];
+    categories_exclude?: string[];
   };
   enrich_emails?: boolean;
   channel?: 'whatsapp' | 'messenger' | 'email';
@@ -44,12 +59,12 @@ export type Job = {
   id: string;
   organization_id: string;
   campaign_id: string | null;
-  type: 'ingest' | 'enrich' | 'generate' | 'email_send' | 'plan' | 'signals';
+  type: 'ingest' | 'enrich' | 'generate' | 'email_send' | 'plan' | 'signals' | 'probe' | 'interview';
   status: 'queued' | 'running' | 'succeeded' | 'failed' | 'cancelled';
   progress: number;
-  counts: Record<string, number | string | null | Record<string, number>>;
+  counts: JobCounts;
   error: string | null;
-  result: PlannerDraft | null;
+  result: unknown;
   credits_reserved: number;
   credits_used: number;
   created_at: string;
@@ -58,9 +73,72 @@ export type Job = {
 export type PlannerDraft = {
   categories: string[];
   keywords: string[];
+  ideal_lead_description?: string;
+  synonyms?: string[];
   locations: { governorate: string; city: string; district: string }[];
-  signals: { key: string; weight: number; reason_ar: string }[];
+  nearby_locations?: { governorate: string; city: string; district: string }[];
+  signals: { key: string; weight: number; reason_ar: string; emphasis?: boolean }[];
+  opportunities?: OpportunityMapItem[];
+  complaint_relevance?: string | null;
   angles: { title_ar: string; description_ar: string }[];
+};
+
+/** Funnel of one campaign (spec 6.2): every removal reason with its count, so fewer leads than requested is explained. */
+export type Funnel = {
+  queries: number;
+  raw_places: number;
+  removed_closed: number;
+  removed_global: number;
+  removed_global_by?: Record<string, number>;
+  removed_category: number;
+  removed_landline: number;
+  removed_filters: number;
+  removed_not_fit: number;
+  duplicates: number;
+  previously_found: number;
+  opted_out: number;
+  cooldown: number;
+  delivered: number;
+};
+
+export type JobCounts = {
+  found?: number; new?: number; already_known?: number; filtered_out?: number; delivered?: number; lead_cap?: number; round?: number;
+  funnel?: Funnel; reached_target?: boolean; empty_reason?: string | null; short_reason?: string | null;
+  not_fit_examples?: { name: string; reason: string }[]; fit_unchecked?: number;
+  generated?: number; failed?: number; retried?: number; skipped_cooldown?: number;
+  [k: string]: unknown;
+};
+
+/** Deterministic facts about a lead (computed in code, spec 6.3b step 1). */
+export type LeadFacts = {
+  n_reviews_fetched: number; n_texts: number; total_reviews: number; overall_rating: number | null;
+  last_review_at: string | null; days_since_last_review: number | null; reviews_per_month: number | null;
+  activity_label: 'active' | 'slowing' | 'dormant' | 'unknown'; is_new_business: boolean | null;
+  owner_reply_rate: number | null; low_reviews: number; unanswered_low_reviews: number;
+  recent_avg_rating: number | null; rating_delta: number | null; unclaimed_listing: boolean;
+  images_count: number; has_hours: boolean; has_website: boolean; branches: number;
+};
+
+export type ReviewAnalysis = {
+  praised?: { theme: string; count: number }[];
+  complaints?: { theme: string; count: number; offer_can_help?: boolean }[];
+  customer_values?: string; summary_ar?: string; summary_en?: string;
+  confidence?: 'low' | 'medium' | 'high'; skipped?: string; n_texts?: number;
+};
+
+export type LeadInsight = { lead_id: string; facts: LeadFacts; analysis: ReviewAnalysis | null };
+
+export type Opportunity = { type: string; strength: number; evidence: Record<string, number | string | boolean | null>; angle: string };
+
+export type ProbeResult = {
+  places: { name: string; category: string | null; area: string; fit: 'fit' | 'maybe' | 'not_fit'; reason: string }[];
+  fit_share: number; judged: number; fit: number; raw_places: number; rewritten: boolean; queries: string[] | null;
+  removed?: { closed: number; global: number; category: number };
+};
+
+export type InterviewTurn = {
+  reply: string; quick_replies: string[]; done: boolean; asked: number;
+  profile: null | { what_we_sell: string; ideal_customer: string; problems_we_solve: string; proof_points: string; regions: { governorate: string; city: string }[]; example_customers: string[] };
 };
 
 export type SignalDefinition = {
@@ -96,6 +174,10 @@ export type CampaignLead = {
   opportunity_score: number | null;
   score_reasons: string[];
   score_reason_keys: { k: string; s: 'high' | 'low'; label?: string }[];
+  fit?: 'fit' | 'maybe';
+  fit_reason?: string | null;
+  opportunities?: Opportunity[];
+  selected_opportunity?: string | null;
   leads: Lead;
 };
 
@@ -107,6 +189,7 @@ export type Message = {
   generated_text: string;
   edited_text: string | null;
   angle: string | null;
+  opportunity_type?: string | null;
   review_status: 'pending' | 'approved' | 'rejected' | 'sent';
   regen_count: number;
   sent_at: string | null;

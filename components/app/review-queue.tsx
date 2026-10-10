@@ -20,7 +20,8 @@ import { regenerateMessage } from '@/app/actions/campaigns';
 import { reasonTexts } from '@/lib/reasons';
 import { newNonce } from '@/lib/nonce';
 import { cn } from '@/lib/utils';
-import type { CampaignLead, Job, Message } from '@/lib/types';
+import { LeadBriefFull, NotRelevantButton } from '@/components/app/lead-brief';
+import type { CampaignLead, Job, LeadInsight, Message } from '@/lib/types';
 
 const wordCount = (s: string) => s.trim().split(/\s+/).filter(Boolean).length;
 type Filter = 'pending' | 'approved' | 'rejected';
@@ -37,7 +38,7 @@ function RegenWatcher({ jobId, onDone }: { jobId: string; onDone: () => void }) 
 
 // DESIGN.md 6.5 Review: mobile = one lead per screen with a counter and a sticky Reject / Regenerate / Approve bar;
 // desktop = two panes (list + the selected lead) with keyboard shortcuts A approve, R regenerate, X reject, J/K move.
-export function ReviewQueue({ messages, leads, onGoLeads }: { messages: Message[]; leads: CampaignLead[]; onGoLeads: () => void }) {
+export function ReviewQueue({ messages, leads, onGoLeads, insights = {} }: { messages: Message[]; leads: CampaignLead[]; onGoLeads: () => void; insights?: Record<string, LeadInsight> }) {
   const t = useT();
   const r = t.review;
   const router = useRouter();
@@ -171,13 +172,18 @@ export function ReviewQueue({ messages, leads, onGoLeads }: { messages: Message[
               <Button variant="ghost" size="icon" aria-label={r.next} onClick={() => go(1)} disabled={at >= list.length - 1}><ChevronLeft className="ltr:rotate-180" aria-hidden /></Button>
             </div>
 
+            {cl && <LeadBriefFull key={cl.id + (cl.selected_opportunity ?? '')} item={cl} insight={insights[cl.leads.id]} />}
+
             <Card className="gap-4" data-testid="message-card">
               <header className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <h2 className="truncate text-h2 text-fg" dir="auto">{m.leads.business_name}</h2>
                   <p className="truncate text-body-sm text-fg-muted" dir="auto">{[m.leads.category, m.leads.district || m.leads.city].filter(Boolean).join(' · ')}</p>
                 </div>
-                <StatusBadge kind="message" status={m.review_status} />
+                <div className="flex shrink-0 items-center gap-2">
+                  {cl && m.review_status !== 'sent' && <NotRelevantButton campaignLeadId={cl.id} name={m.leads.business_name} iconOnly />}
+                  <StatusBadge kind="message" status={m.review_status} />
+                </div>
               </header>
               {cl && <ScoreWithReasons score={cl.opportunity_score} reasons={reasonTexts(cl, t)} />}
               {m.angle && <p className="text-caption text-fg-muted" dir="auto">{r.angle}: {m.angle}</p>}

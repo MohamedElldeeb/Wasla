@@ -93,7 +93,7 @@ Any B2B company that sells to other businesses can use Wasla (tax/accounting fir
 
 `.env.local` is git-ignored; `.env.example` documents every variable (purpose, where it is used, phase introduced). Update `.env.example` in the same change that introduces a variable.
 
-Planned variables: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (server only), `N8N_BASE_URL`, `N8N_API_KEY`, `N8N_WEBHOOK_SECRET`, `APIFY_API_TOKEN`, `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, `OPENROUTER_FALLBACK_MODELS`, `APOLLO_API_KEY` (optional platform key), `ORG_SECRETS_KEY` if not using Vault, `NEXT_PUBLIC_APP_URL`, `WASLA_SALES_WHATSAPP` (OPEN), feature flags (`FF_INSTAGRAM`, `FF_FACEBOOK`, `FF_LINKEDIN`, `FF_APOLLO`).
+Planned variables: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` (server only), `N8N_BASE_URL`, `N8N_API_KEY`, `N8N_WEBHOOK_SECRET`, `APIFY_API_TOKEN`, `OPENROUTER_API_KEY`, `OPENROUTER_MODEL`, `OPENROUTER_PLANNER_MODEL`, `OPENROUTER_FALLBACK_MODELS`, `APOLLO_API_KEY` (optional platform key), `ORG_SECRETS_KEY` if not using Vault, `NEXT_PUBLIC_APP_URL`, `WASLA_SALES_WHATSAPP` (OPEN), feature flags (`FF_INSTAGRAM`, `FF_FACEBOOK`, `FF_LINKEDIN`, `FF_APOLLO`).
 Ask the user only for credentials the current phase needs (see §9).
 
 ## 7. Migrations and RLS

@@ -16,20 +16,20 @@ import { Stepper } from '@/components/app/stepper';
 import { StickyBar } from '@/components/app/sticky-bar';
 import { useJob } from '@/components/app/use-job';
 import { useT } from '@/components/app/i18n-provider';
-import { runCampaign, saveCampaign, startPlanner } from '@/app/actions/campaigns';
+import { runCampaign, saveCampaign, startPlanner, startProbe } from '@/app/actions/campaigns';
 import { defaults } from '@/lib/config/defaults';
 import { parseRegions, type Region } from '@/lib/regions';
 import { newNonce } from '@/lib/nonce';
 import { num } from '@/lib/format';
 import { cn } from '@/lib/utils';
-import type { CampaignParameters, Job, PlannerDraft, SignalDefinition } from '@/lib/types';
+import type { CampaignParameters, Job, OpportunityMapItem, PlannerDraft, ProbeResult, SignalDefinition } from '@/lib/types';
 
 type Template = { code: string; name_ar: string; parameters: CampaignParameters; offer_text: string | null };
 type Props = { balance: number; signalDefs: SignalDefinition[]; templates: Template[]; orgRegions: Region[] };
 
 // Each signal is configured with two simple choices that map to a signed weight:
 //   which state is preferred (has it / lacks it / doesn't matter) x how important it is.
-type Pref = { mode: 'off' | 'high' | 'low'; level: 1 | 2 | 3 };
+type Pref = { mode: 'off' | 'high' | 'low'; level: 1 | 2 | 3; emphasis?: boolean };
 const LEVEL_WEIGHT = { 1: 30, 2: 60, 3: 100 } as const;
 const toWeight = (p: Pref) => (p.mode === 'off' ? 0 : (p.mode === 'high' ? 1 : -1) * LEVEL_WEIGHT[p.level]);
 const fromWeight = (w: number): Pref => ({ mode: w === 0 ? 'off' : w > 0 ? 'high' : 'low', level: Math.abs(w) <= 40 ? 1 : Math.abs(w) <= 75 ? 2 : 3 });
@@ -65,12 +65,44 @@ function Chip({ children, onRemove, removeLabel }: { children: React.ReactNode; 
   );
 }
 
+function ProbeSample({ probe }: { probe: ProbeResult }) {
+  const t = useT();
+  const k = t.targeting;
+  const good = probe.judged > 0 && probe.fit_share >= 0.5;
+  return (
+    <div className="flex flex-col gap-3" aria-live="polite">
+      {probe.judged > 0 ? (
+        <>
+          <Alert variant={good ? 'success' : 'warning'} role="status">
+            <strong className="num">{k.probeShare(probe.fit, probe.judged)}.</strong> {good ? k.probeGood : k.probeWeak}
+            {probe.rewritten && <span className="block">{k.probeRewritten}</span>}
+          </Alert>
+          <ul className="flex flex-col divide-y divide-border rounded-card border border-border">
+            {probe.places.slice(0, 12).map((x, i) => (
+              <li key={i} className="flex items-start justify-between gap-3 p-3">
+                <div className="min-w-0">
+                  <p className="truncate text-body-sm font-medium text-fg" dir="auto">{x.name}</p>
+                  <p className="truncate text-caption text-fg-muted" dir="auto">{[x.category, x.reason].filter(Boolean).join(' · ')}</p>
+                </div>
+                <Badge variant={x.fit === 'fit' ? 'success' : x.fit === 'maybe' ? 'warning' : 'neutral'}>{k.verdict[x.fit]}</Badge>
+              </li>
+            ))}
+          </ul>
+          <p className="text-caption text-fg-muted">{k.sampleKept}</p>
+        </>
+      ) : (
+        <Alert variant="warning" role="status">{k.probeEmpty}</Alert>
+      )}
+    </div>
+  );
+}
+
 export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: Props) {
   const t = useT();
   const w = t.wizard;
   const router = useRouter();
   const [pending, start] = useTransition();
-  const nonces = useRef({ plan: newNonce(), run: newNonce() });
+  const nonces = useRef({ plan: newNonce(), run: newNonce(), probe: newNonce() });
   const [step, setStep] = useState(0);
 
   const [name, setName] = useState('');
@@ -81,7 +113,7 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
   const [maxResults, setMaxResults] = useState(30);
   const [minRating, setMinRating] = useState<number | ''>('');
   const [minReviews, setMinReviews] = useState<number | ''>('');
-  const [mustMobile, setMustMobile] = useState(true);
+  const [mustMobile, setMustMobile] = useState(false);
   const [excludeClosed, setExcludeClosed] = useState(true);
   const [mustWebsite, setMustWebsite] = useState(false);
   const [prefs, setPrefs] = useState<Record<string, Pref>>({});
@@ -89,6 +121,16 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
   const [tone, setTone] = useState<'friendly' | 'professional' | 'direct'>('friendly');
   const [offerOverride, setOfferOverride] = useState('');
   const [angles, setAngles] = useState<PlannerDraft['angles']>([]);
+  // Targeting (spec 6.0): the ideal prospect, the allowed Maps categories and the planner's extras are visible and editable.
+  const [ideal, setIdeal] = useState('');
+  const [categories, setCategories] = useState<string[]>([]);
+  const [catInput, setCatInput] = useState('');
+  const [includePrevious, setIncludePrevious] = useState(false);
+  const [plan, setPlan] = useState<{ synonyms: string[]; nearby: Region[]; opportunities: OpportunityMapItem[]; complaintRelevance: string | null }>({ synonyms: [], nearby: [], opportunities: [], complaintRelevance: null });
+  const [draftId, setDraftId] = useState<string | null>(null);
+  const [probeJob, setProbeJob] = useState<Job | null>(null);
+  const [probe, setProbe] = useState<ProbeResult | null>(null);
+  const [probeMsg, setProbeMsg] = useState<string | null>(null);
   const [angleIdx, setAngleIdx] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -98,19 +140,31 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
   const live = useJob(planJob, (j) => {
     if (j.status === 'failed') { setPlanMsg({ ok: false, text: t.jobErrors[j.error ?? ''] ?? w.plannerFailed }); return; }
     if (j.status === 'succeeded' && j.result) {
-      const d = j.result;
+      const d = j.result as PlannerDraft;
       setKeywords(d.keywords ?? []);
       if (d.locations?.length) setLocations(d.locations);
+      setIdeal(d.ideal_lead_description ?? '');
+      setCategories(d.categories ?? []);
+      setPlan({ synonyms: d.synonyms ?? [], nearby: d.nearby_locations ?? [], opportunities: d.opportunities ?? [], complaintRelevance: d.complaint_relevance ?? null });
       const next: Record<string, Pref> = {};
       const why: Record<string, string> = {};
-      (d.signals ?? []).forEach((s) => { next[s.key] = fromWeight(s.weight); if (s.reason_ar) why[s.key] = s.reason_ar; });
+      (d.signals ?? []).forEach((s) => { next[s.key] = { ...fromWeight(s.weight), ...(s.emphasis ? { emphasis: true } : {}) }; if (s.reason_ar) why[s.key] = s.reason_ar; });
       setPrefs(next);
       setReasons(why);
       setAngles(d.angles ?? []);
-      setPlanMsg({ ok: true, text: w.plannerDone });
+      setPlanMsg({ ok: true, text: `${w.plannerDone} ${t.targeting.planAdded}` });
     }
   });
   const planning = !!live && (live.status === 'queued' || live.status === 'running');
+
+  // Probe (WF0b): a cheap sample judged against the ideal prospect. If under half fit, the planner already rewrote the queries once.
+  const liveProbe = useJob(probeJob, (j) => {
+    if (j.status !== 'succeeded' || !j.result) { setProbeMsg(t.targeting.probeFailed); return; }
+    const r = j.result as ProbeResult;
+    setProbe(r);
+    if (r.rewritten && r.queries?.length) setKeywords(r.queries.slice(0, 4));
+  });
+  const probing = !!liveProbe && (liveProbe.status === 'queued' || liveProbe.status === 'running');
 
   function applyTemplate(tpl: Template) {
     const p = tpl.parameters;
@@ -118,7 +172,7 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
     setKeywords(p.keywords ?? []);
     setTone(p.tone ?? 'friendly');
     setMinRating(p.filters?.min_rating ?? '');
-    setMinReviews(p.filters?.min_reviews ?? '');
+    setMinReviews('');
     setMustMobile(!!p.filters?.must_have_mobile);
     setExcludeClosed(!!p.filters?.exclude_closed);
     const next: Record<string, Pref> = {};
@@ -130,8 +184,13 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
 
   function addKeyword() {
     const k = kwInput.trim();
-    if (k && !keywords.includes(k) && keywords.length < 12) setKeywords([...keywords, k]);
+    if (k && !keywords.includes(k) && keywords.length < 4) setKeywords([...keywords, k]);
     setKwInput('');
+  }
+  function addCategory() {
+    const c = catInput.trim();
+    if (c && !categories.some((x) => x.toLowerCase() === c.toLowerCase()) && categories.length < 20) setCategories([...categories, c]);
+    setCatInput('');
   }
   function addLocation() {
     const [r] = parseRegions(locInput);
@@ -153,7 +212,14 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
       keywords,
       locations,
       max_results: maxResults,
+      include_previous_companies: includePrevious,
+      ...(ideal.trim() ? { ideal_lead_description: ideal.trim() } : {}),
+      ...(plan.synonyms.length ? { synonyms: plan.synonyms } : {}),
+      ...(plan.nearby.length ? { nearby_locations: plan.nearby } : {}),
+      ...(plan.opportunities.length ? { opportunities: plan.opportunities } : {}),
+      ...(plan.complaintRelevance ? { complaint_relevance: plan.complaintRelevance } : {}),
       filters: {
+        ...(categories.length ? { categories_include: categories } : {}),
         ...(minRating !== '' ? { min_rating: Number(minRating) } : {}),
         ...(minReviews !== '' ? { min_reviews: Number(minReviews) } : {}),
         must_have_phone: true,
@@ -165,7 +231,7 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
       channel: 'whatsapp',
       tone,
       ...(offerOverride.trim() ? { offer_override: offerOverride.trim() } : {}),
-      signals: Object.entries(prefs).map(([key, p]) => ({ key, weight: toWeight(p) })).filter((s) => s.weight !== 0),
+      signals: Object.entries(prefs).map(([key, p]) => ({ key, weight: toWeight(p), ...(p.emphasis ? { emphasis: true } : {}) })).filter((s) => s.weight !== 0),
       angle: angleIdx != null ? angles[angleIdx] : null,
     };
   }
@@ -184,12 +250,28 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
     if (v) { setError(v); return; }
     setError(null);
     start(async () => {
-      const saved = await saveCampaign({ name, parameters: buildParameters() });
+      const saved = await saveCampaign({ id: draftId ?? undefined, name, parameters: buildParameters() });
       if (!saved.id) { setError(saved.error ?? t.errors.generic); return; }
       if (!run) { router.push(`/campaigns/${saved.id}`); return; }
       const res = await runCampaign(saved.id, nonces.current.run);
       if (res.error) toast.error(res.error);
       router.push(`/campaigns/${saved.id}`);
+    });
+  }
+
+  function runProbe() {
+    setProbeMsg(null);
+    setProbe(null);
+    const v = stepProblem(1);
+    if (v) { setProbeMsg(v); return; }
+    start(async () => {
+      const saved = await saveCampaign({ id: draftId ?? undefined, name: name.trim() || w.draftName, parameters: buildParameters() });
+      if (!saved.id) { setProbeMsg(saved.error ?? t.errors.generic); return; }
+      setDraftId(saved.id);
+      const res = await startProbe(saved.id, nonces.current.probe);
+      if (!res.jobId) { setProbeMsg(res.error ?? t.targeting.probeFailed); return; }
+      nonces.current.probe = newNonce();
+      setProbeJob({ id: res.jobId, status: 'queued', progress: 0, type: 'probe' } as Job);
     });
   }
 
@@ -265,13 +347,27 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
 
         {step === 1 && (
           <>
-            <Field id="kw" label={w.keywords} helper={w.keywordsHint}>
+            <Field id="ideal" label={t.targeting.ideal} helper={t.targeting.idealHint}>
+              <Textarea id="ideal" dir="auto" className="min-h-24" value={ideal} onChange={(e) => setIdeal(e.target.value)} maxLength={400} />
+            </Field>
+
+            <Field id="kw" label={t.targeting.queries} helper={keywords.length >= 4 ? t.targeting.queriesMax : t.targeting.queriesHint}>
               <div className="flex flex-wrap gap-2" aria-label={w.suggested}>
                 {keywords.map((k) => <Chip key={k} onRemove={() => setKeywords(keywords.filter((x) => x !== k))} removeLabel={`${t.common.remove} ${k}`}>{k}</Chip>)}
               </div>
               <div className="flex gap-2">
-                <Input id="kw" value={kwInput} dir="auto" placeholder={w.addKeyword} onChange={(e) => setKwInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addKeyword(); } }} />
-                <Button type="button" variant="secondary" size="icon" onClick={addKeyword} aria-label={w.addKeyword}><Plus aria-hidden /></Button>
+                <Input id="kw" value={kwInput} dir="auto" placeholder={w.addKeyword} disabled={keywords.length >= 4} onChange={(e) => setKwInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addKeyword(); } }} />
+                <Button type="button" variant="secondary" size="icon" onClick={addKeyword} disabled={keywords.length >= 4} aria-label={w.addKeyword}><Plus aria-hidden /></Button>
+              </div>
+            </Field>
+
+            <Field id="cat" label={t.targeting.categories} helper={categories.length ? t.targeting.categoriesHint : t.targeting.categoriesEmpty}>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((c) => <Chip key={c} onRemove={() => setCategories(categories.filter((x) => x !== c))} removeLabel={`${t.common.remove} ${c}`}>{c}</Chip>)}
+              </div>
+              <div className="flex gap-2">
+                <Input id="cat" value={catInput} dir="auto" placeholder={t.targeting.addCategory} onChange={(e) => setCatInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addCategory(); } }} />
+                <Button type="button" variant="secondary" size="icon" onClick={addCategory} aria-label={t.targeting.addCategory}><Plus aria-hidden /></Button>
               </div>
             </Field>
 
@@ -314,7 +410,28 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
                   {label}
                 </label>
               ))}
+              <label className="flex min-h-12 items-start gap-3 text-body">
+                <Checkbox checked={includePrevious} onCheckedChange={(c) => setIncludePrevious(!!c)} className="mt-3" />
+                <span>
+                  {t.targeting.includePrevious}
+                  <span className="block text-caption text-fg-muted">{t.targeting.includePreviousHint}</span>
+                </span>
+              </label>
               <p className="text-caption text-fg-muted">{w.emailsSoon}</p>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <div>
+                  <CardTitle>{t.targeting.probeTitle}</CardTitle>
+                  <CardDescription className="mt-1">{t.targeting.probeBody}</CardDescription>
+                </div>
+              </CardHeader>
+              <div>
+                <Button type="button" variant="secondary" onClick={runProbe} loading={probing || pending} disabled={planning}>{probing ? t.targeting.probeRunning : t.targeting.probeCta}</Button>
+              </div>
+              {probeMsg && <Alert variant="warning" role="status">{probeMsg}</Alert>}
+              {probe && <ProbeSample probe={probe} />}
             </Card>
           </>
         )}
