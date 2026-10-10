@@ -34,3 +34,4 @@ Items that are deliberately relaxed for the pilot and MUST be reverted or comple
 - [ ] Review `app_config.contact_cooldown_days` (30, PROPOSED) and the fresh-leads default.
 - [ ] Onboarding changed: the old form was replaced by the AI interview; check it with a real new user before launch.
 - [ ] Re-run `scripts/live-checks.mjs` against the deployed site after deploy (shortcuts, mobile filter sheet, Google redirect). Full Google sign-in needs a real Google account and was not tested.
+- [ ] `PREVIEW_ROUTES` must stay unset in Vercel (it enables the `/preview` sample-data route used only to take landing page screenshots).

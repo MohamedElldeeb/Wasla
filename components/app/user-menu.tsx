@@ -20,9 +20,9 @@ export function UserMenu({ initial, orgName, role, className, showName }: { init
         type="button"
         onClick={() => setOpen(true)}
         aria-label={t.shell.menu}
-        className={cn('transition-ui flex min-h-12 items-center gap-3 rounded-control text-start hover:bg-surface-muted', showName ? 'w-full px-2' : 'size-12 justify-center rounded-full', className)}
+        className={cn('transition-ui flex min-h-12 items-center gap-3 rounded-control text-start hover:bg-surface-hover', showName ? 'w-full px-2' : 'size-12 justify-center rounded-full', className)}
       >
-        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-body-sm font-semibold text-primary-fg" aria-hidden>{initial}</span>
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand text-body-sm font-semibold text-brand-fg" aria-hidden>{initial}</span>
         {showName && <span className="min-w-0 flex-1 truncate text-body-sm font-medium text-fg" dir="auto">{orgName}</span>}
       </button>
       <Dialog open={open} onOpenChange={setOpen}>

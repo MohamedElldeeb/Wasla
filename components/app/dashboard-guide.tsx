@@ -31,7 +31,7 @@ export function DashboardGuide() {
       <ol className="grid gap-4 md:grid-cols-3">
         {d.guide.map((g, i) => (
           <li key={g.t} className="flex gap-3">
-            <span className="num flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-body-sm font-semibold text-primary-fg">{i + 1}</span>
+            <span className="num flex size-8 shrink-0 items-center justify-center rounded-full bg-brand text-body-sm font-semibold text-brand-fg">{i + 1}</span>
             <div>
               <strong className="block text-body text-fg">{g.t}</strong>
               <span className="text-body-sm text-fg-muted">{g.d}</span>

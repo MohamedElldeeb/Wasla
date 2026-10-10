@@ -10,7 +10,7 @@ function Checkbox({ className, ...props }: CheckboxPrimitive.Root.Props) {
     <CheckboxPrimitive.Root
       data-slot="checkbox"
       className={cn(
-        "transition-ui relative flex size-6 shrink-0 items-center justify-center rounded-control border border-border-strong bg-surface after:absolute after:-inset-3 disabled:cursor-not-allowed disabled:opacity-50 data-checked:border-primary data-checked:bg-primary data-checked:text-primary-fg",
+        "transition-ui relative flex size-6 shrink-0 items-center justify-center rounded-control border border-border-strong bg-surface after:absolute after:-inset-3 disabled:cursor-not-allowed disabled:opacity-50 data-checked:border-brand data-checked:bg-brand data-checked:text-brand-fg",
         className
       )}
       {...props}

@@ -157,7 +157,7 @@ export function InterviewFlow({ mode, orgName, initial, hasOrg = false }: { mode
                 <div className="flex flex-wrap gap-2">
                   {turn.quick_replies.map((q) => (
                     <button key={q} type="button" onClick={() => answer(q)} dir="auto"
-                      className="transition-ui min-h-12 rounded-control border border-border-strong bg-surface px-4 text-body-sm text-fg hover:bg-surface-muted lg:min-h-10">{q}</button>
+                      className="transition-ui min-h-12 rounded-control border border-border-strong bg-surface px-4 text-body-sm text-fg hover:bg-surface-hover lg:min-h-10">{q}</button>
                   ))}
                 </div>
               )}

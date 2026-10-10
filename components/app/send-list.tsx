@@ -127,7 +127,7 @@ export function SendList({ messages, sentToday, dailyCap }: { messages: Message[
                   <Badge variant={wa ? 'primary' : 'neutral'}>{l.phone_type === 'mobile' ? t.campaign.mobile : t.campaign.landline}</Badge>
                 </header>
                 <p dir="rtl" className={cn('whitespace-pre-wrap rounded-control bg-surface-muted p-3 text-body-sm', !expanded && 'line-clamp-3')}>{body}</p>
-                <button type="button" onClick={() => setOpen({ ...open, [m.id]: !expanded })} aria-expanded={expanded} className="flex min-h-12 items-center gap-1 self-start text-body-sm font-medium text-primary lg:min-h-10">
+                <button type="button" onClick={() => setOpen({ ...open, [m.id]: !expanded })} aria-expanded={expanded} className="flex min-h-12 items-center gap-1 self-start text-body-sm font-medium text-brand lg:min-h-10">
                   <ChevronDown className={cn('size-4 transition-transform duration-200', expanded && 'rotate-180')} aria-hidden />
                   {expanded ? s.collapse : s.expand}
                 </button>
@@ -144,7 +144,7 @@ export function SendList({ messages, sentToday, dailyCap }: { messages: Message[
                   <Button variant="secondary" size="lg" className="w-full sm:w-auto" onClick={() => copy(m)}><Copy aria-hidden />{s.copy}</Button>
                 </footer>
                 {wa && (
-                  <button type="button" onClick={() => markSent(m, null, null)} disabled={capReached || busyId === m.id} className="min-h-12 self-start text-body-sm font-medium text-primary disabled:opacity-50 lg:min-h-10">{s.sentToggle}</button>
+                  <button type="button" onClick={() => markSent(m, null, null)} disabled={capReached || busyId === m.id} className="min-h-12 self-start text-body-sm font-medium text-brand disabled:opacity-50 lg:min-h-10">{s.sentToggle}</button>
                 )}
                 {!wa && <p className="text-caption text-fg-muted">{s.notEligible}</p>}
               </Card>

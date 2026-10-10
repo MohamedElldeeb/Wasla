@@ -131,7 +131,7 @@ export function ReviewQueue({ messages, leads, onGoLeads, insights = {} }: { mes
               role="tab"
               aria-selected={filter === f}
               onClick={() => { setFilter(f); setIdx(0); setRegenOpen(false); }}
-              className={cn('transition-ui min-h-12 rounded-control border px-4 text-body-sm font-medium lg:min-h-10', filter === f ? 'border-primary bg-primary-soft text-primary' : 'border-border-strong bg-surface text-fg hover:bg-surface-muted')}
+              className={cn('transition-ui min-h-12 rounded-control border px-4 text-body-sm font-medium lg:min-h-10', filter === f ? 'border-brand bg-brand-soft text-brand' : 'border-border-strong bg-surface text-fg hover:bg-surface-hover')}
             >
               {r.filters[f]} <span className="num">({counts[f]})</span>
             </button>
@@ -153,7 +153,7 @@ export function ReviewQueue({ messages, leads, onGoLeads, insights = {} }: { mes
                   type="button"
                   onClick={() => { setIdx(i); setRegenOpen(false); }}
                   aria-current={i === at ? 'true' : undefined}
-                  className={cn('transition-ui flex min-h-14 items-center justify-between gap-3 rounded-card border p-3 text-start', i === at ? 'border-primary bg-primary-soft' : 'border-border bg-surface hover:bg-surface-muted')}
+                  className={cn('transition-ui flex min-h-14 items-center justify-between gap-3 rounded-card border p-3 text-start', i === at ? 'border-brand bg-brand-soft' : 'border-border bg-surface hover:bg-surface-hover')}
                 >
                   <span className="min-w-0">
                     <strong className="block truncate text-body-sm text-fg" dir="auto">{x.leads.business_name}</strong>
@@ -206,7 +206,7 @@ export function ReviewQueue({ messages, leads, onGoLeads, insights = {} }: { mes
                 <div className="flex flex-col gap-3 rounded-card bg-surface-muted p-4">
                   <div className="flex flex-wrap gap-2">
                     {r.chips.map((c) => (
-                      <button key={c} type="button" onClick={() => setInstruction(c)} className="transition-ui min-h-12 rounded-control border border-border-strong bg-surface px-3 text-body-sm hover:bg-surface-muted lg:min-h-10">{c}</button>
+                      <button key={c} type="button" onClick={() => setInstruction(c)} className="transition-ui min-h-12 rounded-control border border-border-strong bg-surface px-3 text-body-sm hover:bg-surface-hover lg:min-h-10">{c}</button>
                     ))}
                   </div>
                   <Input value={instruction} onChange={(e) => setInstruction(e.target.value)} placeholder={r.instruction} maxLength={200} dir="auto" aria-label={r.instruction} />

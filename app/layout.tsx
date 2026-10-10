@@ -1,11 +1,15 @@
 import type { Metadata } from 'next';
-import { Readex_Pro, IBM_Plex_Sans_Arabic } from 'next/font/google';
+import { Readex_Pro, IBM_Plex_Sans_Arabic, Inter, JetBrains_Mono } from 'next/font/google';
 import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@/components/ui/sonner';
 import { I18nProvider } from '@/components/app/i18n-provider';
 import { getT } from '@/lib/i18n/server';
 import { dirOf } from '@/lib/i18n';
 import './globals.css';
+
+const inter = Inter({ variable: '--font-inter', subsets: ['latin'] });
+
+const jetbrains = JetBrains_Mono({ variable: '--font-jetbrains', subsets: ['latin'], weight: ['400'] });
 
 const readex = Readex_Pro({
   variable: '--font-readex',
@@ -31,9 +35,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { locale } = await getT();
   return (
-    <html lang={locale} dir={dirOf(locale)} suppressHydrationWarning className={`${readex.variable} ${plexArabic.variable} h-full antialiased`}>
+    <html lang={locale} dir={dirOf(locale)} suppressHydrationWarning className={`${inter.variable} ${jetbrains.variable} ${readex.variable} ${plexArabic.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <I18nProvider locale={locale}>
             {children}
             <Toaster dir={dirOf(locale)} />

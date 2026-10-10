@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { BrandLogo } from '@/components/app/brand-logo';
 import { LanguageToggle } from '@/components/app/language-toggle';
 
 // DESIGN.md 6.1: single column, max width 400, top-aligned with 48px padding on mobile, centered vertically on desktop.
@@ -9,7 +9,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <LanguageToggle />
       </div>
       <main className="flex w-full max-w-[400px] flex-col gap-6">
-        <Image src="/brand/wasla-logo.svg" alt="Wasla" width={230} height={96} priority className="h-16 w-auto self-start" />
+        <BrandLogo priority className="h-16 self-start" />
         {children}
       </main>
     </div>

@@ -45,7 +45,7 @@ function Segmented<T extends string | number>({ value, options, onChange, label 
           role="radio"
           aria-checked={value === o.v}
           onClick={() => onChange(o.v)}
-          className={cn('transition-ui min-h-12 rounded-control border px-4 text-body-sm font-medium lg:min-h-10', value === o.v ? 'border-primary bg-primary-soft text-primary' : 'border-border-strong bg-surface text-fg hover:bg-surface-muted')}
+          className={cn('transition-ui min-h-12 rounded-control border px-4 text-body-sm font-medium lg:min-h-10', value === o.v ? 'border-primary bg-primary-soft text-primary-on-soft' : 'border-border-strong bg-surface text-fg-body hover:bg-surface-hover')}
         >
           {o.label}
         </button>
@@ -56,9 +56,9 @@ function Segmented<T extends string | number>({ value, options, onChange, label 
 
 function Chip({ children, onRemove, removeLabel }: { children: React.ReactNode; onRemove: () => void; removeLabel: string }) {
   return (
-    <span className="inline-flex min-h-10 items-center gap-1 rounded-control bg-primary-soft ps-3 text-body-sm text-primary" dir="auto">
+    <span className="inline-flex min-h-10 items-center gap-1 rounded-full bg-primary-soft ps-3 text-body-sm text-primary-on-soft" dir="auto">
       {children}
-      <button type="button" onClick={onRemove} aria-label={removeLabel} className="transition-ui flex size-12 items-center justify-center rounded-control hover:bg-surface-muted lg:size-10">
+      <button type="button" onClick={onRemove} aria-label={removeLabel} className="transition-ui flex size-12 items-center justify-center rounded-control hover:bg-surface-hover lg:size-10">
         <X className="size-4" aria-hidden />
       </button>
     </span>
@@ -94,7 +94,7 @@ function ProbeSample({ probe, categories, onAddCategory }: { probe: ProbeResult;
               <span className="text-body-sm font-medium text-fg">{k.suggestedCategories}</span>
               <div className="flex flex-wrap gap-2">
                 {probe.suggested_categories.filter((c) => !categories.includes(c)).map((c) => (
-                  <button key={c} type="button" onClick={() => onAddCategory(c)} dir="auto" className="transition-ui inline-flex min-h-12 items-center gap-1 rounded-control border border-border-strong bg-surface px-3 text-body-sm hover:bg-surface-muted lg:min-h-10"><Plus className="size-4" aria-hidden />{c}</button>
+                  <button key={c} type="button" onClick={() => onAddCategory(c)} dir="auto" className="transition-ui inline-flex min-h-12 items-center gap-1 rounded-control border border-border-strong bg-surface px-3 text-body-sm hover:bg-surface-hover lg:min-h-10"><Plus className="size-4" aria-hidden />{c}</button>
                 ))}
               </div>
             </div>
@@ -345,7 +345,7 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
                 <span className="text-body-sm text-fg-muted">{w.templates}</span>
                 <div className="flex flex-wrap gap-2">
                   {templates.map((tpl) => (
-                    <button key={tpl.code} type="button" onClick={() => applyTemplate(tpl)} className="transition-ui min-h-12 rounded-control border border-border-strong bg-surface px-4 text-body-sm hover:bg-surface-muted lg:min-h-10">
+                    <button key={tpl.code} type="button" onClick={() => applyTemplate(tpl)} className="transition-ui min-h-12 rounded-control border border-border-strong bg-surface px-4 text-body-sm hover:bg-surface-hover lg:min-h-10">
                       {t.templates[tpl.code] ?? tpl.name_ar}
                     </button>
                   ))}
@@ -463,7 +463,7 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
                       <div className="min-w-0">
                         <CardTitle>{info.name}</CardTitle>
                         <CardDescription className="mt-1">{info.desc}</CardDescription>
-                        {reasons[s.key] && <p className="mt-1 text-body-sm text-primary" dir="auto">{reasons[s.key]}</p>}
+                        {reasons[s.key] && <p className="mt-1 text-body-sm text-brand" dir="auto">{reasons[s.key]}</p>}
                       </div>
                       <Badge variant={s.credit_cost ? 'outline' : 'neutral'}>{s.credit_cost ? w.signalPaid(s.credit_cost) : w.signalFree}</Badge>
                     </CardHeader>
@@ -491,7 +491,7 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
                 <p className="text-caption text-fg-muted">{w.anglesHint}</p>
                 {angles.map((a, i) => (
                   <button key={i} type="button" onClick={() => setAngleIdx(angleIdx === i ? null : i)} dir="auto" aria-pressed={angleIdx === i}
-                    className={cn('transition-ui rounded-card border p-4 text-start', angleIdx === i ? 'border-primary bg-primary-soft' : 'border-border bg-surface hover:bg-surface-muted')}>
+                    className={cn('transition-ui rounded-card border p-4 text-start', angleIdx === i ? 'border-primary bg-primary-soft' : 'border-border bg-surface hover:bg-surface-hover')}>
                     <strong className="block text-body text-fg">{a.title_ar}</strong>
                     <span className="text-body-sm text-fg-muted">{a.description_ar}</span>
                   </button>

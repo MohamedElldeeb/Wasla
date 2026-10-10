@@ -42,7 +42,7 @@ export function EvidenceRow({ chips, max = 4 }: { chips: string[]; max?: number 
   const shown = chips.slice(0, max);
   return (
     <ul className="flex flex-wrap gap-1">
-      {shown.map((x) => <li key={x} dir="auto" className="inline-flex h-6 items-center rounded-control bg-surface-muted px-2 text-caption text-fg-muted">{x}</li>)}
+      {shown.map((x) => <li key={x} dir="auto" className="inline-flex h-6 items-center rounded-full border border-border bg-surface-muted px-2.5 text-caption text-fg-body">{x}</li>)}
     </ul>
   );
 }
@@ -55,7 +55,7 @@ export function LeadBriefCompact({ item, insight }: { item: CampaignLead; insigh
     <div className="flex flex-col gap-2">
       {top && (
         <p className="flex items-start gap-2 text-body-sm font-medium text-fg" dir="auto">
-          <Sparkles className="mt-0.5 size-4 shrink-0 text-accent" aria-hidden />
+          <Sparkles className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden />
           <span><span className="sr-only">{t.insights.whyNow}: </span>{whyText(t, top)}</span>
         </p>
       )}
@@ -88,7 +88,7 @@ export function LeadBriefFull({ item, insight }: { item: CampaignLead; insight?:
   }
 
   return (
-    <section className="flex flex-col gap-3 rounded-card border border-border bg-surface p-4" aria-label={i.whyNow} data-testid="lead-brief">
+    <section className="flex flex-col gap-3 rounded-card border border-border bg-surface p-4 md:p-6" aria-label={i.whyNow} data-testid="lead-brief">
       <div className="flex flex-col gap-1">
         <h3 className="text-caption font-medium text-fg-muted">{i.whyNow}</h3>
         <p className="text-body font-medium text-fg" dir="auto">{opps[0] ? whyText(t, opps[0]) : i.noInsights}</p>
@@ -115,12 +115,12 @@ export function LeadBriefFull({ item, insight }: { item: CampaignLead; insight?:
       {opps.length > 0 && (
         <div className="flex flex-col gap-2">
           <h3 className="text-caption font-medium text-fg-muted">{i.suggestedAngle}</h3>
-          <p className="flex items-start gap-2 text-body-sm text-fg" dir="auto"><span aria-hidden className="mt-2 size-2 shrink-0 rounded-full bg-accent" />{chosen?.angle || whyText(t, chosen!)}</p>
+          <p className="flex items-start gap-2 text-body-sm text-fg" dir="auto"><span aria-hidden className="mt-2 size-2 shrink-0 rounded-full bg-primary" />{chosen?.angle || whyText(t, chosen!)}</p>
           {opps.length > 1 && (
             <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={i.suggestedAngle}>
               {opps.map((o) => (
                 <button key={o.type} type="button" role="radio" aria-checked={o.type === selected} disabled={pending} onClick={() => choose(o.type)}
-                  className={cn('transition-ui min-h-12 rounded-control border px-3 text-start text-body-sm lg:min-h-10', o.type === selected ? 'border-primary bg-primary-soft text-primary' : 'border-border-strong bg-surface text-fg hover:bg-surface-muted')}>
+                  className={cn('transition-ui min-h-12 rounded-control border px-3 text-start text-body-sm lg:min-h-10', o.type === selected ? 'border-primary bg-primary-soft text-primary-on-soft' : 'border-border-strong bg-surface text-fg-body hover:bg-surface-hover')}>
                   {whyText(t, o)}
                 </button>
               ))}

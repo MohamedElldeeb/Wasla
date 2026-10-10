@@ -41,7 +41,7 @@ function Choice<T extends string>({ value, options, onChange, label }: { value: 
     <div role="radiogroup" aria-label={label} className="flex flex-wrap gap-2">
       {options.map((o) => (
         <button key={o.v} type="button" role="radio" aria-checked={value === o.v} onClick={() => onChange(o.v)}
-          className={cn('transition-ui min-h-12 rounded-control border px-4 text-body-sm font-medium lg:min-h-10', value === o.v ? 'border-primary bg-primary-soft text-primary' : 'border-border-strong bg-surface text-fg hover:bg-surface-muted')}>
+          className={cn('transition-ui min-h-12 rounded-control border px-4 text-body-sm font-medium lg:min-h-10', value === o.v ? 'border-brand bg-brand-soft text-brand' : 'border-border-strong bg-surface text-fg hover:bg-surface-hover')}>
           {o.label}
         </button>
       ))}

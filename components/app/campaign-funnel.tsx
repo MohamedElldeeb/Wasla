@@ -42,7 +42,7 @@ export function CampaignFunnel({ job, requested }: { job: Job; requested: number
                 <span className="block text-caption text-fg-subtle">{Object.entries(globalBy).map(([g, n]) => `${f.globalBy[g] ?? g} ${n}`).join(' · ')}</span>
               )}
             </dt>
-            <dd className={k === 'delivered' ? 'num text-h3 text-fg' : 'num text-body text-fg'}>{k === 'queries' || k === 'raw_places' || k === 'delivered' ? num(Number(funnel[k]) || 0) : `− ${num(Number(funnel[k]) || 0)}`}</dd>
+            <dd className={k === 'delivered' ? 'num whitespace-nowrap text-h3 text-fg' : 'num whitespace-nowrap text-body text-fg'}>{k === 'queries' || k === 'raw_places' || k === 'delivered' ? num(Number(funnel[k]) || 0) : `− ${num(Number(funnel[k]) || 0)}`}</dd>
           </div>
         ))}
       </dl>
