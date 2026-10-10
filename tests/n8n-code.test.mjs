@@ -257,7 +257,7 @@ const OFFER_TEXT = `وصلة: بتلاقي عملاء للوكالات وبتك�
 const QUOTE = 'بتلاقي عملاء للوكالات وبتكتب رسالة واتساب شخصية لكل عميل';
 const SEL = { lead_id: 'l1', message_id: null, regen_count: 0, channel: 'whatsapp', organization_id: 'o', campaign_id: 'c', job_id: 'j', total: 1, requestBody: JSON.stringify({ messages: [{ role: 'system', content: 's' }, { role: 'user', content: 'u' }], model: 'm' }), complaints: ['تأخير التسليم'], opportunity_type: 'unclaimed_listing',
   offer_text: OFFER_TEXT, cta_offer: CTA, sender_name: 'محمد', areas: ['مدينة نصر'], city: 'القاهرة', used_openings: [] };
-const GOOD = 'أهلا يا فريق الإنجاز، عملاءكم دايما بيشكروا في التزامكم بالمواعيد. إحنا عاملين أداة اسمها وصلة بتلاقي عملاء للوكالات وبتكتب رسالة واتساب شخصية لكل عميل، من غير ما تضيعوا وقت في البحث والكتابة. لو حابين، أبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها بنفسكم. محمد من وصلة';
+const GOOD = 'أهلا يا فريق الإنجاز، عملاءكم بيشكروا في التزامكم بالمواعيد. إحنا عاملين أداة اسمها وصلة بتلاقي عملاء للوكالات وبتكتب رسالة واتساب شخصية لكل عميل، من غير ما تضيعوا وقت في البحث والكتابة. لو حابين، أبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها بنفسكم. محمد من وصلة';
 const validate = (content, prev = 'OpenRouter', extra = {}) => runNode('gen_validate.js', {
   nodes: { 'Select and build': [SEL], ...extra },
   input: [llmItem({ message: content, angle: 'التزام', offer_quote: QUOTE, ...(extra.__raw || {}) })],

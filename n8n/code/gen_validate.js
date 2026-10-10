@@ -45,7 +45,7 @@ if (chat && meta.signature && meta.sender_name && !norm(message.slice(-60)).incl
 const tact = checkTact(message, meta.complaints || []);
 if (!tact.ok) return bad(`tact:${tact.reasons.slice(0, 3).join(',')}`, content);
 // Style and honesty rules (round 2): no rating, micro-district, jargon or time greeting; benefits only from the offer; a concrete call to action; a signature.
-const style = checkMessage(message, { channel: meta.channel, areas: meta.areas, city: meta.city, offerText: meta.offer_text, offerQuote: typeof d.offer_quote === 'string' ? d.offer_quote : null, ctaOffer: meta.cta_offer, senderName: meta.sender_name });
+const style = checkMessage(message, { channel: meta.channel, areas: meta.areas, city: meta.city, offerText: meta.offer_text, offerQuote: typeof d.offer_quote === 'string' ? d.offer_quote : null, ctaOffer: meta.cta_offer, senderName: meta.sender_name, styleExamples: meta.style_examples });
 if (!style.ok) return bad(`style:${style.reasons.slice(0, 3).join(',')}`, content);
 // The opening (first five words) must differ from every earlier message of the campaign.
 const opening = openingKey(message);

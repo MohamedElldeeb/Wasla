@@ -138,6 +138,15 @@ begin
   perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = 69, 'no website (baseline, clamped) + one relevant signal cannot pass 69');
   perform pg_temp.ok((select score_reasons from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = '["نشاط كبير أو متعدد الفروع","لا يملك موقعًا إلكترونيًا"]'::jsonb, 'reasons ordered by contribution');
   perform pg_temp.ok((select score_reason_keys from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = '[{"k":"size_proxy","s":"high"},{"k":"has_website","s":"low"}]'::jsonb, 'reason keys are localizable');
+  -- weak reasons are hidden: a signal weighing 15 or less in the campaign is not shown unless it is the only reason
+  perform pg_temp.q('authenticated', a, format('update public.campaigns set parameters = %L where id = %L', '{"signals":[{"key":"has_website","weight":-10},{"key":"size_proxy","weight":30},{"key":"review_insights","weight":50}]}', camp_a));
+  perform pg_temp.q('authenticated', a, format('select public.recompute_campaign_scores(%L)', camp_a));
+  perform pg_temp.ok((select score_reason_keys from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = '[{"k":"size_proxy","s":"high"}]'::jsonb, 'a reason from a signal with weight 15 or less is hidden when a stronger one exists');
+  perform pg_temp.q('authenticated', a, format('update public.campaigns set parameters = %L where id = %L', '{"signals":[{"key":"has_website","weight":-10}]}', camp_a));
+  perform pg_temp.q('authenticated', a, format('select public.recompute_campaign_scores(%L)', camp_a));
+  perform pg_temp.ok((select score_reason_keys from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = '[{"k":"has_website","s":"low"}]'::jsonb, 'but it stays when it is the only reason');
+  perform pg_temp.q('authenticated', a, format('update public.campaigns set parameters = %L where id = %L', '{"signals":[{"key":"has_website","weight":-60},{"key":"size_proxy","weight":30},{"key":"review_insights","weight":50}]}', camp_a));
+  perform pg_temp.q('authenticated', a, format('select public.recompute_campaign_scores(%L)', camp_a));
   perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = lead2 and campaign_id = camp_a) = 0, 'has website + small = 0 for this campaign');
   perform pg_temp.ok((select score_reasons from public.campaign_leads where lead_id = lead2 and campaign_id = camp_a) = '[]'::jsonb, 'no favorable reasons');
   perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = lead_land and campaign_id = camp_a) = 69, 'one relevant signal alone is capped at 69');
@@ -279,6 +288,8 @@ begin
   perform pg_temp.ok(pg_temp.q('authenticated', a, 'select count(*) from public.app_config') = '1', 'config readable');
   perform pg_temp.ok(pg_temp.err('authenticated', a, $q$update public.app_config set value = '0'$q$) like '42501%', 'config not writable by users');
   perform pg_temp.ok(pg_temp.err('authenticated', a, format('select public.ingest_leads(%L, %L, %L, true)', org_a, camp_a, '[]')) like '42501%', 'ingest v3 still service-only');
+  perform pg_temp.ok(pg_temp.err('postgres', null, format('select public.ingest_leads(%L, %L, %L)', org_a, camp_a, '[]')) = 'OK', 'the old 3-argument ingest_leads still works for workflows deployed before this release');
+  perform pg_temp.ok(pg_temp.err('authenticated', a, format('select public.ingest_leads(%L, %L, %L)', org_a, camp_a, '[]')) like '42501%', 'and it is still service-only');
 
   -- Learning loop: opportunity type is stored per message and aggregated per org
   perform pg_temp.q('postgres', null, format('update public.messages set opportunity_type = %L where id = %L', 'unclaimed_listing', msg));

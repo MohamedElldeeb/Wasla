@@ -16,14 +16,10 @@ const links = $('Get campaign leads').all().map((i) => i.json).filter((r) => r.l
 const freshMap = new Map($('Get fresh insights').all().map((i) => i.json).filter((r) => r && r.lead_id).map((r) => [r.lead_id, r]));
 const fresh = new Set(freshMap.keys());
 
-const baseName = (n) => String(n || '').split(/\s[-–|]\s|\(|\|/)[0].toLowerCase().replace(/[^\p{L}\p{N}]+/g, ' ').trim();
-const branchCount = new Map();
-for (const r of $('Get org names').all()) {
-  const k = baseName(r.json.business_name);
-  if (k) branchCount.set(k, (branchCount.get(k) || 0) + 1);
-}
+// Branches: same brand name AND same website or phone among the organization's listings (never by name similarity alone).
+const orgLeads = $('Get org names').all().map((i) => i.json);
 const placeOf = (l) => ({ ...(l.raw || {}), website: l.website, reviewsCount: l.reviews_count, totalScore: l.rating });
-const branchesOf = (l) => Math.max(1, branchCount.get(baseName(l.business_name)) || 1);
+const branchesOf = (l) => countBranches(l, orgLeads);
 
 const now = new Date().toISOString();
 const mk = (lead_id, signal_key, value, raw) => ({

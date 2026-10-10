@@ -268,9 +268,9 @@ const out = [];
   const job = w.sb('Get job', 'GET', `jobs?id=eq.{{ ${JOB} }}&status=eq.running&select=*`);
   const camp = w.sb('Get campaign', 'GET', `campaigns?id=eq.{{ ${CAMPAIGN} }}&select=id,parameters`);
   const org = w.sb('Get org', 'GET', `organizations?id=eq.{{ ${ORG} }}&select=name,offer_profile`);
-  const links = w.sb('Get campaign leads', 'GET', `campaign_leads?campaign_id=eq.{{ ${CAMPAIGN} }}&removed_at=is.null&select=lead_id,fit,leads(id,business_name,google_place_id,website,reviews_count,rating,raw)&limit=5000`, { node: { alwaysOutputData: true } });
+  const links = w.sb('Get campaign leads', 'GET', `campaign_leads?campaign_id=eq.{{ ${CAMPAIGN} }}&removed_at=is.null&select=lead_id,fit,leads(id,business_name,google_place_id,website,phone_e164,reviews_count,rating,raw)&limit=5000`, { node: { alwaysOutputData: true } });
   const fresh = w.sb('Get fresh insights', 'GET', `lead_insights?organization_id=eq.{{ ${ORG} }}&computed_at=gte.{{ new Date(Date.now() - 30 * 86400000).toISOString() }}&select=lead_id,facts,analysis&limit=20000`, { node: { alwaysOutputData: true } });
-  const names = w.sb('Get org names', 'GET', `leads?organization_id=eq.{{ ${ORG} }}&select=business_name&limit=20000`, { node: { alwaysOutputData: true } });
+  const names = w.sb('Get org names', 'GET', `leads?organization_id=eq.{{ ${ORG} }}&select=business_name,website,phone_e164&limit=20000`, { node: { alwaysOutputData: true } });
   const cost = w.rpc('Reviews cost', 'signal_credits_per_lead', 'JSON.stringify({ p_signals: $("Get campaign").first().json.parameters.signals || [] })');
   const plan = w.code('Plan signals', 'signals_plan.js');
   const saveFree = w.sb('Save free signals', 'POST', 'lead_signals?on_conflict=lead_id,signal_key',

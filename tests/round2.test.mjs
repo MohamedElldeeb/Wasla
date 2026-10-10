@@ -16,7 +16,7 @@ const SEL = {
   requestBody: JSON.stringify({ messages: [{ role: 'system', content: 's' }, { role: 'user', content: 'u' }], model: 'm' }), complaints: [], opportunity_type: null,
   offer_text: OFFER_TEXT, cta_offer: CTA, sender_name: 'محمد', areas: ['مدينة نصر'], city: 'القاهرة', used_openings: [],
 };
-const GOOD = 'أهلا يا فريق الإنجاز، عملاءكم دايما بيشكروا في التزامكم بالمواعيد. إحنا عاملين أداة اسمها وصلة بتلاقي عملاء للوكالات وبتكتب رسالة واتساب شخصية لكل عميل، من غير ما تضيعوا وقت في البحث والكتابة. لو حابين، أبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها بنفسكم. محمد من وصلة';
+const GOOD = 'أهلا يا فريق الإنجاز، عملاءكم بيشكروا في التزامكم بالمواعيد. إحنا عاملين أداة اسمها وصلة بتلاقي عملاء للوكالات وبتكتب رسالة واتساب شخصية لكل عميل، من غير ما تضيعوا وقت في البحث والكتابة. لو حابين، أبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها بنفسكم. محمد من وصلة';
 const BODY = 'إحنا عاملين أداة اسمها وصلة بتلاقي عملاء للوكالات وبتكتب رسالة واتساب شخصية لكل عميل، من غير ما تضيعوا وقت في البحث والكتابة.';
 const END = 'لو حابين، أبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها بنفسكم. محمد من وصلة';
 
@@ -54,7 +54,7 @@ test('round 2 message rules: the good message passes, every template habit is re
     assert.equal(r.retry, true, `${name}: one automatic retry`);
   }
   // praise attributed to their customers is allowed (it comes from the review themes)
-  assert.equal((await validate(`أهلا يا فريق الإنجاز، عملاءكم دايما بيشكروا في احترافيتكم وأفكاركم المختلفة. ${BODY} ${END}`)).json.ok, true);
+  assert.equal((await validate(`أهلا يا فريق الإنجاز، عملاءكم بيشكروا في احترافيتكم وأفكاركم المختلفة. ${BODY} ${END}`)).json.ok, true);
   // naming the city is fine (only micro-districts are banned)
   assert.equal((await validate(GOOD.replace('أهلا يا فريق الإنجاز', 'أهلا يا فريق الإنجاز في القاهرة'))).json.ok, true);
   // length: 35 to 70 words for chat
@@ -96,7 +96,7 @@ test('round 2 variety: a duplicate opening of the campaign is rejected; in one r
   assert.equal(again.json.reason, 'duplicate_opening');
   assert.equal(again.json.retry, false, 'the retry is final');
   // and a different opening passes and is remembered
-  const other = await validate(GOOD.replace('أهلا يا فريق الإنجاز، عملاءكم دايما', 'فريقكم شغال في مجال بيكبر، وعملاءكم'), { prev: 'OpenRouter retry', sel: { lead_id: 'b' }, nodes: { 'Validate message': [res[1].json] } });
+  const other = await validate(GOOD.replace('أهلا يا فريق الإنجاز، عملاءكم', 'فريقكم شغال في مجال بيكبر، وعملاءكم'), { prev: 'OpenRouter retry', sel: { lead_id: 'b' }, nodes: { 'Validate message': [res[1].json] } });
   assert.equal(other.json.ok, true, other.json.reason);
 });
 
@@ -122,7 +122,7 @@ test('round 2 prompt: the writer gets the rules, the personal hook (specialty an
       'Get campaign': [{ parameters: { channel: 'whatsapp', opportunities: [{ type: 'low_owner_engagement', angle_ar: 'نلاقي لك عملاء جداد', why_it_means_they_need_the_offer: 'busy agencies need new clients' }] } }],
       'Get org': [{ name: 'وصلة', offer_profile: { what_we_sell: 'أداة بتلاقي عملاء للوكالات', cta_offer: CTA, sender_name: 'محمد' } }],
       'Get campaign leads': [{ opportunities: [], leads: lead }],
-      'Get messages': [{ id: 'm0', lead_id: 'z', channel: 'whatsapp', generated_text: 'أهلا يا فريق الإنجاز عملاءكم دايما بيشكروا' }],
+      'Get messages': [{ id: 'm0', lead_id: 'z', channel: 'whatsapp', generated_text: 'أهلا يا فريق الإنجاز عملاءكم بيشكروا' }],
       'Get insights': [{ lead_id: 'l1', facts: { categories: ['وكالة تسويق'] }, analysis: { confidence: 'high', praised: [{ theme: 'الأفكار الجديدة', count: 3 }], complaints: [] } }],
       'Get cooldown': [],
     },
@@ -134,7 +134,7 @@ test('round 2 prompt: the writer gets the rules, the personal hook (specialty an
   assert.deepEqual(user.personal_hook.customers_praise, ['الأفكار الجديدة']);
   assert.equal(user.sender_name, 'محمد');
   assert.equal(user.sender_offer.cta_offer, CTA);
-  assert.deepEqual(user.avoid_openings, [openingKey('أهلا يا فريق الإنجاز عملاءكم دايما بيشكروا')], 'openings already used in the campaign');
+  assert.deepEqual(user.avoid_openings, [openingKey('أهلا يا فريق الإنجاز عملاءكم بيشكروا')], 'openings already used in the campaign');
   const flat = JSON.stringify(user);
   assert.ok(!('rating' in user) && !flat.includes('4.9') && !flat.includes('المنطقة الأولى'), 'rating and micro-district never reach the model');
   for (const rule of [/NEVER mention the business's rating/, /NEVER use jargon/, /No time-of-day greeting/, /offer_quote/, /NEVER end with/, /signature/, /style_examples/]) assert.match(req.messages[0].content, rule);

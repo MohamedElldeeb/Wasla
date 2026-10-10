@@ -8,12 +8,7 @@ const freshMap = new Map($('Get fresh insights').all().map((i) => i.json).filter
 let byLead = new Map();
 try { byLead = new Map($('Parse signals').first().json.byLead.map((x) => [x.lead_id, x])); } catch (e) { byLead = new Map(); }
 
-const baseName = (n) => String(n || '').split(/\s[-–|]\s|\(|\|/)[0].toLowerCase().replace(/[^\p{L}\p{N}]+/g, ' ').trim();
-const branchCount = new Map();
-for (const r of $('Get org names').all()) {
-  const k = baseName(r.json.business_name);
-  if (k) branchCount.set(k, (branchCount.get(k) || 0) + 1);
-}
+const orgLeads = $('Get org names').all().map((i) => i.json);
 
 const oppMap = ((campaign.parameters || {}).opportunities || []).map((o) => ({ type: o.type, angle: o.angle_ar || o.angle || '' }));
 const rows = [];
@@ -22,7 +17,7 @@ for (const r of links) {
   const scraped = byLead.get(l.id);
   const stored = freshMap.get(l.id);
   const place = { ...(l.raw || {}), website: l.website, reviewsCount: l.reviews_count, totalScore: l.rating };
-  const facts = (scraped && scraped.facts) || (stored && stored.facts) || computeFacts(place, [], { branches: Math.max(1, branchCount.get(baseName(l.business_name)) || 1) });
+  const facts = (scraped && scraped.facts) || (stored && stored.facts) || computeFacts(place, [], { branches: countBranches(l, orgLeads) });
   const analysis = (scraped && scraped.analysis) || (stored && stored.analysis) || null;
   const opportunities = buildOpportunities(facts, analysis, oppMap);
   rows.push({

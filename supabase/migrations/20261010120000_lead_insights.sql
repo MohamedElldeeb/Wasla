@@ -1,5 +1,5 @@
 -- Spec v2.2: lead insights, fit-gated score, fresh leads across campaigns, contact cooldown, "not relevant" learning.
--- Additive only (no data is dropped). Signals that are replaced are disabled, never deleted.
+-- Additive and backward compatible: no table, column or function that the previous release uses is dropped or renamed (ingest_leads keeps its old signature as a wrapper). Signals that are replaced are disabled, never deleted.
 
 -- ───────────── config as data ─────────────
 create table public.app_config (
@@ -287,8 +287,8 @@ end;
 $$;
 
 -- ───────────── ingest v3: fresh leads, cooldown, fit (service role only) ─────────────
-drop function public.ingest_leads(uuid, uuid, jsonb);
-create function public.ingest_leads(p_org uuid, p_campaign uuid, p_leads jsonb, p_include_previous boolean default false)
+-- The 3-argument version stays (as a wrapper, below) so workflows deployed before this release keep working until they are redeployed.
+create function public.ingest_leads(p_org uuid, p_campaign uuid, p_leads jsonb, p_include_previous boolean)
 returns jsonb language plpgsql security definer set search_path = '' as $$
 declare
   received integer;
@@ -397,6 +397,14 @@ end;
 $$;
 revoke all on function public.ingest_leads(uuid, uuid, jsonb, boolean) from public, anon, authenticated;
 grant execute on function public.ingest_leads(uuid, uuid, jsonb, boolean) to service_role;
+
+-- Old signature kept for backward compatibility: same call, fresh-leads default (do not include earlier campaigns' companies).
+create or replace function public.ingest_leads(p_org uuid, p_campaign uuid, p_leads jsonb)
+returns jsonb language sql security definer set search_path = '' as $$
+  select public.ingest_leads(p_org, p_campaign, p_leads, false);
+$$;
+revoke all on function public.ingest_leads(uuid, uuid, jsonb) from public, anon, authenticated;
+grant execute on function public.ingest_leads(uuid, uuid, jsonb) to service_role;
 
 -- ───────────── "Not relevant": remove, refund, learn ─────────────
 create unique index credit_ledger_not_relevant_unique on public.credit_ledger (reason)

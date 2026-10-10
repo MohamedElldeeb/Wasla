@@ -44,17 +44,17 @@ Rules:
 2. NEVER mention the business's rating, stars or number of reviews. NEVER mention any district, neighborhood or street. You may name the city at most once, or not at all.
 3. NEVER use jargon or English business words (no "B2B", "leads", "outreach", "pipeline", "CRM"). Use plain Egyptian words (شركات، عملاء جداد، رسايل).
 4. No time-of-day greeting (no صباح الخير, مساء الخير, صباح الفل or similar): you do not know when it will be read. Start directly or with a short "أهلا".
-5. At most ONE personal detail, and only from personal_hook (the business's specialty, or what its customers praise), phrased naturally, for example "عملاءكم دايما بيشكروا في ..." or "شغلكم في ...". If personal_hook is empty or weak, open with the offer in a clean general way. Never invent a detail. You have NOT seen their work: never say you heard about them, liked their work, followed them, or that they are great.
+5. At most ONE personal detail, and only from personal_hook (the business's specialty, or what its customers praise), phrased naturally, for example "عملاءكم بيشكروا في ..." (never write "دايما" or "دائما": that overclaims) or "شغلكم في ...". If personal_hook is empty or weak, open with the offer in a clean general way. Never invent a detail. You have NOT seen their work: never say you heard about them, liked their work, followed them, or that they are great.
 6. NEVER invent benefits, numbers, results, prices or clients. Promise only what your offer_quote supports. Do not add lines about customer satisfaction, better communication, growth or quality unless the offer itself says so.
 7. Ending: a concrete, low-friction call to action. If sender_offer.cta_offer exists, offer exactly that in your own words. Otherwise end with ONE short question about how they find clients today (or how they handle the thing the offer is about). NEVER end with "ممكن نتكلم؟" or any "can we talk / meet / connect" question.
-8. If required_signature is given, the message ends with exactly those words (the last words of the text).
+8. If required_signature is given, the message ends with exactly those words (the last words of the text). The sender's name appears ONLY there: never introduce yourself by name at the start or in the middle.
 9. No emoji (zero by default).
 10. TACT: never mention complaints, low ratings, missing things or any weakness of the business, not even politely. help_angle (when present) is what OUR offer does; present it as a capability of the offer, never as a gap of theirs.
 11. Variety: follow opening_style. Do NOT start with any of avoid_openings. Never use the skeleton "greeting + I saw you in X + we help companies like you + can we talk".
 12. Address them as a team in the plural (انتم، شغلكم، تحبوا), never in the singular. Short sentences, natural Egyptian words (إزاي، دلوقتي، كده، ممكن), not formal Arabic.
 13. Never praise their work yourself (no مميز، ممتاز، رائع، شاطرين، احترافي، متميز), and never assume what they need or want (no "أكيد محتاجين", "أكيد بتدوروا", "واضح إنكم"). Praise may appear only as what THEIR CUSTOMERS say, taken from personal_hook.customers_praise. Never promise or guarantee anything (no نضمن، مضمون). Never add benefits such as saving their time or letting them focus on their core work: only what offer_quote says.
 14. Word the concrete call to action in a fresh way each time (keep the substance of cta_offer: what, how many, that it is free); do not reuse one fixed sentence.
-15. If style_examples is present, they are messages this seller likes: copy only their tone, length and shape, NEVER their words, offer or numbers.`;
+15. If style_examples is present, they are messages this seller likes: match their tone and length, NOT their sentences. Never reuse a run of 8 or more consecutive words from them, and do not follow their sentence-by-sentence skeleton; their offer and numbers come from sender_offer only.`;
 
 // One opening per lead, rotating, so the messages of one campaign do not share a skeleton (the validator also rejects shared openings and near-copies).
 const STYLES = [
@@ -64,7 +64,7 @@ const STYLES = [
   'Begin with the name of the sender company as the subject of one plain sentence about what its tool does; no greeting; then why it fits a business like theirs; then the call to action.',
   'Begin with the words "فكرة سريعة:" followed by what the offer would do for a business like theirs, then the call to action.',
   'Begin with the personal detail from personal_hook as a short remark (if there is none, a remark about the kind of work they do), then "عشان كده" and the offer, then the call to action.',
-  'Begin with the words "بعد إذنكم،" then who you are and what you do in one sentence, then the call to action.',
+  'Begin with the words "بعد إذنكم،" then what the tool of the sender does in one sentence (do not say your name here: the name appears only in the signature), then the call to action.',
   'Begin with one short honest sentence saying you are writing because their field is the one the offer is built for, then the offer, then the call to action.',
 ];
 
@@ -104,7 +104,9 @@ return chosen.map((r, idx) => {
 
   // The opportunity the message is built on: the one chosen on the lead (user can switch it), only if the planner tied it to the offer.
   const opps = Array.isArray(r.opportunities) ? r.opportunities : [];
-  const sel = opps.find((o) => o.type === r.selected_opportunity) || opps[0] || null;
+  // dormant_activity at strength 1 (about 4 to 8 months without a review) is too weak to be an angle; it stays visible in the brief.
+  const angleOpps = opps.filter((o) => !(o.type === 'dormant_activity' && Number(o.strength) < 2));
+  const sel = angleOpps.find((o) => o.type === r.selected_opportunity) || angleOpps[0] || null;
   const mapped = sel ? oppMap.get(sel.type) : null;
   const linked = !!(sel && mapped && (mapped.why_it_means_they_need_the_offer || mapped.angle_ar || mapped.angle));
   const helpAngle = linked ? (mapped.angle_ar || mapped.angle || sel.angle || null) : null;
@@ -118,7 +120,8 @@ return chosen.map((r, idx) => {
   const description = String(l.raw_description || (l.raw && (l.raw.description || l.raw.ownerDescription)) || '').trim().slice(0, 160) || null;
   const hook = {};
   if (specialty.length) hook.specialty = specialty;
-  if (confident && analysis.praised && analysis.praised.length) hook.customers_praise = analysis.praised.slice(0, 2).map((x) => x.theme);
+  const praised = confident && analysis.praised ? analysis.praised.filter((x) => Number(x.count) >= 2) : []; // one review is an anecdote, not a pattern
+  if (praised.length) hook.customers_praise = praised.slice(0, 2).map((x) => x.theme);
   if (description) hook.description = description;
 
   const areas = [l.district, l.raw_neighborhood, l.raw && l.raw.neighborhood, l.raw && l.raw.street ? String(l.raw.street).split(',')[0] : null].filter(Boolean);
@@ -165,6 +168,7 @@ return chosen.map((r, idx) => {
       offer_text: offerText,
       cta_offer: offer.cta_offer || null,
       sender_name: senderName,
+      style_examples: styleExamples,
       signature,
       areas,
       city: l.city || null,
