@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
+import { Alert } from '@/components/ui/alert';
 import { EmptyState } from '@/components/app/empty-state';
 import { ScoreWithReasons } from '@/components/app/score-badge';
 import { StatusBadge } from '@/components/app/status-badge';
@@ -24,7 +25,18 @@ import { LeadBriefFull, NotRelevantButton } from '@/components/app/lead-brief';
 import type { CampaignLead, Job, LeadInsight, Message } from '@/lib/types';
 
 const wordCount = (s: string) => s.trim().split(/\s+/).filter(Boolean).length;
-type Filter = 'pending' | 'approved' | 'rejected';
+type Filter = 'pending' | 'approved' | 'rejected' | 'failed';
+
+/** Maps the stored failure code to one of the plain-language reasons (never shows technical codes to the user). */
+function failKey(code: string | null | undefined): 'short_long' | 'service' | 'similar' | 'tact' | 'rule' | 'other' {
+  const c = code ?? '';
+  if (/word_count/.test(c)) return 'short_long';
+  if (/bad_json|^http_|empty/.test(c)) return 'service';
+  if (/duplicate_opening|too_similar/.test(c)) return 'similar';
+  if (/^tact:/.test(c)) return 'tact';
+  if (/^style:|contains_link/.test(c)) return 'rule';
+  return 'other';
+}
 
 function RegenWatcher({ jobId, onDone }: { jobId: string; onDone: () => void }) {
   const t = useT();
@@ -56,6 +68,7 @@ export function ReviewQueue({ messages, leads, onGoLeads, insights = {} }: { mes
     pending: messages.filter((m) => m.review_status === 'pending').length,
     approved: messages.filter((m) => m.review_status === 'approved' || m.review_status === 'sent').length,
     rejected: messages.filter((m) => m.review_status === 'rejected').length,
+    failed: messages.filter((m) => m.review_status === 'failed').length,
   }), [messages]);
   const list = useMemo(() => messages.filter((m) => (filter === 'approved' ? m.review_status === 'approved' || m.review_status === 'sent' : m.review_status === filter)), [messages, filter]);
   const leadById = useMemo(() => new Map(leads.map((l) => [l.leads.id, l])), [leads]);
@@ -101,8 +114,8 @@ export function ReviewQueue({ messages, leads, onGoLeads, insights = {} }: { mes
       const k = e.key.toLowerCase();
       if (k === 'j') go(1);
       else if (k === 'k') go(-1);
-      else if (k === 'a' && m.review_status !== 'approved' && m.review_status !== 'sent' && !busy) void setStatus('approved');
-      else if (k === 'x' && m.review_status !== 'rejected' && m.review_status !== 'sent' && !busy) void setStatus('rejected');
+      else if (k === 'a' && m.review_status !== 'approved' && m.review_status !== 'sent' && m.review_status !== 'failed' && !busy) void setStatus('approved');
+      else if (k === 'x' && m.review_status !== 'rejected' && m.review_status !== 'sent' && m.review_status !== 'failed' && !busy) void setStatus('rejected');
       else if (k === 'r' && m.review_status !== 'sent') setRegenOpen((o) => !o);
     };
     window.addEventListener('keydown', onKey);
@@ -124,14 +137,14 @@ export function ReviewQueue({ messages, leads, onGoLeads, insights = {} }: { mes
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap gap-2" role="tablist">
-          {(['pending', 'approved', 'rejected'] as const).map((f) => (
+          {(['pending', 'approved', 'rejected', 'failed'] as const).filter((f) => f !== 'failed' || counts.failed > 0 || filter === 'failed').map((f) => (
             <button
               key={f}
               type="button"
               role="tab"
               aria-selected={filter === f}
               onClick={() => { setFilter(f); setIdx(0); setRegenOpen(false); }}
-              className={cn('transition-ui min-h-12 rounded-control border px-4 text-body-sm font-medium lg:min-h-10', filter === f ? 'border-brand bg-brand-soft text-brand' : 'border-border-strong bg-surface text-fg hover:bg-surface-hover')}
+              className={cn('transition-ui min-h-12 rounded-control border px-4 text-body-sm font-medium lg:min-h-10', filter === f ? 'border-brand bg-brand-soft text-brand' : f === 'failed' ? 'border-danger bg-surface text-danger hover:bg-danger-soft' : 'border-border-strong bg-surface text-fg hover:bg-surface-hover')}
             >
               {r.filters[f]} <span className="num">({counts[f]})</span>
             </button>
@@ -187,7 +200,13 @@ export function ReviewQueue({ messages, leads, onGoLeads, insights = {} }: { mes
               </header>
               {cl && <ScoreWithReasons score={cl.opportunity_score} reasons={reasonTexts(cl, t)} />}
               {m.angle && <p className="text-caption text-fg-muted" dir="auto">{r.angle}: {m.angle}</p>}
-              {/* Outreach messages are written in Egyptian Arabic for the lead, so the box is always RTL. */}
+              {status === 'failed' ? (
+                <Alert variant="danger" role="status" data-testid="message-failed">
+                  <strong className="block">{r.failedTitle}</strong>
+                  {r.failedBody}
+                  <span className="mt-1 block text-caption">{r.failedReason}: {r.failReasons[failKey(m.fail_reason)]}</span>
+                </Alert>
+              ) : (
               <div className="relative">
                 <Textarea
                   value={text}
@@ -199,6 +218,7 @@ export function ReviewQueue({ messages, leads, onGoLeads, insights = {} }: { mes
                 />
                 <span className="num pointer-events-none absolute bottom-2 end-3 text-caption text-fg-muted">{wordCount(text)} {r.words} · {r.charCount(text.length)}</span>
               </div>
+              )}
               {regenJob?.messageId === m.id && (
                 <RegenWatcher jobId={regenJob.id} onDone={() => { setRegenJob(null); setDrafts((d) => { const n = { ...d }; delete n[m.id]; return n; }); router.refresh(); }} />
               )}
@@ -219,9 +239,10 @@ export function ReviewQueue({ messages, leads, onGoLeads, insights = {} }: { mes
             </Card>
 
             <StickyBar className="[&>div]:justify-end">
-              {status !== 'rejected' && status !== 'sent' && <Button variant="ghost" size="lg" className="px-3" onClick={() => setStatus('rejected')} disabled={busy}><X className="max-sm:hidden" aria-hidden />{r.reject}</Button>}
+              {status === 'failed' && <Button size="lg" className="flex-1 sm:flex-none" onClick={regenerate} loading={pending} disabled={!!regenJob} data-testid="retry-message"><RefreshCw className="max-sm:hidden" aria-hidden />{r.failedRetry}</Button>}
+              {status !== 'rejected' && status !== 'sent' && status !== 'failed' && <Button variant="ghost" size="lg" className="px-3" onClick={() => setStatus('rejected')} disabled={busy}><X className="max-sm:hidden" aria-hidden />{r.reject}</Button>}
               {status === 'rejected' && <Button variant="secondary" size="lg" onClick={() => setStatus('pending')} disabled={busy}>{r.restore}</Button>}
-              {status !== 'sent' && <Button variant="secondary" size="lg" className="px-3" onClick={() => setRegenOpen((o) => !o)} disabled={!!regenJob}><RefreshCw className="max-sm:hidden" aria-hidden />{r.regenerate}</Button>}
+              {status !== 'sent' && status !== 'failed' && <Button variant="secondary" size="lg" className="px-3" onClick={() => setRegenOpen((o) => !o)} disabled={!!regenJob}><RefreshCw className="max-sm:hidden" aria-hidden />{r.regenerate}</Button>}
               {(status === 'pending' || status === 'rejected') && <Button size="lg" className="flex-1 sm:flex-none" onClick={() => setStatus('approved')} loading={busy} disabled={!!regenJob} data-testid="approve"><Check className="max-sm:hidden" aria-hidden />{r.approve}</Button>}
               {status === 'approved' && <Button size="lg" className="flex-1 sm:flex-none" onClick={() => setStatus('approved')} loading={busy} disabled={!dirty}>{r.edit}</Button>}
             </StickyBar>

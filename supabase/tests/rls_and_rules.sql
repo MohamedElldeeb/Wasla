@@ -286,6 +286,16 @@ begin
   perform pg_temp.ok(pg_temp.q('authenticated', a, format('select sent || %L || replied from public.opportunity_stats(%L)', '/', org_a)) = '1/1', 'opportunity stats: 1 sent, 1 replied');
   perform pg_temp.ok(pg_temp.q('authenticated', b, format('select count(*) from public.opportunity_stats(%L)', org_a)) = '0', 'B cannot read A opportunity stats');
 
+  -- Failed generation: stored as a visible 'failed' row with no text, never sendable, regenerable
+  perform pg_temp.q('postgres', null, format('insert into public.messages (organization_id, lead_id, campaign_id, channel, generated_text, review_status, fail_reason) values (%L, %L, %L, %L, %L, %L, %L)', org_a, lead_land, camp_a, 'messenger', 'ignored', 'failed', 'style:word_count_29'));
+  perform pg_temp.ok((select review_status || '/' || generated_text || '/' || fail_reason from public.messages where lead_id = lead_land and channel = 'messenger') = 'failed//style:word_count_29', 'a failed generation is stored as failed, with no text');
+  perform pg_temp.ok(pg_temp.q('authenticated', a, format('select count(*) from public.messages where review_status = %L', 'failed')) = '1', 'members see failed rows of their organization');
+  perform pg_temp.ok(pg_temp.q('authenticated', b, format('select count(*) from public.messages where review_status = %L', 'failed')) = '0', 'other organizations do not');
+  perform pg_temp.ok(pg_temp.err('authenticated', a, format('select public.mark_message_sent(%L)', (select id from public.messages where review_status = 'failed'))) like '%not_approved%', 'a failed message can never be sent');
+  perform pg_temp.ok(pg_temp.err('postgres', null, format('update public.messages set review_status = %L where review_status = %L', 'pending', 'failed')) like '%empty_message%', 'a failed row cannot become reviewable without text');
+  perform pg_temp.q('postgres', null, format('update public.messages set review_status = %L, generated_text = %L, fail_reason = null where review_status = %L', 'pending', 'نص جديد', 'failed'));
+  perform pg_temp.ok((select count(*) from public.messages where review_status = 'failed') = 0, 'regenerating turns a failed row into a normal pending message');
+
   -- Angle switching: only an opportunity the lead has, only by members
   perform pg_temp.q('postgres', null, format('update public.campaign_leads set opportunities = %L where id = %L', '[{"type":"unclaimed_listing","strength":2,"evidence":{},"angle":"x"},{"type":"dormant_activity","strength":1,"evidence":{},"angle":"y"}]', cl_a));
   perform pg_temp.q('authenticated', a, format('select public.set_selected_opportunity(%L, %L)', cl_a, 'dormant_activity'));

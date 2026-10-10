@@ -14,7 +14,12 @@ const run = JSON.parse(readFileSync(new URL('../docs/samples/fixtures-run.json',
 const draft = run.planner.draft;
 const WEBHOOK = (model) => ({ body: { organization_id: 'org', campaign_id: 'camp', job_id: 'job', model, fallback_models: [] } });
 const campaign = { id: 'camp', parameters: { opportunities: draft.opportunities, complaint_relevance: draft.complaint_relevance, channel: 'whatsapp', tone: 'friendly', angle: draft.angles[0] || null } };
+const STYLE_EXAMPLES = [
+  'أهلا يا فريق [اسم النشاط]، عملاءكم دايما بيشكروا في الأفكار الجديدة اللي بتقدموها. إحنا عاملين أداة اسمها وصلة بتجيب لوكالات التسويق شركات محتاجة خدماتها فعلا، ومع كل شركة رسالة جاهزة تتبعت على واتساب. تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها بنفسكم؟ محمد من وصلة',
+  'أهلا، بنساعد وكالات التسويق في إسكندرية يلاقوا شركات محتاجة خدماتهم، ونجهز لكل شركة رسالة شخصية تتبعت على واتساب. لو حابين، أبعتلكم 10 شركات مناسبة لتخصصكم ببلاش تجربوا بيها. محمد من وصلة',
+];
 const PROFILE = {
+  style_examples: STYLE_EXAMPLES,
   what_we_sell: 'وصلة: بتلاقي عملاء B2B للوكالات وبتكتب رسائل واتساب شخصية لكل عميل', ideal_customer: 'وكالات تسويق ودعاية وإعلان ومستقلين في مصر',
   problems_we_solve: 'إن الوكالة تلاقي عملاء جدد ومناسبين وتتواصل معاهم بسرعة', proof_points: '', cta_offer: 'أبعتلكم 10 شركات مناسبة لشغلكم ببلاش', sender_name: 'محمد', regions: [{ governorate: 'القاهرة' }],
 };
@@ -75,7 +80,7 @@ let md = `# Model comparison: first WhatsApp message (round 2)
 Generated ${new Date().toISOString().slice(0, 10)} by \`scripts/model-compare.mjs\` (no Apify).
 
 ## What changed in round 2
-- The generation prompt and validator were rewritten (rules: no rating or stars, no micro-district, no jargon, no time-of-day greeting, one personal detail at most from the lead's specialty or praised themes, benefits only from the offer with an \`offer_quote\` check, a concrete CTA from the offer profile, a signature, 35 to 70 words, variety of openings). The two reference messages from the review are used as few-shot style examples marked as written for a different seller.
+- The generation prompt and validator were rewritten (rules: no rating or stars, no micro-district, no jargon, no time-of-day greeting, one personal detail at most from the lead's specialty or praised themes, benefits only from the offer with an \`offer_quote\` check, a concrete CTA from the offer profile, a signature, 35 to 70 words, variety of openings). The two reference messages are no longer in the global prompt: they are the Wasla organization's own style_examples (optional per-organization field, empty by default).
 - The offer profile for Wasla now has \`cta_offer\` ("${PROFILE.cta_offer}") and \`sender_name\` ("${PROFILE.sender_name}").
 - Only the two models you asked for are compared, on the same ${rows.length} fixture leads (Cairo and Alexandria marketing agencies kept by the new fit logic). The planner is fixed to Gemini 2.5 Flash, so the planner comparison is dropped.
 - Each model got **one attempt** (the real workflow adds one automatic retry on top). "Style audit" re-checks every produced text, including rejected ones, against the rules.

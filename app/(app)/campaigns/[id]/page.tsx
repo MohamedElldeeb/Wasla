@@ -29,7 +29,7 @@ export default async function CampaignPage({ params }: { params: Promise<{ id: s
       .limit(1000),
     supabase
       .from('messages')
-      .select(`id,lead_id,campaign_id,channel,generated_text,edited_text,angle,review_status,regen_count,sent_at,leads(${LEAD_COLS})`)
+      .select(`id,lead_id,campaign_id,channel,generated_text,edited_text,angle,review_status,fail_reason,regen_count,sent_at,leads(${LEAD_COLS})`)
       .eq('campaign_id', id)
       .order('created_at')
       .limit(2000),

@@ -32,10 +32,8 @@ const offerText = [offer.what_we_sell, offer.problems_we_solve, offer.proof_poin
 const generalAngle = p.angle && typeof p.angle === 'object' ? p.angle : null;
 const oppMap = new Map(((p.opportunities) || []).map((o) => [o.type, o]));
 
-const EXAMPLES = [
-  'أهلا يا فريق [اسم النشاط]، عملاءكم دايما بيشكروا في الأفكار الجديدة اللي بتقدموها. إحنا عاملين أداة اسمها وصلة بتجيب لوكالات التسويق شركات محتاجة خدماتها فعلا، ومع كل شركة رسالة جاهزة تتبعت على واتساب. تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها بنفسكم؟ محمد من وصلة',
-  'أهلا، بنساعد وكالات التسويق في إسكندرية يلاقوا شركات محتاجة خدماتهم، ونجهز لكل شركة رسالة شخصية تتبعت على واتساب. لو حابين، أبعتلكم 10 شركات مناسبة لتخصصكم ببلاش تجربوا بيها. محمد من وصلة',
-];
+// Style examples are NOT part of this global prompt: they belong to the organization (offer_profile.style_examples, optional, empty by default).
+const styleExamples = (Array.isArray(profile.style_examples) ? profile.style_examples : []).map((x) => String(x || '').trim()).filter(Boolean).slice(0, 3).map((x) => x.slice(0, 700));
 
 const SYSTEM = `You write the FIRST outreach message that one company sends to another business, in natural Egyptian colloquial Arabic. A busy owner reads it on their phone: it must sound like one real person wrote it for THIS business, never like a template or an ad.
 Return ONE JSON object only: ${channel === 'email' ? '{"subject": string, "message": string, "angle": string, "offer_quote": string}' : '{"message": string, "angle": string, "offer_quote": string}'}.
@@ -56,9 +54,7 @@ Rules:
 12. Address them as a team in the plural (انتم، شغلكم، تحبوا), never in the singular. Short sentences, natural Egyptian words (إزاي، دلوقتي، كده، ممكن), not formal Arabic.
 13. Never praise their work yourself (no مميز، ممتاز، رائع، شاطرين، احترافي، متميز), and never assume what they need or want (no "أكيد محتاجين", "أكيد بتدوروا", "واضح إنكم"). Praise may appear only as what THEIR CUSTOMERS say, taken from personal_hook.customers_praise. Never promise or guarantee anything (no نضمن، مضمون). Never add benefits such as saving their time or letting them focus on their core work: only what offer_quote says.
 14. Word the concrete call to action in a fresh way each time (keep the substance of cta_offer: what, how many, that it is free); do not reuse one fixed sentence.
-Style references (written for a DIFFERENT seller with a different offer: copy only the tone, the length and the shape, NEVER their words, topic, offer or numbers):
-- ${EXAMPLES[0]}
-- ${EXAMPLES[1]}`;
+15. If style_examples is present, they are messages this seller likes: copy only their tone, length and shape, NEVER their words, offer or numbers.`;
 
 // One opening per lead, rotating, so the messages of one campaign do not share a skeleton (the validator also rejects shared openings and near-copies).
 const STYLES = [
@@ -73,7 +69,8 @@ const STYLES = [
 ];
 
 // Targets: explicit lead ids, a regeneration, or every eligible lead that has no message yet.
-const haveMsg = new Set(messages.filter((m) => m.channel === channel).map((m) => m.lead_id));
+const failedRows = new Map(messages.filter((m) => m.channel === channel && m.review_status === 'failed').map((m) => [m.lead_id, m]));
+const haveMsg = new Set(messages.filter((m) => m.channel === channel && m.review_status !== 'failed').map((m) => m.lead_id));
 let chosen;
 let regen = null;
 let skippedCooldown = 0;
@@ -138,6 +135,7 @@ return chosen.map((r, idx) => {
     sender_name: senderName,
     required_signature: signature,
     sender_offer: offer,
+    ...(styleExamples.length ? { style_examples: styleExamples } : {}),
     help_angle: usable ? helpAngle : null,
     help_angle_reason: usable && mapped ? (mapped.why_it_means_they_need_the_offer || null) : null,
     general_angle: generalAngle,
@@ -154,8 +152,8 @@ return chosen.map((r, idx) => {
   return {
     json: {
       lead_id: l.id,
-      message_id: regen ? regen.id : null,
-      regen_count: regen ? (regen.regen_count || 0) + 1 : 0,
+      message_id: regen ? regen.id : (failedRows.get(l.id) ? failedRows.get(l.id).id : null),
+      regen_count: regen ? (regen.regen_count || 0) + 1 : (failedRows.get(l.id) ? (failedRows.get(l.id).regen_count || 0) + 1 : 0),
       channel,
       organization_id: body.organization_id,
       campaign_id: body.campaign_id,

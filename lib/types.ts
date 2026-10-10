@@ -8,6 +8,8 @@ export type OfferProfile = {
   example_customers?: string[];
   /** One concrete, low-friction offer the first message ends with (e.g. a free sample). Optional. */
   cta_offer?: string;
+  /** Optional messages this organization likes; the writer copies only their tone, length and shape. Empty by default. */
+  style_examples?: string[];
   /** First name used to sign the first message ("name from company"). Optional. */
   sender_name?: string;
 };
@@ -196,7 +198,8 @@ export type Message = {
   edited_text: string | null;
   angle: string | null;
   opportunity_type?: string | null;
-  review_status: 'pending' | 'approved' | 'rejected' | 'sent';
+  review_status: 'pending' | 'approved' | 'rejected' | 'sent' | 'failed';
+  fail_reason?: string | null;
   regen_count: number;
   sent_at: string | null;
   leads: Lead;

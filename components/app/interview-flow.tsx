@@ -45,6 +45,8 @@ export function InterviewFlow({ mode, orgName, initial, hasOrg = false }: { mode
   const [f, setF] = useState({
     what_we_sell: initial?.what_we_sell ?? '', ideal_customer: initial?.ideal_customer ?? '', problems_we_solve: initial?.problems_we_solve ?? '',
     proof_points: initial?.proof_points ?? '', cta_offer: initial?.cta_offer ?? '', sender_name: initial?.sender_name ?? '', regions: regionsToText(initial?.regions), example_customers: (initial?.example_customers ?? []).join('\n'),
+    // optional style examples: separated by a blank line; kept as they are when the interview is re-run
+    style_examples: (initial?.style_examples ?? []).join('\n\n'),
   });
 
   const live = useJob(job, (j) => {
@@ -54,7 +56,8 @@ export function InterviewFlow({ mode, orgName, initial, hasOrg = false }: { mode
     setMsgs((m) => [...m, { role: 'assistant', content: r.reply }]);
     setTurn(r);
     if (r.done && r.profile) {
-      setF({ what_we_sell: r.profile.what_we_sell, ideal_customer: r.profile.ideal_customer, problems_we_solve: r.profile.problems_we_solve, proof_points: r.profile.proof_points, cta_offer: r.profile.cta_offer ?? '', sender_name: r.profile.sender_name ?? '', regions: regionsToText(r.profile.regions), example_customers: r.profile.example_customers.join('\n') });
+      const pr = r.profile;
+      setF((prev) => ({ ...prev, what_we_sell: pr.what_we_sell, ideal_customer: pr.ideal_customer, problems_we_solve: pr.problems_we_solve, proof_points: pr.proof_points, cta_offer: pr.cta_offer ?? '', sender_name: pr.sender_name ?? '', regions: regionsToText(pr.regions), example_customers: pr.example_customers.join('\n') }));
       setPhase('summary');
     }
   });
@@ -100,6 +103,7 @@ export function InterviewFlow({ mode, orgName, initial, hasOrg = false }: { mode
     const res = await saveOfferProfile({
       what_we_sell: f.what_we_sell, ideal_customer: f.ideal_customer, problems_we_solve: f.problems_we_solve, proof_points: f.proof_points, cta_offer: f.cta_offer, sender_name: f.sender_name,
       regions: parseRegions(f.regions), example_customers: f.example_customers.split('\n').map((x) => x.trim()).filter(Boolean),
+      style_examples: f.style_examples.split(/\n\s*\n/).map((x) => x.trim()).filter(Boolean).slice(0, 3),
     });
     setSaving(false);
     if (res.error) { setError(res.error); return; }
@@ -180,7 +184,7 @@ export function InterviewFlow({ mode, orgName, initial, hasOrg = false }: { mode
             <h2 className="text-h2 text-fg">{k.summaryTitle}</h2>
             <p className="mt-1 text-body-sm text-fg-muted">{k.summaryHint}</p>
           </div>
-          {(['what_we_sell', 'ideal_customer', 'problems_we_solve', 'proof_points', 'cta_offer', 'sender_name', 'regions', 'example_customers'] as const).map((key) => (
+          {(['what_we_sell', 'ideal_customer', 'problems_we_solve', 'proof_points', 'cta_offer', 'sender_name', 'regions', 'example_customers', 'style_examples'] as const).map((key) => (
             <Field key={key} id={`f-${key}`} label={k.fields[key]} optional={key === 'what_we_sell' || key === 'ideal_customer' ? undefined : t.common.optional}>
               <Textarea id={`f-${key}`} value={f[key]} onChange={(e) => setF({ ...f, [key]: e.target.value })} dir="auto" className="min-h-24" />
             </Field>

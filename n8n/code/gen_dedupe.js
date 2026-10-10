@@ -19,7 +19,9 @@ const out = $input.all().map((it, idx) => {
       const retryable = !!meta;
       return {
         json: { ...r, ok: false, reason: similar && !seen.has(r.opening) ? 'too_similar' : 'duplicate_opening', retry: retryable, requestBody: retryable ? retryRequestBody(meta.requestBody, r.raw_content, similar && !seen.has(r.opening) ? 'too_similar_to_another_message' : 'duplicate_opening') : '{}',
-          save: { method: 'PATCH', path: 'messages?id=eq.00000000-0000-0000-0000-000000000000', prefer: 'return=minimal', body: { review_status: 'pending' } } },
+          save: meta && meta.message_id
+            ? { method: 'PATCH', path: `messages?id=eq.${meta.message_id}&review_status=neq.sent`, prefer: 'return=minimal', body: { review_status: 'failed', fail_reason: 'duplicate_opening', job_id: meta.job_id } }
+            : { method: 'POST', path: 'messages?on_conflict=lead_id,campaign_id,channel', prefer: 'resolution=ignore-duplicates,return=minimal', body: { organization_id: r.organization_id, lead_id: r.lead_id, campaign_id: r.campaign_id, job_id: r.job_id, channel: r.channel, generated_text: '', review_status: 'failed', fail_reason: 'duplicate_opening' } } },
         pairedItem: { item: idx },
       };
     }

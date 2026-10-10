@@ -14,7 +14,12 @@ const PLANNER = process.env.OPENROUTER_PLANNER_MODEL || MODEL;
 const FALLBACK = (process.env.OPENROUTER_FALLBACK_MODELS || '').split(',').map((s) => s.trim()).filter(Boolean);
 const NOW = Date.parse(process.env.FIXTURE_NOW || '2026-10-10T12:00:00Z');
 const OFFER = 'Wasla: finds B2B clients for agencies and sends personalized WhatsApp messages';
+const STYLE_EXAMPLES = [
+  'أهلا يا فريق [اسم النشاط]، عملاءكم دايما بيشكروا في الأفكار الجديدة اللي بتقدموها. إحنا عاملين أداة اسمها وصلة بتجيب لوكالات التسويق شركات محتاجة خدماتها فعلا، ومع كل شركة رسالة جاهزة تتبعت على واتساب. تحبوا أبعتلكم 10 شركات مناسبة لشغلكم ببلاش تشوفوها بنفسكم؟ محمد من وصلة',
+  'أهلا، بنساعد وكالات التسويق في إسكندرية يلاقوا شركات محتاجة خدماتهم، ونجهز لكل شركة رسالة شخصية تتبعت على واتساب. لو حابين، أبعتلكم 10 شركات مناسبة لتخصصكم ببلاش تجربوا بيها. محمد من وصلة',
+];
 const OFFER_PROFILE = {
+  style_examples: STYLE_EXAMPLES, // the Wasla organization's own style references (per-organization, not in the global prompt)
   what_we_sell: 'وصلة: بتلاقي عملاء B2B للوكالات وبتكتب رسائل واتساب شخصية لكل عميل',
   ideal_customer: 'وكالات تسويق ودعاية وإعلان ومستقلين في مصر',
   problems_we_solve: 'إن الوكالة تلاقي عملاء جدد ومناسبين وتتواصل معاهم بسرعة',

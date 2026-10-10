@@ -62,7 +62,7 @@ Generated ${new Date().toISOString().slice(0, 10)} by \`scripts/fixtures-run.mjs
 - Free Maps data now used: search rank (new opportunity \`weak_search_rank\`), all categories (specialty), \`reviewsDistribution\` (share of 1-2 star reviews), and a social page used as the website counts as no real website.
 
 **Messages (section 3)**
-- New prompt with the style rules, two few-shot references written for a different seller, plus validator rules for: no rating or review count, no micro-district, no jargon (B2B), no time-of-day greeting, no "ممكن نتكلم", the concrete \`cta_offer\`, a signature "name من company", 35 to 70 words.
+- New prompt with the style rules (the example messages are NOT in the global prompt: they are the optional per-organization style_examples, filled here for the Wasla fixture organization), plus validator rules for: no rating or review count, no micro-district, no jargon (B2B), no time-of-day greeting, no "ممكن نتكلم", the concrete \`cta_offer\`, a signature "name من company", 35 to 70 words.
 - New offer-profile fields \`cta_offer\` and \`sender_name\`, asked in the onboarding interview and editable on the summary card.
 - Variety: the campaign's earlier openings are given to the writer and rejected by the validator, and a new "Dedupe openings" node in WF3 sends a duplicate of the same run back for its single retry.
 
@@ -72,6 +72,7 @@ Generated ${new Date().toISOString().slice(0, 10)} by \`scripts/fixtures-run.mjs
 **Still not perfect (honest list)**
 - ${failed.length} of ${msgs.length} messages fail even after the one automatic retry (reasons above). They are not saved and not charged; the user can press regenerate. The causes are model variance (a message under 35 words, an assumed need, an occasional invalid JSON reply from the provider), not logic bugs.
 - The validator cannot prove a hook is true: "عملاءكم بيشكروا في ..." comes from the review themes, and some models still add an invented need ("شغلكم محتاج ...") that only a pattern check catches.
+- A message that still fails after the retry is now stored as a visible "failed" row: the review queue shows the lead with "Couldn't write a good message" and a Try again button (no credit is charged).
 - A place counts as "inside the categories" if ANY of its Maps categories is allowed (AIT Systems is a software company that also lists an internet marketing category), so it is delivered as "maybe" with a capped score.
 - The offer text is the only source of "what we promise"; if a profile is thin, the quote check rejects more messages.
 `;

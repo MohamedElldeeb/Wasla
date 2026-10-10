@@ -14,14 +14,18 @@ const prevU = first || { tokens_in: 0, tokens_out: 0, cost: 0 };
 const usage = { tokens_in: (u.prompt_tokens || 0) + prevU.tokens_in, tokens_out: (u.completion_tokens || 0) + prevU.tokens_out,
   cost: (Number(u.cost) || 0) + prevU.cost, model: (body && body.model) || (first && first.model) || null };
 // Save instruction for the single "Save message" HTTP node: invalid items become a harmless no-op PATCH (matches no row).
-const NOOP = { method: 'PATCH', path: 'messages?id=eq.00000000-0000-0000-0000-000000000000', prefer: 'return=minimal', body: { review_status: 'pending' } };
+// A final failure is stored as a visible 'failed' row (no text, never charged) so the review queue can show it with a regenerate button.
+const failSave = (reason) => (meta.message_id
+  ? { method: 'PATCH', path: `messages?id=eq.${meta.message_id}&review_status=neq.sent`, prefer: 'return=minimal', body: { review_status: 'failed', fail_reason: String(reason).slice(0, 120), job_id: meta.job_id } }
+  : { method: 'POST', path: 'messages?on_conflict=lead_id,campaign_id,channel', prefer: 'resolution=ignore-duplicates,return=minimal',
+      body: { organization_id: meta.organization_id, lead_id: meta.lead_id, campaign_id: meta.campaign_id, job_id: meta.job_id, channel: meta.channel, generated_text: '', review_status: 'failed', fail_reason: String(reason).slice(0, 120) } });
 
 // A failed first attempt is retried ONCE with the reasons as feedback; a failed retry is final.
 const bad = (reason, raw) => {
   const retryable = attempt === 1 && !/^http_/.test(reason);
   let retryBody = '{}';
   if (retryable) retryBody = retryRequestBody(meta.requestBody, raw, reason);
-  return { json: { ...base, ...usage, ok: false, reason, retry: retryable, requestBody: retryBody, save: NOOP } };
+  return { json: { ...base, ...usage, ok: false, reason, retry: retryable, requestBody: retryBody, save: failSave(reason) } };
 };
 
 if (!res || res.statusCode < 200 || res.statusCode >= 300 || !body || !body.choices) return bad(`http_${res && res.statusCode}`);
@@ -63,7 +67,7 @@ const angle = typeof d.angle === 'string' ? d.angle.trim().slice(0, 120) : null;
 const subject = typeof d.subject === 'string' ? d.subject.trim().slice(0, 100) : null;
 const save = meta.message_id
   ? { method: 'PATCH', path: `messages?id=eq.${meta.message_id}&review_status=neq.sent`, prefer: 'return=minimal',
-      body: { generated_text: message, edited_text: null, angle, subject, opportunity_type: meta.opportunity_type, review_status: 'pending', regen_count: meta.regen_count, llm_model: usage.model, job_id: meta.job_id } }
+      body: { generated_text: message, edited_text: null, fail_reason: null, angle, subject, opportunity_type: meta.opportunity_type, review_status: 'pending', regen_count: meta.regen_count, llm_model: usage.model, job_id: meta.job_id } }
   : { method: 'POST', path: 'messages?on_conflict=lead_id,campaign_id,channel', prefer: 'resolution=ignore-duplicates,return=minimal',
       body: { organization_id: meta.organization_id, lead_id: meta.lead_id, campaign_id: meta.campaign_id, job_id: meta.job_id, channel: meta.channel,
         subject, generated_text: message, angle, opportunity_type: meta.opportunity_type, llm_model: usage.model } };

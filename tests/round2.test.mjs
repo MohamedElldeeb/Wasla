@@ -137,7 +137,7 @@ test('round 2 prompt: the writer gets the rules, the personal hook (specialty an
   assert.deepEqual(user.avoid_openings, [openingKey('أهلا يا فريق الإنجاز عملاءكم دايما بيشكروا')], 'openings already used in the campaign');
   const flat = JSON.stringify(user);
   assert.ok(!('rating' in user) && !flat.includes('4.9') && !flat.includes('المنطقة الأولى'), 'rating and micro-district never reach the model');
-  for (const rule of [/NEVER mention the business's rating/, /NEVER use jargon/, /No time-of-day greeting/, /offer_quote/, /NEVER end with/, /signature/, /Style references/, /DIFFERENT seller/]) assert.match(req.messages[0].content, rule);
+  for (const rule of [/NEVER mention the business's rating/, /NEVER use jargon/, /No time-of-day greeting/, /offer_quote/, /NEVER end with/, /signature/, /style_examples/]) assert.match(req.messages[0].content, rule);
   assert.ok(j.areas.includes('المنطقة الأولى'), 'the micro-district is kept only for validation');
   assert.equal(j.sender_name, 'محمد');
 });
@@ -195,4 +195,58 @@ test('no Code node or shared source contains stray control characters (a regex w
       assert.ok(!/[ --]/.test(src), `${d}${f} has a control character`);
     }
   }
+});
+
+test('style examples belong to the organization: absent from the global prompt, sent only when the profile has them', async () => {
+  const mk = (profile) => runNode('gen_build.js', {
+    nodes: {
+      Webhook: [WEBHOOK], 'Claim job': [{ credits_reserved: 5 }], 'Get campaign': [{ parameters: {} }], 'Get org': [{ name: 'W', offer_profile: { what_we_sell: 't', ...profile } }],
+      'Get campaign leads': [{ opportunities: [], leads: { id: 'l1', business_name: 'X', whatsapp_eligible: true, status: 'new' } }], 'Get messages': [], 'Get insights': [], 'Get cooldown': [],
+    },
+  });
+  const none = JSON.parse((await mk({}))[0].json.requestBody);
+  assert.ok(!('style_examples' in JSON.parse(none.messages[1].content)), 'empty by default');
+  // the old global examples are gone from the system prompt
+  assert.ok(!none.messages[0].content.includes('أبعتلكم 10 شركات'));
+  assert.ok(!none.messages[0].content.includes('محمد من وصلة'));
+  const withEx = JSON.parse((await mk({ style_examples: ['رسالة مثال أولى', '  ', 'رسالة مثال ثانية', 'ثالثة', 'رابعة تتجاهل'] }))[0].json.requestBody);
+  assert.deepEqual(JSON.parse(withEx.messages[1].content).style_examples, ['رسالة مثال أولى', 'رسالة مثال ثانية', 'ثالثة'], 'blank ones dropped, at most three');
+});
+
+test('a message that fails after the retry is saved as a visible failed row (no text); a later run regenerates that same row', async () => {
+  const bad = (await validate('أهلا. قصيرة.', { prev: 'OpenRouter retry', nodes: { 'Validate message': [{ tokens_in: 0, tokens_out: 0, cost: 0 }] } })).json;
+  assert.equal(bad.ok, false);
+  assert.equal(bad.retry, false);
+  assert.equal(bad.save.method, 'POST');
+  assert.equal(bad.save.body.review_status, 'failed');
+  assert.equal(bad.save.body.generated_text, '');
+  assert.match(bad.save.body.fail_reason, /^style:word_count_/);
+  // when the lead already has a message row (regenerate or an earlier failure) the failure updates that row
+  const upd = (await validate('أهلا. قصيرة.', { prev: 'OpenRouter retry', sel: { message_id: 'm-1' }, nodes: { 'Validate message': [{ tokens_in: 0, tokens_out: 0, cost: 0 }] } })).json;
+  assert.equal(upd.save.method, 'PATCH');
+  assert.match(upd.save.path, /id=eq\.m-1/);
+  assert.equal(upd.save.body.review_status, 'failed');
+  // success clears the failure
+  const ok = (await validate(GOOD, { sel: { message_id: 'm-1' } })).json;
+  assert.equal(ok.save.body.fail_reason, null);
+  assert.equal(ok.save.body.review_status, 'pending');
+  // a normal "generate" run picks the failed lead up again and targets its row
+  const lead = { id: 'l1', business_name: 'X', whatsapp_eligible: true, status: 'new' };
+  const out = await runNode('gen_build.js', {
+    nodes: {
+      Webhook: [WEBHOOK], 'Claim job': [{ credits_reserved: 5 }], 'Get campaign': [{ parameters: {} }], 'Get org': [{ name: 'W', offer_profile: { what_we_sell: 't' } }],
+      'Get campaign leads': [{ opportunities: [], leads: lead }, { opportunities: [], leads: { ...lead, id: 'l2' } }],
+      'Get messages': [{ id: 'f1', lead_id: 'l1', channel: 'whatsapp', review_status: 'failed', regen_count: 1 }, { id: 'p1', lead_id: 'l2', channel: 'whatsapp', review_status: 'pending', regen_count: 0 }],
+      'Get insights': [], 'Get cooldown': [],
+    },
+  });
+  assert.equal(out.length, 1, 'only the failed lead needs a new message');
+  assert.equal(out[0].json.message_id, 'f1');
+  assert.equal(out[0].json.regen_count, 2);
+  // a duplicate-opening failure from the dedupe node is stored the same way
+  resetStatic();
+  const mkd = (id, text) => ({ lead_id: id, organization_id: 'o', campaign_id: 'c', job_id: 'job', channel: 'whatsapp', ok: true, opening: openingKey(text), message: text, raw_content: '{}', save: {} });
+  const res = await runNode('gen_dedupe.js', { nodes: { Webhook: [WEBHOOK], 'Select and build': [{ ...SEL, lead_id: 'a' }, { ...SEL, lead_id: 'b', message_id: 'm-b' }] }, input: [mkd('a', 'أهلا يا فريق الإنجاز عملاءكم'), mkd('b', 'أهلا يا فريق الإنجاز عملاءكم')] });
+  assert.equal(res[1].json.save.body.review_status, 'failed');
+  assert.match(res[1].json.save.path, /id=eq\.m-b/);
 });
