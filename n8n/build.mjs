@@ -26,7 +26,7 @@ class Workflow {
   }
   merge(name) { return this.add(name, 'n8n-nodes-base.merge', 3, { mode: 'append' }); }
   chain(...names) { for (let i = 0; i < names.length - 1; i++) this.connect(names[i], names[i + 1]); }
-  json() { return { name: this.name, nodes: this.nodes, connections: this.connections, settings: { executionOrder: 'v1' } }; }
+  json() { return { name: this.name, nodes: this.nodes, connections: this.connections, settings: { executionOrder: 'v1', saveDataSuccessExecution: 'none', saveManualExecutions: false, saveExecutionProgress: false } }; }
 
   webhook(path, name = 'Webhook') {
     return this.add(name, 'n8n-nodes-base.webhook', 2, { httpMethod: 'POST', path, authentication: 'headerAuth', responseMode: 'onReceived', options: {} },
