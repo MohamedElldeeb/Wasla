@@ -1,6 +1,6 @@
 # Wasla (وصلة) Product Specification
 
-Version: 2.1 (supersedes v2.0 and v1.1). Changes in 2.1: product is explicitly horizontal (any B2B offer), offer profile and AI campaign planner (6.0), signals library and opportunity score (6.3a), new tables and workflows for them.
+Version: 2.2 (supersedes earlier versions). Changes in 2.2: lead insights layer (6.3b), richer review and listing signals in 6.3a replacing business age. Earlier in 2.1: Changes in 2.1: product is explicitly horizontal (any B2B offer), offer profile and AI campaign planner (6.0), signals library and opportunity score (6.3a), new tables and workflows for them.
 Date: 2026-10-09
 Owner: Mohamed
 
@@ -140,6 +140,27 @@ AI campaign planner (one LLM call via OpenRouter, costs **PROPOSED** 2 credits):
 
 This is what makes Wasla work for any B2B offer without hardcoding segments.
 
+#### Intent understanding (so results match what the user really wants)
+Good results come from context and verification, not from a bigger model. The planner works in four steps:
+1. **Interview (onboarding, once per organization, and again when the user adds a new offer).** A short conversational interview with an AI agent replaces the static offer-profile form:
+   - It starts by asking for the company's website, Facebook, or Instagram link (optional). If given, the agent reads the public page and drafts the profile first, then only asks about what is missing.
+   - It asks at most 5 adaptive questions, one at a time: what you sell, who usually buys from you, their size and location, your best customers today, and the problem you solve for them. Each question offers 2 to 4 suggested quick replies as tappable chips, plus free text.
+   - It replies in the user's own language and register (if the user writes in Egyptian Arabic, it answers in Egyptian Arabic; the rest of the UI stays as configured).
+   - The user can skip any question or end early. The agent never asks more than 5 questions.
+   - It always ends with a **summary card** of the structured offer profile (`what_we_sell`, `ideal_customer`, `problems_we_solve`, `proof_points`, `regions`, plus example customers) that the user edits and confirms. Only the confirmed card is saved; the chat transcript is not used as the profile.
+   - The offer profile stays editable in Settings, and the user can rerun the interview from there.
+   - Campaign creation itself stays a guided wizard (not a chat): it reuses the confirmed profile.
+2. **Plan.** The planner produces queries (max 4, specific, Arabic and English synonyms, district level), allowed categories in both Arabic and English, and an `ideal_lead_description` in one sentence.
+3. **Probe.** Before the full run, a cheap probe fetches about 5 places per query. Each place is checked by the LLM (name, categories, website, description) against `ideal_lead_description` and labeled fit, maybe, or not fit with a short reason. If fewer than half are fit, the planner rewrites the queries and probes once more, then shows the user the fit sample ("this is the kind of company we'll find") before the full run. Probe places that are fit are kept, so nothing is wasted.
+4. **Relevance check on the full run.** Every delivered lead passes the same fit check. Not-fit leads are removed (shown in the funnel as "not relevant to your offer") and are not charged. "Maybe" leads are kept but marked.
+
+Learning from the user: a "Not relevant" action on any lead stores the reason, removes it, refunds its credit, and feeds future planning for that organization (used as negative examples in the planner and fit check).
+
+Model choice: the planner and fit check use the model in `OPENROUTER_PLANNER_MODEL` (can be stronger than the message model because calls are few and cheap). Free OpenRouter models are allowed only for development, never as the production default, because of rate limits and availability.
+
+#### Zero or low results
+If a query returns 0 places, the engine automatically retries a broader version (simpler keyword, wider area, no category filter at actor level; category matching is done by Wasla in Arabic and English after scraping). If the campaign still ends empty, the user sees the exact reason and concrete suggestions, and no credits are charged.
+
 ### 6.1 Campaigns
 Fields:
 - `name`
@@ -148,7 +169,8 @@ Fields:
   - `keywords`: array of Arabic or English search terms (e.g. "مطعم", "عيادة أسنان")
   - `locations`: array of `{ governorate, city, district }`; the engine expands keywords x districts into individual queries
   - `max_results`: total cap for the campaign (hard limit, also bounded by credits)
-  - `filters`: `min_rating`, `min_reviews`, `must_have_phone`, `must_have_mobile`, `must_have_website`, `exclude_closed`, `categories_include`, `categories_exclude`
+  - `include_previous_companies`: boolean, default false
+  - `filters` (no minimum-reviews filter by default; few reviews is a signal, not a reason to drop): `min_rating`, `min_reviews`, `must_have_phone`, `must_have_mobile`, `must_have_website`, `exclude_closed`, `categories_include`, `categories_exclude`
   - `enrich_emails`: boolean
   - `channel`: `whatsapp` | `messenger` | `email`
   - `tone`: `friendly` | `professional` | `direct`
@@ -166,6 +188,20 @@ Campaign templates (seeded): "وكالة تسويق تستهدف مطاعم", "�
 - Per-run caps (`maxCrawledPlacesPerSearch`, total max) always come from the reserved credits.
 - Results land in a staging step, then normalization.
 
+**Requested count = delivered qualified leads.**
+- `max_results` is the number of leads the user receives after every filter, exclusion, and dedupe, not the number scraped.
+- Never split the target evenly into shallow per-query caps. Each query gets real depth (at least 20 places). The engine keeps searching in rounds (deeper per query, then synonyms, then nearby districts) until the target is reached or results are exhausted, within the reserved credits.
+- If the target cannot be reached, the campaign shows how many were found and concrete ways to get more (widen area, add keywords, include previously found companies).
+- The user is charged only for delivered leads.
+
+**Fresh leads across campaigns.**
+- By default a new campaign excludes every company already found in any earlier campaign of the organization, and keeps searching to replace them.
+- Wizard option "Include companies found in earlier campaigns" turns this off (useful for a new offer to the same market).
+- Contact cooldown, always on: a company that received a message from the organization in the last 30 days cannot be sent another message from any campaign, whatever the option above.
+- The organization's past queries (keyword + location) are stored. The planner and the search rounds prefer new districts and synonyms over repeating past searches.
+
+**Campaign funnel (always visible on the campaign page):** queries run and results per query, raw places, removed by category mismatch, closed, landline (if mobile required), other filters, duplicates, previously found, opt-outs, cooldown, delivered.
+
 ### 6.3 Normalization and dedupe
 Normalized lead fields:
 - `business_name`, `category`, `address`, `governorate`, `city`, `district`, `lat`, `lng`
@@ -180,7 +216,7 @@ Rules:
 - Egyptian phone normalization: `01XXXXXXXXX` → `+201XXXXXXXXX` stored; wa.me uses `201XXXXXXXXX`.
 - `dedupe_key` priority: `google_place_id`, then `phone_e164`, then normalized `email`, then `business_name + district`.
 - Dedupe is per organization: the same business can exist in two orgs, never twice in one org.
-- A lead already in the org from an older campaign is linked to the new campaign, not duplicated, and not charged again.
+- A lead already in the org from an older campaign is excluded from new campaigns by default (see 6.2). If the user includes earlier companies, the lead is linked to the new campaign, not duplicated, and not charged again.
 - Leads on the org's opt-out list are dropped at this step.
 
 ### 6.3a Signals and opportunity score
@@ -190,9 +226,14 @@ Signal library:
 
 | Signal key | What it tells | Source | Phase |
 |---|---|---|---|
-| `review_insights` | Recurring praise and complaints from recent reviews (LLM summary of the last 10 reviews) | `compass/google-maps-reviews-scraper` + LLM | 2 |
-| `business_age` | Looks new or established (date of oldest visible review) | Reviews scraper | 2 |
-| `size_proxy` | Reviews count, rating, number of branches with the same name in the area | Google Maps data | 2 |
+| `review_insights` | Recurring praise and complaints from recent reviews (see 6.3b) | `compass/google-maps-reviews-scraper` + LLM | 2 |
+| `activity` | Active or dormant: date of the latest review and review velocity over the fetched reviews | Reviews scraper | 2 |
+| `owner_engagement` | Share of reviews the owner replied to | Reviews scraper | 2 |
+| `unanswered_low_reviews` | Count of 1 to 2 star reviews in the fetched set with no owner reply | Reviews scraper | 2 |
+| `rating_trend` | Average of fetched recent reviews vs overall rating (improving or declining) | Both | 2 |
+| `unclaimed_listing` | Google listing not claimed by the owner (`claimThisBusiness`) | Google Maps data | 2 |
+| `profile_completeness` | Photos count, opening hours, description present | Google Maps data | 2 |
+| `size_proxy` | Reviews count, number of branches with the same name in the area | Google Maps data | 2 |
 | `has_website` | Website exists or not | Google Maps data | 2 |
 | `website_contacts` | Emails and social links found on the website | `vdrmota/contact-info-scraper` | 3 |
 | `instagram_activity` | Followers, posts count, date of last post | `apify/instagram-profile-scraper` | 3 |
@@ -203,10 +244,69 @@ Signal library:
 Rules:
 - Each signal is stored in `lead_signals` with its raw value, a normalized value, source, and collected_at. Signals older than **PROPOSED** 30 days are refreshed only on request.
 - The same signal can mean opposite things for different offers (no website is a strong positive for a web agency, neutral for a packaging supplier). That is why weights come from the campaign, never from global rules.
+- **Score is gated by fit.** Only leads that pass the fit check (6.0) get a score; not-fit leads are removed. Fit "maybe" caps the score at 60.
+- No single signal can produce a high score by itself: a lead needs at least two relevant signals above zero to exceed 70, and common baseline facts (such as simply having a website, which most businesses have) carry low weight unless the offer is specifically about websites.
+- **Global exclusions (always, for every campaign):** government offices and agencies, public utilities and infrastructure (power stations, water, telecom exchanges), universities, schools, hospitals, places of worship, embassies, and military sites. Matching uses categories in Arabic and English plus the fit check.
+- Never match on the business name alone: "Marketing" in a name does not make an equipment supplier a marketing agency. Category and fit decide.
 - **Opportunity score** (0 to 100) = weighted sum of normalized signals using the campaign weights, plus `score_reasons`: the top 2 to 3 reasons in short Arabic (e.g. "مالوش موقع", "آخر بوست من 4 شهور", "الريفيوهات بتشتكي من التأخير").
 - Leads table and review queue sort by score by default and show the reasons as badges.
 - Message generation receives the score reasons and review insights and must build the opening on the strongest real signal. It must never mention a signal that was not collected.
 - Credit cost per signal per lead (**PROPOSED**): reviews 1, website contacts 1, Instagram 1, Facebook page 1, ads 1. Signals derived from data already collected (has_website, size_proxy) are free.
+
+### 6.3b Lead insights (the core value of Wasla)
+
+A list of names and phones is a commodity. Wasla's value is telling the user, for every lead: **why this lead, why now, and what to say.** Every lead the user sees comes with a short brief built from the data we already collect. No new data source is needed for this.
+
+#### Step 1: deterministic facts (code, no LLM)
+Computed from the place and review data and stored as normalized signal values:
+- `last_review_at`, `reviews_per_month` (over the fetched reviews), `activity_label`: active (latest review within 90 days), slowing (90 to 365 days), dormant (over a year). Never label a business "old and stable" from 10 reviews.
+- `is_new_business`: oldest fetched review within the last 12 months AND total reviews ≤ fetched count. Otherwise unknown, not "old".
+- `owner_reply_rate`, `unanswered_low_reviews`, `recent_avg_rating` vs `totalScore`.
+- `unclaimed_listing`, `images_count`, `has_hours`, `has_description`, `has_website`, `phone_type`.
+- Exclude before anything else: `permanentlyClosed`, `temporarilyClosed`, and places outside the campaign's allowed categories.
+
+#### Step 2: review analysis (one LLM call per lead, via OpenRouter)
+Input: up to 10 most recent reviews with text, stars, date, owner reply.
+Output JSON:
+```json
+{
+  "praised": [{"theme": "...", "count": 3}],
+  "complaints": [{"theme": "...", "count": 2}],
+  "customer_values": "one short sentence",
+  "summary_ar": "one or two sentences in plain Arabic",
+  "summary_en": "same in English",
+  "confidence": "low | medium | high"
+}
+```
+Rules: themes only from what reviews actually say; `confidence` is low when fewer than 3 reviews have text; skip the call entirely when no review has text (record why).
+
+#### Step 3: opportunities (relevance to the user's offer)
+An opportunity = an insight that matters **for this organization's offer**. Each has: `type`, `evidence` (numbers and facts from steps 1 and 2), `strength` (1 to 3), `angle` (one sentence on how the offer helps).
+- The campaign planner (6.0) chooses which insight types are relevant for the offer and how they map to angles. Example for a marketing agency: unclaimed listing, no website, few photos, unanswered low reviews, dormant activity, declining rating. Example for a tax firm: new business, multiple branches. Nothing is hardcoded per segment.
+- Top 3 opportunities per lead are stored with the lead in the campaign and drive the score reasons.
+
+#### Step 4: the lead brief (UI)
+On the lead card (compact) and at the top of the review screen (full):
+1. **Why now:** one line built from the strongest opportunity (e.g. "5 تقييمات منخفضة خلال آخر سنة بدون أي رد").
+2. **Evidence chips** with real numbers: activity, rating trend, owner reply rate, website, photos.
+3. **What customers say:** the review summary with confidence shown; low confidence is labeled as such.
+4. **Suggested angle:** the angle the message will use, which the user can switch to another opportunity before generating.
+
+#### Step 5: message rules on top of 6.4
+- The opening uses the selected opportunity, phrased as help, never as criticism. Never quote a review, never say "your reviews are bad", never mention a reviewer.
+- **Never mention complaints, negative review themes, low ratings, or any weakness of the lead in the first message**, even indirectly ("I saw you have a problem with delays or trust" is forbidden). Negative insights may only shape which angle is chosen, silently. The first message opens with something neutral or positive and true (their field, area, a strength customers praise, or a growth opportunity), then the offer.
+- An insight is shown in the brief and used in the message only if the user's offer can actually help with it. Example: complaints about an agency's professionalism are irrelevant when the offer is a lead generation tool, so they are not shown as an opportunity.
+- Mention at most one specific fact. If confidence is low, use a softer, general angle.
+- Never state anything not present in the evidence.
+
+#### Step 6: campaign insights (market view)
+On the campaign page, a short summary across all leads: share of leads with no website, unclaimed listings, dormant activity, average rating, and the top complaint themes across the market. This helps the user position their offer and can be exported as a one-page report.
+
+#### Step 7: learning loop
+Store the opportunity type and angle used on every sent message. When the user marks replied, interested, or won, analytics shows reply rate by opportunity type, so users learn which angles work and the planner can prefer them later.
+
+#### Testing without spending credits
+The raw datasets in `docs/samples/fixtures/` (one Google Maps run and its reviews run) are the test fixtures for steps 1 to 4. Unit tests assert the expected facts for known places in those files.
 
 ### 6.4 Message generation
 - Provider: OpenRouter, model from env `OPENROUTER_MODEL` (default `openai/gpt-4o-mini`), overridable per campaign, with a fallback model list.

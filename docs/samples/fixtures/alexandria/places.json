@@ -1,0 +1,2529 @@
+[{
+  "title": "Scitecs",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "وكالة تسويق",
+  "address": "محمد بهاء الدين الغوري، عزبة سعد، قسم سيدى جابر، محافظة الإسكندرية 5432062، مصر",
+  "neighborhood": "عزبة سعد",
+  "street": "محمد بهاء الدين الغوري",
+  "city": "قسم سيدى جابر",
+  "postalCode": null,
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "website": "http://www.scitecs.com/",
+  "phone": "+20 3 4041116",
+  "phoneUnformatted": "+2034041116",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.2150029,
+    "lng": 29.9417454
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.4,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJkQMfib3E9RQRTJlLwZ05JXI",
+  "categories": [
+    "وكالة تسويق"
+  ],
+  "fid": "0x14f5c4bd891f0391:0x7225399dc14b994c",
+  "cid": "8225043644177684812",
+  "reviewsCount": 14,
+  "reviewsDistribution": {
+    "oneStar": 1,
+    "twoStar": 1,
+    "threeStar": 0,
+    "fourStar": 1,
+    "fiveStar": 11
+  },
+  "imagesCount": 3,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:06.016Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "مغلق"
+    },
+    {
+      "day": "السبت",
+      "hours": "مغلق"
+    },
+    {
+      "day": "الأحد",
+      "hours": "9ص to 5م"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "9ص to 5م"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "9ص to 5م"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "9ص to 5م"
+    },
+    {
+      "day": "الخميس",
+      "hours": "9ص to 5م"
+    }
+  ],
+  "wasOpenAtScrapeTime": false,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "التخطيط": [
+      {
+        "مطلوب تحديد موعد": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Scitecs&query_place_id=ChIJkQMfib3E9RQRTJlLwZ05JXI",
+  "searchPageUrl": "https://www.google.com/maps/search/B2B%20companies%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "B2B companies الاسكندرية",
+  "language": "ar",
+  "rank": 2,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9RiPgCzuxz5G_y9aYjEIir2bMdisZ3RIvnt5y37Ogd5AWnt0b5GXjMcWQpIPf344k-5tlzELbLprI0gGwZuqRSbPj1OZPeqd-Bdy4Fpy65Jf4Jd7YMoKoznyDMw5f9RaV-Q0TzS9w=w959-h240-k-no",
+  "kgmid": "/g/1tdv9b2f",
+  "businessProfileId": "16841986823050087422"
+},
+{
+  "title": "سنجر سابقا",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "خدمة وسائل النقل",
+  "address": "5VRP+M7F، البلقطرية، الجمرك، محافظة الإسكندرية 5321101، مصر",
+  "neighborhood": "البلقطرية",
+  "street": "5VRP+M7F",
+  "city": "الجمرك",
+  "postalCode": null,
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "phone": "",
+  "phoneUnformatted": "",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": 31.1916856,
+    "lng": 29.8856573
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 3.7,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJpYSc9d7D9RQR1R4RSg8dgBE",
+  "categories": [
+    "خدمة وسائل النقل"
+  ],
+  "fid": "0x14f5c3def59c84a5:0x11801d0f4a111ed5",
+  "cid": "1261039847168089813",
+  "reviewsCount": 3,
+  "reviewsDistribution": {
+    "oneStar": 1,
+    "twoStar": 0,
+    "threeStar": 0,
+    "fourStar": 0,
+    "fiveStar": 2
+  },
+  "imagesCount": 2,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:06.016Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [],
+  "wasOpenAtScrapeTime": null,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=%D8%B3%D9%86%D8%AC%D8%B1%20%D8%B3%D8%A7%D8%A8%D9%82%D8%A7&query_place_id=ChIJpYSc9d7D9RQR1R4RSg8dgBE",
+  "searchPageUrl": "https://www.google.com/maps/search/B2B%20companies%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "B2B companies الاسكندرية",
+  "language": "ar",
+  "rank": 3,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9QLW4ql3XYjxaTBKmkgCyBEs8WHM29w01-950xt0hLUzW8_TGZ6EtWibQAHbW32W65fKmsSIVTTHn5k8jxWQ165Ekkd-a1mcuhiFjSzjBn-FJaf1aCiHIsvJYw8Cm1GxOHu6LME7Q=w426-h240-k-no",
+  "kgmid": "/g/1v13ws0j",
+  "businessProfileId": null
+},
+{
+  "title": "The Marketing house",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "وكالة تسويق",
+  "address": "90 محمد فوزى معاذ، st, قسم سيدى جابر، محافظة الإسكندرية 21648، مصر",
+  "neighborhood": "st",
+  "street": "90 محمد فوزى معاذ",
+  "city": "قسم سيدى جابر",
+  "postalCode": "21648",
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "website": "http://themarketinghouse.net/",
+  "phone": "+20 15 56666886",
+  "phoneUnformatted": "+201556666886",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.2136718,
+    "lng": 29.9446918
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJx5xkpJSvLK4RfBJX5onUPjQ",
+  "categories": [
+    "وكالة تسويق"
+  ],
+  "fid": "0xae2caf94a4649cc7:0x343ed489e657127c",
+  "cid": "3764680027268387452",
+  "reviewsCount": 1,
+  "reviewsDistribution": {
+    "oneStar": 0,
+    "twoStar": 0,
+    "threeStar": 0,
+    "fourStar": 0,
+    "fiveStar": 1
+  },
+  "imagesCount": 1,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:06.017Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "مغلق"
+    },
+    {
+      "day": "السبت",
+      "hours": "مغلق"
+    },
+    {
+      "day": "الأحد",
+      "hours": "10ص to 3م"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "10ص to 3م"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "10ص to 3م"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "10ص to 3م"
+    },
+    {
+      "day": "الخميس",
+      "hours": "10ص to 3م"
+    }
+  ],
+  "wasOpenAtScrapeTime": false,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=The%20Marketing%20house&query_place_id=ChIJx5xkpJSvLK4RfBJX5onUPjQ",
+  "searchPageUrl": "https://www.google.com/maps/search/B2B%20companies%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "B2B companies الاسكندرية",
+  "language": "ar",
+  "rank": 9,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9TM8746_RQsarPe0mGc15jo_Vruj8i29qAWFE9-LWHflbU1CXAZkWwEKXpYsInm6FxTlYlx1eReUZslkzvYRzX6Dh79u-cnLm_3ZXMuVflnZHzjXKaC5t_eZzzvmBxEUX97RvvU=w521-h240-k-no",
+  "kgmid": "/g/11j_1lb8_r",
+  "businessProfileId": "1713523604621211937"
+},
+{
+  "title": "شركة لافينوس للتسويق الالكتروني",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "وكالة تسويق",
+  "address": "229 شارع طيبة, كليوباترا، قسم سيدى جابر، محافظة الإسكندرية 21618، مصر",
+  "neighborhood": "كليوباترا",
+  "street": "229 شارع طيبة",
+  "city": "قسم سيدى جابر",
+  "postalCode": "21618",
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "phone": "+20 10 27669962",
+  "phoneUnformatted": "+201027669962",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.2214263,
+    "lng": 29.9368205
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJS__tAITF9RQRIzI_5iRU3XU",
+  "categories": [
+    "وكالة تسويق"
+  ],
+  "fid": "0x14f5c58400edff4b:0x75dd5424e63f3223",
+  "cid": "8493036989749080611",
+  "reviewsCount": 11,
+  "reviewsDistribution": {
+    "oneStar": 0,
+    "twoStar": 0,
+    "threeStar": 0,
+    "fourStar": 0,
+    "fiveStar": 11
+  },
+  "imagesCount": 27,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:06.377Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "نعمل على مدار 24 ساعة"
+    },
+    {
+      "day": "السبت",
+      "hours": "نعمل على مدار 24 ساعة"
+    },
+    {
+      "day": "الأحد",
+      "hours": "نعمل على مدار 24 ساعة"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "نعمل على مدار 24 ساعة"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "نعمل على مدار 24 ساعة"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "نعمل على مدار 24 ساعة"
+    },
+    {
+      "day": "الخميس",
+      "hours": "نعمل على مدار 24 ساعة"
+    }
+  ],
+  "additionalOpeningHours": {
+    "ساعات الخدمة على الإنترنت": [
+      {
+        "day": "الجمعة",
+        "hours": "9ص–5م"
+      },
+      {
+        "day": "السبت",
+        "hours": "9ص–5م"
+      },
+      {
+        "day": "الأحد",
+        "hours": "9ص–5م"
+      },
+      {
+        "day": "الاثنين",
+        "hours": "9ص–5م"
+      },
+      {
+        "day": "الثلاثاء",
+        "hours": "9ص–5م"
+      },
+      {
+        "day": "الأربعاء",
+        "hours": "9ص–5م"
+      },
+      {
+        "day": "الخميس",
+        "hours": "9ص–5م"
+      }
+    ],
+    "إمكانية الدخول": [
+      {
+        "day": "الجمعة",
+        "hours": "مغلق"
+      },
+      {
+        "day": "السبت",
+        "hours": "نعمل على مدار 24 ساعة"
+      },
+      {
+        "day": "الأحد",
+        "hours": "نعمل على مدار 24 ساعة"
+      },
+      {
+        "day": "الاثنين",
+        "hours": "نعمل على مدار 24 ساعة"
+      },
+      {
+        "day": "الثلاثاء",
+        "hours": "نعمل على مدار 24 ساعة"
+      },
+      {
+        "day": "الأربعاء",
+        "hours": "نعمل على مدار 24 ساعة"
+      },
+      {
+        "day": "الخميس",
+        "hours": "نعمل على مدار 24 ساعة"
+      }
+    ]
+  },
+  "wasOpenAtScrapeTime": true,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "إمكانية الوصول": [
+      {
+        "أماكن جلوس صالحة للكراسي المتحركة": true
+      },
+      {
+        "دورة مياه تستوعب الكراسي المتحركة": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=%D8%B4%D8%B1%D9%83%D8%A9%20%D9%84%D8%A7%D9%81%D9%8A%D9%86%D9%88%D8%B3%20%D9%84%D9%84%D8%AA%D8%B3%D9%88%D9%8A%D9%82%20%D8%A7%D9%84%D8%A7%D9%84%D9%83%D8%AA%D8%B1%D9%88%D9%86%D9%8A&query_place_id=ChIJS__tAITF9RQRIzI_5iRU3XU",
+  "searchPageUrl": "https://www.google.com/maps/search/%D8%B4%D8%B1%D9%83%D8%A7%D8%AA%20%D8%AA%D8%B3%D9%88%D9%8A%D9%82%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "شركات تسويق الاسكندرية",
+  "language": "ar",
+  "rank": 2,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9SVZhVqH8q3pFnQT2DrUsZ6tvomkFm-R7f9LiwS0QmANgg1AK0LrH6OMRiyGK_g1L3wm2av3kJ3tEB91WPr3XCjF-dG8-U4vcT8nNz7dqD3DXysEM_nL1S43cBCa5pBeSc5uyTy=w408-h408-k-no",
+  "kgmid": "/g/11j6_qqq2d",
+  "businessProfileId": "12115407672730501972"
+},
+{
+  "title": "Promo Marketing Agency",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "وكالة تسويق",
+  "address": "74 حسن الإسكندراني، الباب الجديد ومنشا، محرم بك، محافظة الإسكندرية 5413214، مصر",
+  "neighborhood": "الباب الجديد ومنشا",
+  "street": "74 حسن الإسكندراني",
+  "city": "محرم بك",
+  "postalCode": null,
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "website": "https://promomarketing.agency/",
+  "phone": "+20 15 55418907",
+  "phoneUnformatted": "+201555418907",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.1889617,
+    "lng": 29.9098153
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJp3tw0cvD9RQR08H7F5nQ2Gs",
+  "categories": [
+    "وكالة تسويق",
+    "وكالة تصميم",
+    "خدمة التسويق عبر الإنترنت",
+    "وكالة إعلانية"
+  ],
+  "fid": "0x14f5c3cbd1707ba7:0x6bd8d09917fbc1d3",
+  "cid": "7771190512978739667",
+  "reviewsCount": 4,
+  "reviewsDistribution": {
+    "oneStar": 0,
+    "twoStar": 0,
+    "threeStar": 0,
+    "fourStar": 0,
+    "fiveStar": 4
+  },
+  "imagesCount": 0,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:06.378Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "نعمل على مدار 24 ساعة"
+    },
+    {
+      "day": "السبت",
+      "hours": "نعمل على مدار 24 ساعة"
+    },
+    {
+      "day": "الأحد",
+      "hours": "نعمل على مدار 24 ساعة"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "نعمل على مدار 24 ساعة"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "نعمل على مدار 24 ساعة"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "نعمل على مدار 24 ساعة"
+    },
+    {
+      "day": "الخميس",
+      "hours": "نعمل على مدار 24 ساعة"
+    }
+  ],
+  "wasOpenAtScrapeTime": true,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Promo%20Marketing%20Agency&query_place_id=ChIJp3tw0cvD9RQR08H7F5nQ2Gs",
+  "searchPageUrl": "https://www.google.com/maps/search/%D8%B4%D8%B1%D9%83%D8%A7%D8%AA%20%D8%AA%D8%B3%D9%88%D9%8A%D9%82%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "شركات تسويق الاسكندرية",
+  "language": "ar",
+  "rank": 4,
+  "isAdvertisement": false,
+  "imageUrl": null,
+  "kgmid": "/g/11hdzsjc6w",
+  "businessProfileId": null
+},
+{
+  "title": "Ocd",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "وكالة تسويق",
+  "address": "16hdaya street, بحرى بك، محافظة الإسكندرية، مصر",
+  "neighborhood": "مشمس البصل",
+  "street": "16hdaya street, بحرى بك",
+  "city": "اللبان",
+  "postalCode": null,
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "phone": "+20 10 27188476",
+  "phoneUnformatted": "+201027188476",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.1921559,
+    "lng": 29.8881757
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJI2fQOwrD9RQR4GGOMSu1xaU",
+  "categories": [
+    "وكالة تسويق"
+  ],
+  "fid": "0x14f5c30a3bd06723:0xa5c5b52b318e61e0",
+  "cid": "11945152783789744608",
+  "reviewsCount": 2,
+  "reviewsDistribution": {
+    "oneStar": 0,
+    "twoStar": 0,
+    "threeStar": 0,
+    "fourStar": 0,
+    "fiveStar": 2
+  },
+  "imagesCount": 4,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:06.378Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [],
+  "wasOpenAtScrapeTime": null,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Ocd&query_place_id=ChIJI2fQOwrD9RQR4GGOMSu1xaU",
+  "searchPageUrl": "https://www.google.com/maps/search/%D8%B4%D8%B1%D9%83%D8%A7%D8%AA%20%D8%AA%D8%B3%D9%88%D9%8A%D9%82%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "شركات تسويق الاسكندرية",
+  "language": "ar",
+  "rank": 5,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9T-1imdaqWVOr68-ZNcbhUcK9-_bRbwlPSuvEOiHDXX-aVr7-D195cSsm5wJ6cUYG7Idqga6V4m3d5b2AoXOB4N0TocSs3of9eJBbLwzrS7wqLkkynrjgwm1vrWgbwtsg5dj0BP=w408-h725-k-no",
+  "kgmid": "/g/11p73391yt",
+  "businessProfileId": "9458753219937670814"
+},
+{
+  "title": "مكتب الاسكندرية للاستشارات القانونية",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "شركة محاماة",
+  "address": "26 شارع سعد زغلول، المسلة غرب وشريف باشا، العطارين، محافظة الإسكندرية 5372041، مصر",
+  "neighborhood": "المسلة غرب وشريف باشا",
+  "street": "26 شارع سعد زغلول",
+  "city": "العطارين",
+  "postalCode": null,
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "website": "https://www.facebook.com/kabbarylaw",
+  "phone": "+20 10 06807059",
+  "phoneUnformatted": "+201006807059",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.1982767,
+    "lng": 29.8972233
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJm-i23e7D9RQR0GWCY8WyJz4",
+  "categories": [
+    "شركة محاماة"
+  ],
+  "fid": "0x14f5c3eeddb6e89b:0x3e27b2c5638265d0",
+  "cid": "4478744915291039184",
+  "reviewsCount": 21,
+  "reviewsDistribution": {
+    "oneStar": 2,
+    "twoStar": 1,
+    "threeStar": 0,
+    "fourStar": 0,
+    "fiveStar": 18
+  },
+  "imagesCount": 17,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:09.913Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "مغلق"
+    },
+    {
+      "day": "السبت",
+      "hours": "2 to 7م"
+    },
+    {
+      "day": "الأحد",
+      "hours": "2 to 7م"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "2 to 7م"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "2 to 7م"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "2 to 7م"
+    },
+    {
+      "day": "الخميس",
+      "hours": "2 to 7م"
+    }
+  ],
+  "wasOpenAtScrapeTime": false,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "إمكانية الوصول": [
+      {
+        "مدخل صالح للكراسي المتحركة": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=%D9%85%D9%83%D8%AA%D8%A8%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9%20%D9%84%D9%84%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A7%D8%AA%20%D8%A7%D9%84%D9%82%D8%A7%D9%86%D9%88%D9%86%D9%8A%D8%A9&query_place_id=ChIJm-i23e7D9RQR0GWCY8WyJz4",
+  "searchPageUrl": "https://www.google.com/maps/search/%D8%B4%D8%B1%D9%83%D8%A7%D8%AA%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "شركات استشارات الاسكندرية",
+  "language": "ar",
+  "rank": 1,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWl_IuDu6WUiQsfIMf1wIsUihWjI_Oiubeov0CAIL2IGoGwkzbBZRd4a2mscK0L8GTf4q7qp0ei46DLyrw-Ugrlom944MgD28RpPeEZRvFKMuCUnyEFWPYdirjBerr07TXOQSDeYuA=w408-h544-k-no",
+  "kgmid": "/g/11c1njw5dr",
+  "businessProfileId": "7487057865581791389"
+},
+{
+  "title": "مكتب البهنساوي للمحاماة و الاستشارات القانونية",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "محام عام",
+  "address": "13 الباب الاخضر، الهماميل، قسم المنشية، محافظة الإسكندرية 5360104، مصر",
+  "neighborhood": "الهماميل",
+  "street": "13 الباب الاخضر",
+  "city": "قسم المنشية",
+  "postalCode": "5360104",
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "phone": "+20 12 07114232",
+  "phoneUnformatted": "+201207114232",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.1953482,
+    "lng": 29.8877089
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJfYc63DrD9RQRlkicW7Pw1-w",
+  "categories": [
+    "محام عام"
+  ],
+  "fid": "0x14f5c33adc3a877d:0xecd7f0b35b9c4896",
+  "cid": "17066373966070565014",
+  "reviewsCount": 15,
+  "reviewsDistribution": {
+    "oneStar": 0,
+    "twoStar": 0,
+    "threeStar": 0,
+    "fourStar": 0,
+    "fiveStar": 15
+  },
+  "imagesCount": 4,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:09.913Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "مغلق"
+    },
+    {
+      "day": "السبت",
+      "hours": "5 to 8م"
+    },
+    {
+      "day": "الأحد",
+      "hours": "5 to 8م"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "5 to 9م"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "5 to 9م"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "5 to 9م"
+    },
+    {
+      "day": "الخميس",
+      "hours": "5 to 9م"
+    }
+  ],
+  "wasOpenAtScrapeTime": false,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "إمكانية الوصول": [
+      {
+        "دورة مياه تستوعب الكراسي المتحركة": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=%D9%85%D9%83%D8%AA%D8%A8%20%D8%A7%D9%84%D8%A8%D9%87%D9%86%D8%B3%D8%A7%D9%88%D9%8A%20%D9%84%D9%84%D9%85%D8%AD%D8%A7%D9%85%D8%A7%D8%A9%20%D9%88%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A7%D8%AA%20%D8%A7%D9%84%D9%82%D8%A7%D9%86%D9%88%D9%86%D9%8A%D8%A9&query_place_id=ChIJfYc63DrD9RQRlkicW7Pw1-w",
+  "searchPageUrl": "https://www.google.com/maps/search/%D8%B4%D8%B1%D9%83%D8%A7%D8%AA%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "شركات استشارات الاسكندرية",
+  "language": "ar",
+  "rank": 2,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWlHHZRFaeG6mRnlPGl077uceW0p4dlBLBDS6DYtSbc0XNxHpWDlqIJd5n8fhI89gB4R0yjiGqFlkZnVQmy37zjphCGLwDyat7O9g9RuZrgBRrtI2fyX900h3B4lC81MAoPb16h6wA=w426-h240-k-no",
+  "kgmid": "/g/11qrdwnzb6",
+  "businessProfileId": "4095769464071781161"
+},
+{
+  "title": "مكتب المستشار /عصام حمزه الاسيوطي للمحاماة و الاستشارات القانونية",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "مكتب الشركات",
+  "address": "12 النجع القديم، اللبان، الإسكندرية،، 12 النجع القديم، اللبان، محافظة الإسكندرية، مصر",
+  "neighborhood": "النجع القديم",
+  "street": "12 النجع القديم، اللبان، الإسكندرية،، 12 النجع القديم",
+  "city": "اللبان",
+  "postalCode": null,
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "phone": "+20 11 18185975",
+  "phoneUnformatted": "+201118185975",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": 31.1883543,
+    "lng": 29.8902397
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJLZZaT_DD9RQRQsAhkuNez4Y",
+  "categories": [
+    "مكتب الشركات"
+  ],
+  "fid": "0x14f5c3f04f5a962d:0x86cf5ee39221c042",
+  "cid": "9714087252763721794",
+  "reviewsCount": 2,
+  "reviewsDistribution": {
+    "oneStar": 0,
+    "twoStar": 0,
+    "threeStar": 0,
+    "fourStar": 0,
+    "fiveStar": 2
+  },
+  "imagesCount": 2,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:09.913Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "مغلق"
+    },
+    {
+      "day": "السبت",
+      "hours": "6 to 10ص"
+    },
+    {
+      "day": "الأحد",
+      "hours": "6 to 10ص"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "6 to 10ص"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "6 to 10ص"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "6 to 10ص"
+    },
+    {
+      "day": "الخميس",
+      "hours": "مغلق"
+    }
+  ],
+  "wasOpenAtScrapeTime": false,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=%D9%85%D9%83%D8%AA%D8%A8%20%D8%A7%D9%84%D9%85%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%20%2F%D8%B9%D8%B5%D8%A7%D9%85%20%D8%AD%D9%85%D8%B2%D9%87%20%D8%A7%D9%84%D8%A7%D8%B3%D9%8A%D9%88%D8%B7%D9%8A%20%D9%84%D9%84%D9%85%D8%AD%D8%A7%D9%85%D8%A7%D8%A9%20%D9%88%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A7%D8%AA%20%D8%A7%D9%84%D9%82%D8%A7%D9%86%D9%88%D9%86%D9%8A%D8%A9&query_place_id=ChIJLZZaT_DD9RQRQsAhkuNez4Y",
+  "searchPageUrl": "https://www.google.com/maps/search/%D8%B4%D8%B1%D9%83%D8%A7%D8%AA%20%D8%A7%D8%B3%D8%AA%D8%B4%D8%A7%D8%B1%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "شركات استشارات الاسكندرية",
+  "language": "ar",
+  "rank": 3,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWnXgNYdfRWdrWQbJZ73VMJ0h7ERh2I57wUFY7zLqKOLSsVS8w-KpJEIPQUrvFe7Gzy4A-FJ3b7FNmjThaB4PAFXbh8mD-2Ll3tj8LVuBfMD7bQ_dh2ZqRBgpA4-iMdksbkl6zPIOw=w408-h390-k-no",
+  "kgmid": "/g/11pcmdkttz",
+  "businessProfileId": null
+},
+{
+  "title": "معهد تكنولوجيا المعلومات - ITI",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "جامعة",
+  "address": "1 محمود سلامة، كوم الدكة غرب، العطارين، محافظة الإسكندرية 5370051، مصر",
+  "neighborhood": "كوم الدكة غرب",
+  "street": "1 محمود سلامة",
+  "city": "العطارين",
+  "postalCode": null,
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "phone": "+20 3 3906924",
+  "phoneUnformatted": "+2033906924",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.19264,
+    "lng": 29.9060892
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": "5WV4+3C العطارين، مصر",
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJwT7Q65TD9RQRS_NPhF3_yxY",
+  "categories": [
+    "جامعة"
+  ],
+  "fid": "0x14f5c394ebd03ec1:0x16cbff5d844ff34b",
+  "cid": "1642687266223551307",
+  "reviewsCount": 92,
+  "reviewsDistribution": {
+    "oneStar": 5,
+    "twoStar": 1,
+    "threeStar": 5,
+    "fourStar": 9,
+    "fiveStar": 72
+  },
+  "imagesCount": 4,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:11.058Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "مغلق"
+    },
+    {
+      "day": "السبت",
+      "hours": "مغلق"
+    },
+    {
+      "day": "الأحد",
+      "hours": "8:30ص to 3:30م"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "8:30ص to 3:30م"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "8:30ص to 3:30م"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "8:30ص to 3:30م"
+    },
+    {
+      "day": "الخميس",
+      "hours": "8:30ص to 3:30م"
+    }
+  ],
+  "wasOpenAtScrapeTime": false,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "إمكانية الوصول": [
+      {
+        "مدخل صالح للكراسي المتحركة": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=%D9%85%D8%B9%D9%87%D8%AF%20%D8%AA%D9%83%D9%86%D9%88%D9%84%D9%88%D8%AC%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D9%84%D9%88%D9%85%D8%A7%D8%AA%20-%20ITI&query_place_id=ChIJwT7Q65TD9RQRS_NPhF3_yxY",
+  "searchPageUrl": "https://www.google.com/maps/search/%D8%AA%D9%83%D9%86%D9%88%D9%84%D9%88%D8%AC%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D9%84%D9%88%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "تكنولوجيا المعلومات الاسكندرية",
+  "language": "ar",
+  "rank": 1,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkWfzl7w5uxcMbNLNHMeHWAdfEbDVA7xfT4U3WhRXOc5WyxAfn4dcV_UuZ8Z5TNqpt2ToUO6vNAhNzg0bJogZB_AYSCsYyf1nHZOeV61FcttVHTTTHNjvx2kMbJpsQ4YgxPOqk=w408-h306-k-no",
+  "kgmid": "/m/06zk97n",
+  "businessProfileId": "7134467481911847649"
+},
+{
+  "title": "Alexandria Business Association",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "مكتب حكومي",
+  "address": "21512,، 52 فؤاد، محافظة الإسكندرية، مصر",
+  "neighborhood": "المسلة شرق",
+  "street": "21512,، 52 فؤاد",
+  "city": "العطارين",
+  "postalCode": null,
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "phone": "+20 3 4848979",
+  "phoneUnformatted": "+2034848979",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": 31.1983203,
+    "lng": 29.9062118
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.8,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJX7xO65LD9RQRGxUXGMA6pgY",
+  "categories": [
+    "مكتب حكومي"
+  ],
+  "fid": "0x14f5c392eb4ebc5f:0x6a63ac01817151b",
+  "cid": "479135007073834267",
+  "reviewsCount": 13,
+  "reviewsDistribution": {
+    "oneStar": 0,
+    "twoStar": 0,
+    "threeStar": 0,
+    "fourStar": 3,
+    "fiveStar": 10
+  },
+  "imagesCount": 4,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:13.660Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "مغلق"
+    },
+    {
+      "day": "السبت",
+      "hours": "9ص to 5:15م"
+    },
+    {
+      "day": "الأحد",
+      "hours": "9ص to 5:15م"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "9ص to 5:15م"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "9ص to 5:15م"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "9ص to 5:15م"
+    },
+    {
+      "day": "الخميس",
+      "hours": "9ص to 5:15م"
+    }
+  ],
+  "wasOpenAtScrapeTime": false,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Alexandria%20Business%20Association&query_place_id=ChIJX7xO65LD9RQRGxUXGMA6pgY",
+  "searchPageUrl": "https://www.google.com/maps/search/%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A3%D8%B9%D9%85%D8%A7%D9%84%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "خدمات الأعمال الاسكندرية",
+  "language": "ar",
+  "rank": 1,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/grass-cs/ACvplmMpGb5pA9kr1BRo3j9oNl5CWUgAvW_wTZScZlhrpIs2NxeZ1paudQKvriz_mvSR9JtOn9WuMhGGmMZ2EMgtdTwN-8DCtVEC_kDS0F5fiKm_YEmCMAB1idpJtx_Ho2yCrexwG0Zq=w408-h306-k-no",
+  "kgmid": "/g/11cnwg23z3",
+  "businessProfileId": null
+},
+{
+  "title": "كلية الأعمال - جامعة الإسكندرية",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "كلية",
+  "address": "6W46+W53، عباس المصري، الأزاريتة والشاطبي، باب شرق، محافظة الإسكندرية 5424010، مصر",
+  "neighborhood": "الأزاريتة والشاطبي",
+  "street": "6W46+W53، عباس المصري",
+  "city": "باب شرق",
+  "postalCode": null,
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "website": "http://www.comm.alexu.edu.eg/",
+  "phone": "+20 3 4865665",
+  "phoneUnformatted": "+2034865665",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": 31.2072688,
+    "lng": 29.9104169
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJzaNKForD9RQRj_CkIO_kaXY",
+  "categories": [
+    "كلية"
+  ],
+  "fid": "0x14f5c38a164aa3cd:0x7669e4ef20a4f08f",
+  "cid": "8532602684726112399",
+  "reviewsCount": 948,
+  "reviewsDistribution": {
+    "oneStar": 152,
+    "twoStar": 21,
+    "threeStar": 94,
+    "fourStar": 119,
+    "fiveStar": 562
+  },
+  "imagesCount": 366,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:13.660Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "8ص to 9م"
+    },
+    {
+      "day": "السبت",
+      "hours": "8ص to 9م"
+    },
+    {
+      "day": "الأحد",
+      "hours": "8ص to 9م"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "8ص to 9م"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "8ص to 9م"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "8ص to 9م"
+    },
+    {
+      "day": "الخميس",
+      "hours": "8ص to 9م"
+    }
+  ],
+  "wasOpenAtScrapeTime": false,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "إمكانية الوصول": [
+      {
+        "مدخل صالح للكراسي المتحركة": true
+      },
+      {
+        "موقف سيارات صالح للكراسي المتحركة": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=%D9%83%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%A3%D8%B9%D9%85%D8%A7%D9%84%20-%20%D8%AC%D8%A7%D9%85%D8%B9%D8%A9%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9&query_place_id=ChIJzaNKForD9RQRj_CkIO_kaXY",
+  "searchPageUrl": "https://www.google.com/maps/search/%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A3%D8%B9%D9%85%D8%A7%D9%84%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "خدمات الأعمال الاسكندرية",
+  "language": "ar",
+  "rank": 2,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/grass-cs/ACvplmOMDfX0yYzqXkgHMHS0k2kTT3ZVlIynN7yWG9CVY2HMB6gBev1TotlVUum5lAAJn3O6h8MfIhZqisK-HxOhFEsVLa08dItM-6HKqEpqBjwpb1SOAnNADT8JSounZ6TSDHt7b8Q=w450-h240-k-no",
+  "kgmid": "/m/0vb3b_n",
+  "businessProfileId": null
+},
+{
+  "title": "ALSHEHAB لخدمات رجال الأعمال",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "خدمة إدارة الأعمال",
+  "address": "محطة مصر، 3 شارع رستم العلايلى، متفرع من شارع منشأ،، مصر",
+  "neighborhood": "الباب الجديد ومنشا",
+  "street": "محطة مصر، 3 شارع رستم العلايلى، متفرع من شارع منشأ،",
+  "city": "محرم بك",
+  "postalCode": null,
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "phone": "+20 12 83006929",
+  "phoneUnformatted": "+201283006929",
+  "claimThisBusiness": true,
+  "location": {
+    "lat": 31.1925562,
+    "lng": 29.9095863
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJD3ToEJTD9RQRFzq8n9_LXUE",
+  "categories": [
+    "خدمة إدارة الأعمال"
+  ],
+  "fid": "0x14f5c39410e8740f:0x415dcbdf9fbc3a17",
+  "cid": "4710144946617465367",
+  "reviewsCount": 1,
+  "reviewsDistribution": {
+    "oneStar": 0,
+    "twoStar": 0,
+    "threeStar": 0,
+    "fourStar": 0,
+    "fiveStar": 1
+  },
+  "imagesCount": 2,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:13.660Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "9ص to 12ص"
+    },
+    {
+      "day": "السبت",
+      "hours": "9ص to 12ص"
+    },
+    {
+      "day": "الأحد",
+      "hours": "9ص to 12ص"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "9ص to 12ص"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "9ص to 12ص"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "9ص to 12ص"
+    },
+    {
+      "day": "الخميس",
+      "hours": "9ص to 12ص"
+    }
+  ],
+  "wasOpenAtScrapeTime": true,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=ALSHEHAB%20%D9%84%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%20%D8%B1%D8%AC%D8%A7%D9%84%20%D8%A7%D9%84%D8%A3%D8%B9%D9%85%D8%A7%D9%84&query_place_id=ChIJD3ToEJTD9RQRFzq8n9_LXUE",
+  "searchPageUrl": "https://www.google.com/maps/search/%D8%AE%D8%AF%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A3%D8%B9%D9%85%D8%A7%D9%84%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "خدمات الأعمال الاسكندرية",
+  "language": "ar",
+  "rank": 3,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh5.googleusercontent.com/kXI4wntfagPqbqURuMgWN1Dyl6OLqMYsSjS-pW0A3BzZtUdl47GJFmpffbkAAJE=w426-h240-k-no",
+  "kgmid": "/g/11hyvmr8r7",
+  "businessProfileId": null
+},
+{
+  "title": "Icons Co-working Space",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "منطقة عمل جماعي",
+  "address": "سيدي جابر - ٣٣٢ طريق الحرية ( شارع ابو قير, الرئيسي امام محطة قطار, سيدي جابر، قسم سيدى جابر، محافظة الإسكندرية، مصر",
+  "neighborhood": "سيدي جابر",
+  "street": "سيدي جابر - ٣٣٢ طريق الحرية ( شارع ابو قير, الرئيسي امام محطة قطار",
+  "city": "قسم سيدى جابر",
+  "postalCode": null,
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "website": "https://iconsworkingspace.com/",
+  "phone": "+20 15 07051898",
+  "phoneUnformatted": "+201507051898",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.219054,
+    "lng": 29.9411025
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.9,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJF95MzOfF9RQRzY4lFpD8P5c",
+  "categories": [
+    "منطقة عمل جماعي"
+  ],
+  "fid": "0x14f5c5e7cc4cde17:0x973ffc9016258ecd",
+  "cid": "10898707319036939981",
+  "reviewsCount": 230,
+  "reviewsDistribution": {
+    "oneStar": 1,
+    "twoStar": 2,
+    "threeStar": 0,
+    "fourStar": 11,
+    "fiveStar": 216
+  },
+  "imagesCount": 15,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:15.846Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "9ص to 11م"
+    },
+    {
+      "day": "السبت",
+      "hours": "9ص to 11م"
+    },
+    {
+      "day": "الأحد",
+      "hours": "9ص to 11م"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "9ص to 11م"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "9ص to 11م"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "9ص to 11م"
+    },
+    {
+      "day": "الخميس",
+      "hours": "9ص to 11م"
+    }
+  ],
+  "wasOpenAtScrapeTime": true,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Icons%20Co-working%20Space&query_place_id=ChIJF95MzOfF9RQRzY4lFpD8P5c",
+  "searchPageUrl": "https://www.google.com/maps/search/%D8%A7%D8%AC%D8%AA%D9%85%D8%A7%D8%B9%D8%A7%D8%AA%20%D8%B9%D9%85%D9%84%20%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "اجتماعات عمل جديدة الاسكندرية",
+  "language": "ar",
+  "rank": 1,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9RCORQWtNNtBI2s9nVMgySIOhaapkDVDq3rwa57z0-DA60mIqvQJKMTGi6E4cYN6b78ACDatKsfT_wgMjCNcl7dDee4FwiNYO0Va95mLYfbUEVEFsIK1sbwQhciy3Kg8_r_J6G2pIJpl-K8=w408-h306-k-no",
+  "kgmid": "/g/11k46rgvqc",
+  "businessProfileId": "9839168591419969361"
+},
+{
+  "title": "Kite Business Space",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "منطقة عمل جماعي",
+  "address": "12 اللواء محمود حمدي خطاب، أول شارع شمال في شارع فؤاد، قسم باب شرقي، الإسكندرية 12 Al-Lawa Mahmoud Hamdi Khattab, Fouad Street, Sharqi, 21514، مصر",
+  "neighborhood": "باب شرقي ووابور المياه",
+  "street": "12 اللواء محمود حمدي خطاب، أول شارع شمال في شارع فؤاد، قسم باب شرقي، الإسكندرية 12 Al-Lawa Mahmoud Hamdi Khattab, Fouad Street, Sharqi",
+  "city": "باب شرق",
+  "postalCode": "21514",
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "website": "http://kitebusiness.space/",
+  "phone": "+20 10 10522286",
+  "phoneUnformatted": "+201010522286",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.1995716,
+    "lng": 29.9125076
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.8,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJjYZWhRTD9RQRLKvDKgeleg8",
+  "categories": [
+    "منطقة عمل جماعي",
+    "خدمة التخطيط للاجتماعات",
+    "وكالة تأجير وحدات مكتبية"
+  ],
+  "fid": "0x14f5c3148556868d:0xf7aa5072ac3ab2c",
+  "cid": "1115385307928439596",
+  "reviewsCount": 90,
+  "reviewsDistribution": {
+    "oneStar": 1,
+    "twoStar": 0,
+    "threeStar": 3,
+    "fourStar": 6,
+    "fiveStar": 80
+  },
+  "imagesCount": 36,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:15.846Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "مغلق"
+    },
+    {
+      "day": "السبت",
+      "hours": "مغلق"
+    },
+    {
+      "day": "الأحد",
+      "hours": "نعمل على مدار 24 ساعة"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "نعمل على مدار 24 ساعة"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "نعمل على مدار 24 ساعة"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "مغلق"
+    },
+    {
+      "day": "الخميس",
+      "hours": "مغلق"
+    }
+  ],
+  "wasOpenAtScrapeTime": false,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "إمكانية الوصول": [
+      {
+        "أماكن جلوس صالحة للكراسي المتحركة": true
+      },
+      {
+        "مدخل صالح للكراسي المتحركة": true
+      },
+      {
+        "دورة مياه تستوعب الكراسي المتحركة": false
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Kite%20Business%20Space&query_place_id=ChIJjYZWhRTD9RQRLKvDKgeleg8",
+  "searchPageUrl": "https://www.google.com/maps/search/%D8%A7%D8%AC%D8%AA%D9%85%D8%A7%D8%B9%D8%A7%D8%AA%20%D8%B9%D9%85%D9%84%20%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "اجتماعات عمل جديدة الاسكندرية",
+  "language": "ar",
+  "rank": 2,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9Sw3ElwSpjPTUr9s7uYxF18MeQUzeQ1NKmLlfnY6sXlUcKpHcpXiqyJkHn-eBjBO8VP3FGr6hRr7ClX221L9gziiBaTQOMjCL9PmWDazfXrcMjgXqW-kmWJRS6YHsP919RXCqAj=w408-h306-k-no",
+  "kgmid": "/g/11f792zw9h",
+  "businessProfileId": "11398366741730412295"
+},
+{
+  "title": "Espaces - Alexandria",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "منطقة عمل جماعي",
+  "address": "215 شارع بورسعيد، سيدي جابر، قسم سيدى جابر، محافظة الإسكندرية 21523، مصر",
+  "neighborhood": "سيدي جابر",
+  "street": "215 شارع بورسعيد",
+  "city": "قسم سيدى جابر",
+  "postalCode": "21523",
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "website": "https://e-spaces.co/",
+  "phone": "+20 11 56295800",
+  "phoneUnformatted": "+201156295800",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.219785,
+    "lng": 29.9326447
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.7,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJa-I2aCrF9RQR8PY8a6zu4O0",
+  "categories": [
+    "منطقة عمل جماعي"
+  ],
+  "fid": "0x14f5c52a6836e26b:0xede0eeac6b3cf6f0",
+  "cid": "17140962606073050864",
+  "reviewsCount": 123,
+  "reviewsDistribution": {
+    "oneStar": 6,
+    "twoStar": 1,
+    "threeStar": 0,
+    "fourStar": 6,
+    "fiveStar": 110
+  },
+  "imagesCount": 34,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:15.846Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "9ص to 11م"
+    },
+    {
+      "day": "السبت",
+      "hours": "9ص to 11م"
+    },
+    {
+      "day": "الأحد",
+      "hours": "9ص to 11م"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "9ص to 11م"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "9ص to 11م"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "9ص to 11م"
+    },
+    {
+      "day": "الخميس",
+      "hours": "9ص to 11م"
+    }
+  ],
+  "wasOpenAtScrapeTime": true,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Espaces%20-%20Alexandria&query_place_id=ChIJa-I2aCrF9RQR8PY8a6zu4O0",
+  "searchPageUrl": "https://www.google.com/maps/search/%D8%A7%D8%AC%D8%AA%D9%85%D8%A7%D8%B9%D8%A7%D8%AA%20%D8%B9%D9%85%D9%84%20%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "اجتماعات عمل جديدة الاسكندرية",
+  "language": "ar",
+  "rank": 3,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9SnhiHw7o30nH7ghVFlCeE-fhE9lUi0nYctZ3f7VW0TUwbFx67c9M2r1YkmBvmMfhetwkbUUboA8jAHTq709QF0SQFpp7UuOrPaRgD6W-iohZB9rY4gIJeWaTdAmT2sXPdNm_G4=w408-h271-k-no",
+  "kgmid": "/g/11w9l3h4_6",
+  "businessProfileId": "15869509078811543662"
+},
+{
+  "title": "Jenica Agency",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "وكالة تسويق",
+  "address": "23,street mahmoud eltoreni, nokali building first, محافظة الإسكندرية 21618، مصر",
+  "neighborhood": "سيدي جابر",
+  "street": "23,street mahmoud eltoreni, nokali building first",
+  "city": "قسم سيدى جابر",
+  "postalCode": "21618",
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "website": "http://www.jenicaagency.com/",
+  "phone": "+20 10 00953137",
+  "phoneUnformatted": "+201000953137",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.2198103,
+    "lng": 29.9356933
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.8,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJ9wtfnqbF9RQRc81NHO3TkRQ",
+  "categories": [
+    "وكالة تسويق",
+    "وكالة إعلانية",
+    "مصمم رسومات",
+    "خدمة التسويق عبر الإنترنت",
+    "مستشار تسويق",
+    "Media house"
+  ],
+  "fid": "0x14f5c5a69e5f0bf7:0x1491d3ed1c4dcd73",
+  "cid": "1482198767717174643",
+  "reviewsCount": 16,
+  "reviewsDistribution": {
+    "oneStar": 1,
+    "twoStar": 0,
+    "threeStar": 0,
+    "fourStar": 0,
+    "fiveStar": 15
+  },
+  "imagesCount": 9,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:15.989Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "مغلق"
+    },
+    {
+      "day": "السبت",
+      "hours": "مغلق"
+    },
+    {
+      "day": "الأحد",
+      "hours": "10ص to 6م"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "10ص to 6م"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "10ص to 6م"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "10ص to 6م"
+    },
+    {
+      "day": "الخميس",
+      "hours": "10ص to 6م"
+    }
+  ],
+  "wasOpenAtScrapeTime": false,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "إمكانية الوصول": [
+      {
+        "أماكن جلوس صالحة للكراسي المتحركة": true
+      },
+      {
+        "دورة مياه تستوعب الكراسي المتحركة": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Jenica%20Agency&query_place_id=ChIJ9wtfnqbF9RQRc81NHO3TkRQ",
+  "searchPageUrl": "https://www.google.com/maps/search/Lead%20generation%20services%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "Lead generation services الاسكندرية",
+  "language": "ar",
+  "rank": 2,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/ANWiy9RxER_o-ePP9y-WNlxu6d96OxWmfWMx9VtM5ceriFCPdbJoTLCtJh3eTObWiJ8agOBTKazrh9FGpSOpnqiN34apB7i2GdJRK7z1zPG0fPbSouVuSwxhLUma550KUua_0Paiy6IXu3a_FQAb=w408-h725-k-no",
+  "kgmid": "/g/11ld2k5zb5",
+  "businessProfileId": "2261160586750015347"
+},
+{
+  "title": "بالم هيلز للتنمية",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "مكتب الشركات",
+  "address": "5WX7+P9، باب شرقي ووابور المياه، باب شرق، محافظة الإسكندرية 5422004، مصر",
+  "neighborhood": "باب شرقي ووابور المياه",
+  "street": "5WX7+P9",
+  "city": "باب شرق",
+  "postalCode": null,
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "website": "http://www.palmhillsdevelopments.com/",
+  "phone": "+20 2 35351200",
+  "phoneUnformatted": "+20235351200",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.1996055,
+    "lng": 29.914324
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 3.9,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJ8-_RlH7D9RQR0MaV9y47jCk",
+  "categories": [
+    "مكتب الشركات"
+  ],
+  "fid": "0x14f5c37e94d1eff3:0x298c3b2ef795c6d0",
+  "cid": "2993832925202859728",
+  "reviewsCount": 88,
+  "reviewsDistribution": {
+    "oneStar": 12,
+    "twoStar": 5,
+    "threeStar": 8,
+    "fourStar": 19,
+    "fiveStar": 44
+  },
+  "imagesCount": 15,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:17.926Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "مغلق"
+    },
+    {
+      "day": "السبت",
+      "hours": "مغلق"
+    },
+    {
+      "day": "الأحد",
+      "hours": "9ص to 5م"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "9ص to 5م"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "9ص to 5م"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "9ص to 5م"
+    },
+    {
+      "day": "الخميس",
+      "hours": "9ص to 5م"
+    }
+  ],
+  "wasOpenAtScrapeTime": false,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=%D8%A8%D8%A7%D9%84%D9%85%20%D9%87%D9%8A%D9%84%D8%B2%20%D9%84%D9%84%D8%AA%D9%86%D9%85%D9%8A%D8%A9&query_place_id=ChIJ8-_RlH7D9RQR0MaV9y47jCk",
+  "searchPageUrl": "https://www.google.com/maps/search/%D8%B4%D8%B1%D9%83%D8%A7%D8%AA%20%D9%85%D8%A8%D9%8A%D8%B9%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "شركات مبيعات الاسكندرية",
+  "language": "ar",
+  "rank": 1,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/grass-cs/ACvplmNugitAnPwu4kZgnCVwyMj0-EQ-fyIC22rZmhRczjeFIVAqaNoSNvI7Lom9DoCyoKua0IQGpxn_dLpT8iwjK8pItGmsi9f3XTRHiXHIevXSv__Kk3gKg0QOmFNogWOX94WiOmg4QA=w408-h544-k-no",
+  "kgmid": "/g/11ghpmwpxg",
+  "businessProfileId": "9063623098694756310"
+},
+{
+  "title": "المتحدة للاسكان والتعمير",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "مكتب الشركات",
+  "address": "95 طريق 26 يوليو،, الازاريطة،, العطارين، محافظة الإسكندرية، مصر",
+  "neighborhood": "الازاريطة،",
+  "street": "95 طريق 26 يوليو،",
+  "city": "العطارين",
+  "postalCode": null,
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "website": "https://www.mubasher.info/markets/EGX/stocks/UNIT",
+  "phone": "+20 3 4860317",
+  "phoneUnformatted": "+2034860317",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.1980203,
+    "lng": 29.9017769
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJJ7eXRYvD9RQRmKvsylsT7Es",
+  "categories": [
+    "مكتب الشركات"
+  ],
+  "fid": "0x14f5c38b4597b727:0x4bec135bcaecab98",
+  "cid": "5470768932315769752",
+  "reviewsCount": 22,
+  "reviewsDistribution": {
+    "oneStar": 2,
+    "twoStar": 2,
+    "threeStar": 3,
+    "fourStar": 2,
+    "fiveStar": 13
+  },
+  "imagesCount": 3,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:17.926Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [],
+  "wasOpenAtScrapeTime": null,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "إمكانية الوصول": [
+      {
+        "مدخل صالح للكراسي المتحركة": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=%D8%A7%D9%84%D9%85%D8%AA%D8%AD%D8%AF%D8%A9%20%D9%84%D9%84%D8%A7%D8%B3%D9%83%D8%A7%D9%86%20%D9%88%D8%A7%D9%84%D8%AA%D8%B9%D9%85%D9%8A%D8%B1&query_place_id=ChIJJ7eXRYvD9RQRmKvsylsT7Es",
+  "searchPageUrl": "https://www.google.com/maps/search/%D8%B4%D8%B1%D9%83%D8%A7%D8%AA%20%D9%85%D8%A8%D9%8A%D8%B9%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "شركات مبيعات الاسكندرية",
+  "language": "ar",
+  "rank": 2,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/grass-cs/ACvplmPZmO3Du3KODXTq2C1I3R7OtrlIIO9I0XgET38UEOgZcjzazbx65IDOaIH0uLEk8M7oVNJWgykXUaJqc9I9kl51thhaBilvTFrzHhMjxX8I4iEa_4MNW7YTHvWT8k7a0oBaaD4=w408-h725-k-no",
+  "kgmid": "/g/1tfm3_kr",
+  "businessProfileId": "18377900324480311313"
+},
+{
+  "title": "Carnival Trading",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "مكتب الشركات",
+  "address": "المسلة غرب وشريف باشا، العطارين، محافظة الإسكندرية 5372013، مصر",
+  "neighborhood": "المسلة غرب وشريف باشا",
+  "street": null,
+  "city": "العطارين",
+  "postalCode": null,
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "website": "http://www.carnival4trading.com/",
+  "phone": "+20 3 4843922",
+  "phoneUnformatted": "+2034843922",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.1958701,
+    "lng": 29.899831
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.3,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJWSzs8v3D9RQR6rH34rvVJMI",
+  "categories": [
+    "مكتب الشركات"
+  ],
+  "fid": "0x14f5c3fdf2ec2c59:0xc224d5bbe2f7b1ea",
+  "cid": "13989541345463087594",
+  "reviewsCount": 41,
+  "reviewsDistribution": {
+    "oneStar": 5,
+    "twoStar": 1,
+    "threeStar": 2,
+    "fourStar": 3,
+    "fiveStar": 30
+  },
+  "imagesCount": 59,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:17.926Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "12 to 11:30م"
+    },
+    {
+      "day": "السبت",
+      "hours": "10ص to 11:30م"
+    },
+    {
+      "day": "الأحد",
+      "hours": "10ص to 11:30م"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "10ص to 11:30م"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "10ص to 11:30م"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "10ص to 11:30م"
+    },
+    {
+      "day": "الخميس",
+      "hours": "10ص to 11:30م"
+    }
+  ],
+  "wasOpenAtScrapeTime": true,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Carnival%20Trading&query_place_id=ChIJWSzs8v3D9RQR6rH34rvVJMI",
+  "searchPageUrl": "https://www.google.com/maps/search/%D8%B4%D8%B1%D9%83%D8%A7%D8%AA%20%D9%85%D8%A8%D9%8A%D8%B9%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.184487734679518,29.878002583262898,16z?hl=ar",
+  "searchString": "شركات مبيعات الاسكندرية",
+  "language": "ar",
+  "rank": 3,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/grass-cs/ACvplmOHfOanKd3iYEws-rW7dZ5XAYYy3rZxKOoXyXQBCJCYFrT874Wx5Buw6wcuN5qHK0JEDzppeKIA3k6s5gIaOPpWmBOfSejOVaAUbV4jTTCSPPoCQGej83cTmPkKe9XOftWeKBoLlw=w408-h408-k-no",
+  "kgmid": "/g/11j4h6zdhv",
+  "businessProfileId": "2650994901042495348"
+},
+{
+  "title": "Talent Idea Advertising Agency",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "وكالة إعلانية",
+  "address": "143 طريق الجيش، سيدي جابر، قسم سيدى جابر، محافظة الإسكندرية 21617، مصر",
+  "neighborhood": "سيدي جابر",
+  "street": "143 طريق الجيش",
+  "city": "قسم سيدى جابر",
+  "postalCode": "21617",
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "website": "http://www.talent-idea.com/",
+  "phone": "+20 10 60771121",
+  "phoneUnformatted": "+201060771121",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.2224323,
+    "lng": 29.9330583
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJc_GamxzF9RQRDE9OZGHDybQ",
+  "categories": [
+    "وكالة إعلانية"
+  ],
+  "fid": "0x14f5c51c9b9af173:0xb4c9c361644e4f0c",
+  "cid": "13027158220207968012",
+  "reviewsCount": 1,
+  "reviewsDistribution": {
+    "oneStar": 0,
+    "twoStar": 0,
+    "threeStar": 0,
+    "fourStar": 0,
+    "fiveStar": 1
+  },
+  "imagesCount": 0,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:20.172Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "مغلق"
+    },
+    {
+      "day": "السبت",
+      "hours": "مغلق"
+    },
+    {
+      "day": "الأحد",
+      "hours": "9ص to 6م"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "9ص to 6م"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "9ص to 6م"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "9ص to 6م"
+    },
+    {
+      "day": "الخميس",
+      "hours": "9ص to 6م"
+    }
+  ],
+  "wasOpenAtScrapeTime": false,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Talent%20Idea%20Advertising%20Agency&query_place_id=ChIJc_GamxzF9RQRDE9OZGHDybQ",
+  "searchPageUrl": "https://www.google.com/maps/search/Lead%20generation%20services%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.213873465320486,29.929509633474208,16z?hl=ar",
+  "searchString": "Lead generation services الاسكندرية",
+  "language": "ar",
+  "rank": 5,
+  "isAdvertisement": false,
+  "imageUrl": null,
+  "kgmid": "/g/11h4qm34nn",
+  "businessProfileId": "994065437942114425"
+},
+{
+  "title": "Digitopia Agency",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "وكالة تسويق",
+  "address": "El Geish Road 155 ElGeish road, Cleopatra, سيدي جابر، محافظة الإسكندرية 21618، مصر",
+  "neighborhood": "سيدي جابر",
+  "street": "El Geish Road 155 ElGeish road, Cleopatra",
+  "city": "قسم سيدى جابر",
+  "postalCode": "21618",
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "website": "https://www.digitopiaagency.net/",
+  "phone": "+20 15 01177375",
+  "phoneUnformatted": "+201501177375",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.2236794,
+    "lng": 29.9348699
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 3.8,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJa5ibMk_F9RQRFn1jfw9ZZ1Y",
+  "categories": [
+    "وكالة تسويق"
+  ],
+  "fid": "0x14f5c54f329b986b:0x5667590f7f637d16",
+  "cid": "6226042932959608086",
+  "reviewsCount": 16,
+  "reviewsDistribution": {
+    "oneStar": 5,
+    "twoStar": 0,
+    "threeStar": 0,
+    "fourStar": 0,
+    "fiveStar": 11
+  },
+  "imagesCount": 23,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:20.172Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "مغلق"
+    },
+    {
+      "day": "السبت",
+      "hours": "مغلق"
+    },
+    {
+      "day": "الأحد",
+      "hours": "9ص to 5م"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "9ص to 5م"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "9ص to 5م"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "9ص to 5م"
+    },
+    {
+      "day": "الخميس",
+      "hours": "9ص to 5م"
+    }
+  ],
+  "wasOpenAtScrapeTime": false,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=Digitopia%20Agency&query_place_id=ChIJa5ibMk_F9RQRFn1jfw9ZZ1Y",
+  "searchPageUrl": "https://www.google.com/maps/search/Lead%20generation%20services%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.213873465320486,29.929509633474208,16z?hl=ar",
+  "searchString": "Lead generation services الاسكندرية",
+  "language": "ar",
+  "rank": 7,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWl4difSmcdWowT13sz4GZIx41JdLEzmKyQUJpHbZokmwKpRVq1yqtU9qIHuRY-ZJpWIUwdo8Kc0PgJRhA9eeNrzT2PNTUBJoYZszsbkX9fB9h5I0ZG28PuqOcBtK8X3S5L7lQyfUw=w408-h544-k-no",
+  "kgmid": "/g/11l662xp1q",
+  "businessProfileId": "12840333656173545936"
+},
+{
+  "title": "كلية الحاسبات وعلوم البيانات جامعة الإسكندرية",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "كلية",
+  "address": "عزبة سعد، قسم سيدى جابر، محافظة الإسكندرية 5432042، مصر",
+  "neighborhood": "عزبة سعد",
+  "street": null,
+  "city": "قسم سيدى جابر",
+  "postalCode": null,
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "website": "https://fcds.alexu.edu.eg/index.php/ar/",
+  "phone": "",
+  "phoneUnformatted": "",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.2075794,
+    "lng": 29.9420669
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 4.4,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJ_ejeIdjF9RQRH2keUEXRVSE",
+  "categories": [
+    "كلية"
+  ],
+  "fid": "0x14f5c5d821dee8fd:0x2155d145501e691f",
+  "cid": "2402056071899146527",
+  "reviewsCount": 103,
+  "reviewsDistribution": {
+    "oneStar": 9,
+    "twoStar": 2,
+    "threeStar": 4,
+    "fourStar": 12,
+    "fiveStar": 76
+  },
+  "imagesCount": 57,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:23.336Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "مغلق"
+    },
+    {
+      "day": "السبت",
+      "hours": "8ص to 8:30م"
+    },
+    {
+      "day": "الأحد",
+      "hours": "8ص to 8:30م"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "8ص to 8:30م"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "8ص to 8:30م"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "8ص to 8:30م"
+    },
+    {
+      "day": "الخميس",
+      "hours": "8ص to 8:30م"
+    }
+  ],
+  "wasOpenAtScrapeTime": false,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "إمكانية الوصول": [
+      {
+        "مدخل صالح للكراسي المتحركة": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=%D9%83%D9%84%D9%8A%D8%A9%20%D8%A7%D9%84%D8%AD%D8%A7%D8%B3%D8%A8%D8%A7%D8%AA%20%D9%88%D8%B9%D9%84%D9%88%D9%85%20%D8%A7%D9%84%D8%A8%D9%8A%D8%A7%D9%86%D8%A7%D8%AA%20%D8%AC%D8%A7%D9%85%D8%B9%D8%A9%20%D8%A7%D9%84%D8%A5%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9&query_place_id=ChIJ_ejeIdjF9RQRH2keUEXRVSE",
+  "searchPageUrl": "https://www.google.com/maps/search/%D8%AA%D9%83%D9%86%D9%88%D9%84%D9%88%D8%AC%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D9%84%D9%88%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.213873465320486,29.84366454978869,16z?hl=ar",
+  "searchString": "تكنولوجيا المعلومات الاسكندرية",
+  "language": "ar",
+  "rank": 3,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/grass-cs/AABkmLcOltR9u5j3beL3wwunsrIGFBUOU7ihxx8l51GHkM11CLE9HOKeYrfJFKKZZWWoiIrTy6CxitOU9BhfUGwnekc15VsXBiCzLbiBYVmUAm_4ipo5E1F1VYFX31wXRtGLJ2r8AQmtqFnM_Cc=w408-h300-k-no",
+  "kgmid": "/g/11j4ld9rdn",
+  "businessProfileId": "4703329304530698696"
+},
+{
+  "title": "AIT Systems",
+  "subTitle": null,
+  "description": null,
+  "ownerDescription": null,
+  "price": null,
+  "categoryName": "شركة برمجيات",
+  "address": "215 شارع بورسعيد، سيدي جابر، قسم سيدى جابر، محافظة الإسكندرية 5434002، مصر",
+  "neighborhood": "سيدي جابر",
+  "street": "215 شارع بورسعيد",
+  "city": "قسم سيدى جابر",
+  "postalCode": "5434002",
+  "state": "محافظة الإسكندرية",
+  "countryCode": "EG",
+  "website": "https://ait.systems/",
+  "phone": "+20 12 00007043",
+  "phoneUnformatted": "+201200007043",
+  "claimThisBusiness": false,
+  "location": {
+    "lat": 31.219785,
+    "lng": 29.9326447
+  },
+  "locatedIn": null,
+  "floor": null,
+  "plusCode": null,
+  "menu": null,
+  "servicesLink": null,
+  "totalScore": 5,
+  "permanentlyClosed": false,
+  "temporarilyClosed": false,
+  "placeId": "ChIJlTcuapDE9RQRyfj8QgAGOOU",
+  "categories": [
+    "شركة برمجيات",
+    "استشاري كمبيوتر",
+    "خدمة أمان الكمبيوتر",
+    "دعم الكمبيوتر والخدمات",
+    "شركة لإدارة قواعد البيانات",
+    "وكالة تجارة إلكترونية",
+    "خدمة التجارة الإلكترونية",
+    "خدمة التسويق عبر الإنترنت",
+    "شركة استضافة على الويب",
+    "مصمم مواقع ويب"
+  ],
+  "fid": "0x14f5c4906a2e3795:0xe538060042fcf8c9",
+  "cid": "16516958231574935753",
+  "reviewsCount": 37,
+  "reviewsDistribution": {
+    "oneStar": 0,
+    "twoStar": 0,
+    "threeStar": 0,
+    "fourStar": 1,
+    "fiveStar": 36
+  },
+  "imagesCount": 1,
+  "imageCategories": [],
+  "scrapedAt": "2026-10-09T18:20:24.145Z",
+  "reserveTableUrl": null,
+  "googleFoodUrl": null,
+  "hotelStars": null,
+  "hotelDescription": null,
+  "checkInDate": null,
+  "checkOutDate": null,
+  "hotelAds": [],
+  "popularTimesLiveText": null,
+  "popularTimesLivePercent": null,
+  "popularTimesHistogram": {},
+  "openingHours": [
+    {
+      "day": "الجمعة",
+      "hours": "مغلق"
+    },
+    {
+      "day": "السبت",
+      "hours": "مغلق"
+    },
+    {
+      "day": "الأحد",
+      "hours": "9ص to 5م"
+    },
+    {
+      "day": "الاثنين",
+      "hours": "9ص to 5م"
+    },
+    {
+      "day": "الثلاثاء",
+      "hours": "9ص to 5م"
+    },
+    {
+      "day": "الأربعاء",
+      "hours": "9ص to 5م"
+    },
+    {
+      "day": "الخميس",
+      "hours": "9ص to 5م"
+    }
+  ],
+  "wasOpenAtScrapeTime": false,
+  "peopleAlsoSearch": [],
+  "placesTags": [],
+  "reviewsTags": [],
+  "additionalInfo": {
+    "خيارات الخدمة": [
+      {
+        "مواعيد على الإنترنت": true
+      },
+      {
+        "الخدمات في الموقع": true
+      }
+    ]
+  },
+  "gasPrices": [],
+  "url": "https://www.google.com/maps/search/?api=1&query=AIT%20Systems&query_place_id=ChIJlTcuapDE9RQRyfj8QgAGOOU",
+  "searchPageUrl": "https://www.google.com/maps/search/%D8%AA%D9%83%D9%86%D9%88%D9%84%D9%88%D8%AC%D9%8A%D8%A7%20%D8%A7%D9%84%D9%85%D8%B9%D9%84%D9%88%D9%85%D8%A7%D8%AA%20%D8%A7%D9%84%D8%A7%D8%B3%D9%83%D9%86%D8%AF%D8%B1%D9%8A%D8%A9/@31.213873465320486,29.929509633474208,16z?hl=ar",
+  "searchString": "تكنولوجيا المعلومات الاسكندرية",
+  "language": "ar",
+  "rank": 3,
+  "isAdvertisement": false,
+  "imageUrl": "https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkL7z4Doo4yyBIdndkU5uquxrDwRwSXG6fYGOoKYuC1TuimJ8tEd4OdPTbly0pubQ7D8cOe078TrOvi1QjPT-YORKDBrlssBXd9B5n5yz4oImDuYgzmz7FPHbATNfU6YVkME0o7j62ZzTfJ=w408-h408-k-no",
+  "kgmid": "/g/1vttzzjc",
+  "businessProfileId": "4126312472289781660"
+}]
