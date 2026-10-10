@@ -18,7 +18,7 @@ export function Stepper({ steps, current, stepOf }: { steps: string[]; current: 
       <ol className="hidden items-center gap-3 md:flex" aria-label={stepOf(current + 1, steps.length)}>
         {steps.map((label, i) => (
           <li key={label} className="flex flex-1 items-center gap-3 last:flex-none" aria-current={i === current ? 'step' : undefined}>
-            <span className={cn('num flex size-8 shrink-0 items-center justify-center rounded-full text-body-sm font-semibold', i < current ? 'bg-success text-primary-fg' : i === current ? 'bg-primary text-primary-fg' : 'bg-surface-muted text-fg-muted')}>
+            <span className={cn('num flex size-8 shrink-0 items-center justify-center rounded-full text-body-sm font-semibold', i < current ? 'bg-success text-brand-fg' : i === current ? 'bg-brand text-brand-fg' : 'bg-surface-muted text-fg-muted')}>
               {i < current ? <Check className="size-4" aria-hidden /> : i + 1}
             </span>
             <span className={cn('text-body-sm', i === current ? 'font-semibold text-fg' : 'text-fg-muted')}>{label}</span>

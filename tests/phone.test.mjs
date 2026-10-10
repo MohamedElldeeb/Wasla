@@ -52,3 +52,25 @@ test('wa.me link uses digits only and encodes text', () => {
   assert.equal(whatsappLink(null, 'x'), null);
   assert.equal(telLink('+20221250000'), 'tel:+20221250000');
 });
+
+test('Jenica Agency real number is stored in full (was truncated to +2010009531)', () => {
+  const r = n('+201000953137', '+20 10 00953137');
+  assert.equal(r.phone_e164, '+201000953137');
+  assert.equal(r.whatsapp_eligible, true);
+  assert.equal(n('+20 10 00953137').phone_e164, '+201000953137');
+});
+
+test('8-digit Alexandria landline with country code (+20 3 4041116)', () => {
+  const r = n('+2034041116', '+20 3 4041116');
+  assert.equal(r.phone_e164, '+2034041116');
+  assert.equal(r.phone_type, 'landline');
+});
+
+test('numbers with an invalid Egyptian length are flagged, not guessed', () => {
+  for (const raw of ['+2010009531', '0100095313', '+20100095313712', '12345']) {
+    const r = n(raw);
+    assert.equal(r.phone_e164, null, raw);
+    assert.equal(r.phone_invalid, true, raw);
+    assert.equal(r.whatsapp_eligible, false, raw);
+  }
+});

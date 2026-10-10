@@ -39,6 +39,7 @@ declare
   zero uuid := '00000000-0000-0000-0000-000000000000';
   org_a uuid; org_b uuid; camp_a uuid; lead_a uuid; lead_b uuid; lead_land uuid; lead2 uuid;
   msg uuid; msg2 uuid; msg_land uuid; jid uuid; r text; n int := 0;
+  camp2 uuid; l_ing1 uuid; l_ing2 uuid; msg_c2 uuid; bal0 int; cl_ing2 uuid; cl_a uuid; res jsonb;
 begin
   insert into auth.users (id, instance_id, aud, role, email) values
     (a, zero, 'authenticated', 'authenticated', 'a@test.local'),
@@ -58,7 +59,7 @@ begin
   perform pg_temp.ok(pg_temp.q('authenticated', a, 'select count(*) from public.plans') = '3', 'plans readable');
   perform pg_temp.ok(pg_temp.q('authenticated', a, 'select count(*) from public.campaign_templates') = '4', 'templates readable');
   perform pg_temp.ok(pg_temp.err('anon', null, 'select count(*) from public.organizations') like '42501%', 'anon blocked from orgs');
-  perform pg_temp.ok(pg_temp.q('authenticated', a, 'select count(*) from public.signal_definitions') = '9', 'signal library readable');
+  perform pg_temp.ok(pg_temp.q('authenticated', a, 'select count(*) from public.signal_definitions') = '16', 'signal library readable');
   perform pg_temp.ok(pg_temp.err('anon', null, 'select count(*) from public.signal_definitions') like '42501%', 'anon blocked from signal library');
   perform pg_temp.ok(pg_temp.err('anon', null, 'select count(*) from public.plans') like '42501%', 'anon blocked from plans');
   perform pg_temp.ok(pg_temp.err('authenticated', a, 'select count(*) from public.lead_staging') like '42501%', 'lead_staging not readable by users');
@@ -134,18 +135,27 @@ begin
   perform pg_temp.q('authenticated', a, format('update public.campaigns set parameters = %L where id = %L', '{"signals":[{"key":"has_website","weight":-60},{"key":"size_proxy","weight":30},{"key":"review_insights","weight":50}]}', camp_a));
   perform pg_temp.ok(pg_temp.err('authenticated', b, format('select public.recompute_campaign_scores(%L)', camp_a)) like '42501%', 'B cannot score A campaign');
   perform pg_temp.ok(pg_temp.q('authenticated', a, format('select public.recompute_campaign_scores(%L)', camp_a)) = '3', 'scored all campaign leads');
-  perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = 100, 'no website + big business = 100');
-  perform pg_temp.ok((select score_reasons from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = '["لا يملك موقعًا إلكترونيًا","نشاط كبير أو متعدد الفروع"]'::jsonb, 'reasons ordered by contribution');
-  perform pg_temp.ok((select score_reason_keys from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = '[{"k":"has_website","s":"low"},{"k":"size_proxy","s":"high"}]'::jsonb, 'reason keys are localizable');
+  perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = 69, 'no website (baseline, clamped) + one relevant signal cannot pass 69');
+  perform pg_temp.ok((select score_reasons from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = '["نشاط كبير أو متعدد الفروع","لا يملك موقعًا إلكترونيًا"]'::jsonb, 'reasons ordered by contribution');
+  perform pg_temp.ok((select score_reason_keys from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = '[{"k":"size_proxy","s":"high"},{"k":"has_website","s":"low"}]'::jsonb, 'reason keys are localizable');
+  -- weak reasons are hidden: a signal weighing 15 or less in the campaign is not shown unless it is the only reason
+  perform pg_temp.q('authenticated', a, format('update public.campaigns set parameters = %L where id = %L', '{"signals":[{"key":"has_website","weight":-10},{"key":"size_proxy","weight":30},{"key":"review_insights","weight":50}]}', camp_a));
+  perform pg_temp.q('authenticated', a, format('select public.recompute_campaign_scores(%L)', camp_a));
+  perform pg_temp.ok((select score_reason_keys from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = '[{"k":"size_proxy","s":"high"}]'::jsonb, 'a reason from a signal with weight 15 or less is hidden when a stronger one exists');
+  perform pg_temp.q('authenticated', a, format('update public.campaigns set parameters = %L where id = %L', '{"signals":[{"key":"has_website","weight":-10}]}', camp_a));
+  perform pg_temp.q('authenticated', a, format('select public.recompute_campaign_scores(%L)', camp_a));
+  perform pg_temp.ok((select score_reason_keys from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = '[{"k":"has_website","s":"low"}]'::jsonb, 'but it stays when it is the only reason');
+  perform pg_temp.q('authenticated', a, format('update public.campaigns set parameters = %L where id = %L', '{"signals":[{"key":"has_website","weight":-60},{"key":"size_proxy","weight":30},{"key":"review_insights","weight":50}]}', camp_a));
+  perform pg_temp.q('authenticated', a, format('select public.recompute_campaign_scores(%L)', camp_a));
   perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = lead2 and campaign_id = camp_a) = 0, 'has website + small = 0 for this campaign');
   perform pg_temp.ok((select score_reasons from public.campaign_leads where lead_id = lead2 and campaign_id = camp_a) = '[]'::jsonb, 'no favorable reasons');
-  perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = lead_land and campaign_id = camp_a) = 90, 'custom label signal scores');
+  perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = lead_land and campaign_id = camp_a) = 69, 'one relevant signal alone is capped at 69');
   perform pg_temp.ok((select score_reasons ->> 0 from public.campaign_leads where lead_id = lead_land and campaign_id = camp_a) = 'التقييمات تشكو من التأخير', 'custom reason label used');
   perform pg_temp.ok((select score_reason_keys -> 0 ->> 'label' from public.campaign_leads where lead_id = lead_land and campaign_id = camp_a) = 'التقييمات تشكو من التأخير', 'custom label kept in keys');
   -- Same signals, opposite offer: the weight sign flips the meaning
   perform pg_temp.q('authenticated', a, format('update public.campaigns set parameters = %L where id = %L', '{"signals":[{"key":"has_website","weight":60},{"key":"size_proxy","weight":30}]}', camp_a));
   perform pg_temp.q('authenticated', a, format('select public.recompute_campaign_scores(%L)', camp_a));
-  perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = 33, 'opposite weights flip the score');
+  perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = lead_a and campaign_id = camp_a) = 55, 'opposite weights flip the score (baseline weight clamped to 25)');
   perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = lead_land and campaign_id = camp_a) is null, 'no collected signals = no score');
   perform pg_temp.ok(pg_temp.q('authenticated', a, $q$select public.signal_credits_per_lead('[{"key":"review_insights"},{"key":"business_age"},{"key":"has_website"},{"key":"instagram_activity"}]')$q$) = '1', 'shared cost group charged once, disabled signals ignored');
   perform pg_temp.q('authenticated', a, format('update public.campaigns set parameters = %L where id = %L', '{}', camp_a));
@@ -193,12 +203,116 @@ begin
   perform pg_temp.ok(
     (pg_temp.q('service_role', null, format('select public.ingest_leads(%L, %L, %L)', org_a, camp_a,
       '[{"business_name":"جديد 1","phone_e164":"+201511111111","phone_type":"mobile","whatsapp_eligible":true,"source":"google_maps","dedupe_key":"ing1","rating":4.5,"reviews_count":12},{"business_name":"جديد 2","phone_e164":"+201211111112","phone_type":"mobile","whatsapp_eligible":true,"source":"google_maps","dedupe_key":"ing2"},{"business_name":"ممنوع","phone_e164":"+201112345678","source":"google_maps","dedupe_key":"ing3"},{"business_name":"موجود","phone_e164":"+201012345678","source":"google_maps","dedupe_key":"p1"}]'))::jsonb)
-    = '{"new": 2, "received": 4, "newly_linked": 2, "already_known": 1, "dropped_opted_out": 1}'::jsonb, 'ingest counts: 2 new, 1 known, 1 opted-out dropped');
+    = '{"new": 2, "cooldown": 0, "received": 4, "newly_linked": 2, "already_known": 0, "previously_found": 0, "dropped_opted_out": 1, "already_in_campaign": 1}'::jsonb, 'ingest counts: 2 new, 1 already in this campaign, 1 opted-out dropped');
   perform pg_temp.ok(
     (pg_temp.q('service_role', null, format('select public.ingest_leads(%L, %L, %L)', org_a, camp_a,
       '[{"business_name":"جديد 1","phone_e164":"+201511111111","source":"google_maps","dedupe_key":"ing1"}]'))::jsonb ->> 'new') = '0', 'ingest is idempotent');
   perform pg_temp.ok((select count(*) from public.leads where organization_id = org_a and dedupe_key = 'ing3') = 0, 'opted-out lead never stored');
   perform pg_temp.ok((select count(*) from public.campaign_leads where campaign_id = camp_a) = 5, 'ingested leads linked to campaign (3 + 2 new)');
+
+  -- Fresh leads across campaigns (spec 6.2): by default skip companies the org already has; option to include; cooldown always.
+  insert into public.campaigns (organization_id, name, created_by) values (org_a, 'second', a) returning id into camp2;
+  select id into l_ing1 from public.leads where organization_id = org_a and dedupe_key = 'ing1';
+  select id into l_ing2 from public.leads where organization_id = org_a and dedupe_key = 'ing2';
+  -- p1 (lead_a) has a sent message => cooldown; ing1 is known; ing5 is new and fit "maybe"
+  res := pg_temp.q('service_role', null, format('select public.ingest_leads(%L, %L, %L)', org_a, camp2,
+    '[{"business_name":"قديم","phone_e164":"+201012345678","source":"google_maps","dedupe_key":"p1"},{"business_name":"جديد 1","source":"google_maps","dedupe_key":"ing1"},{"business_name":"جديد 5","phone_e164":"+201511111115","phone_type":"mobile","whatsapp_eligible":true,"source":"google_maps","dedupe_key":"ing5","fit":"maybe","fit_reason":"نشاط قريب"}]'))::jsonb;
+  perform pg_temp.ok(res @> '{"cooldown":1,"previously_found":1,"new":1,"newly_linked":1,"already_known":0}'::jsonb, 'default: cooldown + previously found skipped, new kept: ' || res::text);
+  perform pg_temp.ok((select fit from public.campaign_leads where campaign_id = camp2) = 'maybe', 'fit maybe stored on the campaign link');
+  perform pg_temp.ok((select fit_reason from public.campaign_leads where campaign_id = camp2) = 'نشاط قريب', 'fit reason stored');
+  res := pg_temp.q('service_role', null, format('select public.ingest_leads(%L, %L, %L, true)', org_a, camp2,
+    '[{"business_name":"جديد 1","source":"google_maps","dedupe_key":"ing1"},{"business_name":"جديد 2","source":"google_maps","dedupe_key":"ing2"},{"business_name":"قديم","phone_e164":"+201012345678","source":"google_maps","dedupe_key":"p1"}]'))::jsonb;
+  perform pg_temp.ok(res @> '{"cooldown":1,"previously_found":0,"new":0,"newly_linked":2,"already_known":2}'::jsonb, 'include previous: known leads linked, not charged, cooldown still skipped: ' || res::text);
+  perform pg_temp.ok((select count(*) from public.campaign_leads where campaign_id = camp2 and not charged) = 2, 'included leads are not charged again');
+  perform pg_temp.ok((select count(*) from public.campaign_leads where campaign_id = camp2) = 3, 'cooldown lead never linked');
+
+  -- Contact cooldown is enforced in the database for every campaign and channel
+  insert into public.messages (organization_id, lead_id, campaign_id, channel, generated_text)
+    values (org_a, l_ing1, camp_a, 'whatsapp', 'اهلا ing1');
+  insert into public.messages (organization_id, lead_id, campaign_id, channel, generated_text)
+    values (org_a, l_ing1, camp2, 'whatsapp', 'اهلا ing1 c2') returning id into msg_c2;
+  perform pg_temp.q('postgres', null, format('update public.messages set review_status = %L where lead_id = %L', 'approved', l_ing1));
+  perform pg_temp.q('postgres', null, $q$select set_config('wasla.sent_rpc', '1', true)$q$);
+  perform pg_temp.q('postgres', null, format('update public.messages set review_status = %L, sent_at = now() where lead_id = %L and campaign_id = %L', 'sent', l_ing1, camp_a));
+  perform pg_temp.ok(pg_temp.err('postgres', null, format('update public.messages set review_status = %L, sent_at = now() where id = %L', 'sent', msg_c2)) like '%contact_cooldown%', 'second send to the same lead within 30 days is blocked');
+  perform pg_temp.ok(pg_temp.err('postgres', null, format('insert into public.messages (organization_id, lead_id, campaign_id, channel, generated_text) values (%L, %L, %L, %L, %L)', org_a, l_ing1, camp2, 'email', 'x')) like '%contact_cooldown%', 'no new message for a lead in cooldown');
+  perform pg_temp.q('postgres', null, $q$update public.app_config set value = '0' where key = 'contact_cooldown_days'$q$);
+  perform pg_temp.ok(pg_temp.err('postgres', null, format('insert into public.messages (organization_id, lead_id, campaign_id, channel, generated_text) values (%L, %L, %L, %L, %L)', org_a, l_ing1, camp2, 'email', 'x')) = 'OK', 'cooldown length is config (0 days = off)');
+  perform pg_temp.q('postgres', null, $q$update public.app_config set value = '30' where key = 'contact_cooldown_days'$q$);
+
+  -- "Not relevant": removes, refunds the charged credits once, teaches, never after a send
+  select id into cl_ing2 from public.campaign_leads where campaign_id = camp_a and lead_id = l_ing2;
+  select id into cl_a from public.campaign_leads where campaign_id = camp_a and lead_id = lead_a;
+  bal0 := pg_temp.q('authenticated', a, format('select public.org_credit_balance(%L)', org_a))::int;
+  res := pg_temp.q('authenticated', a, format('select public.mark_not_relevant(%L, %L)', cl_ing2, 'مش بيشتري مننا'))::jsonb;
+  perform pg_temp.ok(res = '{"already": false, "refunded": 1}'::jsonb, 'refund 1 credit: ' || res::text);
+  perform pg_temp.ok(pg_temp.q('authenticated', a, format('select public.org_credit_balance(%L)', org_a))::int = bal0 + 1, 'balance +1');
+  perform pg_temp.ok((pg_temp.q('authenticated', a, format('select public.mark_not_relevant(%L)', cl_ing2))::jsonb) @> '{"already": true}'::jsonb, 'idempotent, no second refund');
+  perform pg_temp.ok(pg_temp.q('authenticated', a, format('select public.org_credit_balance(%L)', org_a))::int = bal0 + 1, 'still +1');
+  perform pg_temp.ok(pg_temp.err('authenticated', b, format('select public.mark_not_relevant(%L)', cl_ing2)) like 'P0002%', 'B cannot remove A leads');
+  perform pg_temp.ok(pg_temp.err('authenticated', a, format('select public.mark_not_relevant(%L)', cl_a)) like '%already_sent%', 'a lead that was messaged cannot be removed');
+  perform pg_temp.ok(pg_temp.q('authenticated', a, 'select count(*) from public.negative_examples') = '1', 'negative example stored');
+  perform pg_temp.ok(pg_temp.q('authenticated', b, 'select count(*) from public.negative_examples') = '0', 'negative examples are per org');
+  perform pg_temp.ok((select count(*) from public.credit_ledger where organization_id = org_a and kind = 'refund' and reason like 'not_relevant:%') = 1, 'one refund row');
+
+  -- Score v2.2: two relevant signals can pass 69; one cannot; maybe caps at 60; removed leads are not scored
+  insert into public.lead_signals (organization_id, lead_id, signal_key, normalized, source) values
+    (org_a, l_ing1, 'activity', '{"value":1}', 'test'), (org_a, l_ing1, 'unclaimed_listing', '{"value":1}', 'test'), (org_a, l_ing1, 'has_website', '{"value":0}', 'test'),
+    (org_a, l_ing2, 'activity', '{"value":1}', 'test');
+  perform pg_temp.q('authenticated', a, format('update public.campaigns set parameters = %L where id = %L', '{"signals":[{"key":"activity","weight":40},{"key":"unclaimed_listing","weight":60},{"key":"has_website","weight":-100}]}', camp_a));
+  perform pg_temp.q('authenticated', a, format('select public.recompute_campaign_scores(%L)', camp_a));
+  perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = l_ing1 and campaign_id = camp_a) = 100, 'two relevant signals can reach 100');
+  perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = l_ing2 and campaign_id = camp_a) is null, 'removed (not relevant) leads are not scored');
+  perform pg_temp.q('authenticated', a, format('update public.campaigns set parameters = %L where id = %L', '{"signals":[{"key":"activity","weight":40},{"key":"has_website","weight":-100}]}', camp_a));
+  perform pg_temp.q('authenticated', a, format('select public.recompute_campaign_scores(%L)', camp_a));
+  perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = l_ing1 and campaign_id = camp_a) = 69, 'one relevant signal + baseline website cannot pass 69');
+  perform pg_temp.q('authenticated', a, format('update public.campaigns set parameters = %L where id = %L', '{"signals":[{"key":"activity","weight":40},{"key":"has_website","weight":-100,"emphasis":true}]}', camp_a));
+  perform pg_temp.q('authenticated', a, format('select public.recompute_campaign_scores(%L)', camp_a));
+  perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = l_ing1 and campaign_id = camp_a) = 100, 'planner-emphasized website signal counts fully');
+  perform pg_temp.q('postgres', null, format('update public.campaign_leads set fit = %L where lead_id = %L and campaign_id = %L', 'maybe', l_ing1, camp_a));
+  perform pg_temp.q('authenticated', a, format('select public.recompute_campaign_scores(%L)', camp_a));
+  perform pg_temp.ok((select opportunity_score from public.campaign_leads where lead_id = l_ing1 and campaign_id = camp_a) = 60, 'fit maybe caps at 60');
+  perform pg_temp.q('authenticated', a, format('update public.campaigns set parameters = %L where id = %L', '{}', camp_a));
+
+  -- New tables: members read, others do not, nobody writes from the client
+  insert into public.lead_insights (organization_id, lead_id, facts, analysis) values (org_a, lead_a, '{"activity_label":"active"}', '{"confidence":"low"}');
+  insert into public.search_queries (organization_id, campaign_id, query, area) values (org_a, camp_a, 'شركة تسويق مدينة نصر', 'مدينة نصر');
+  perform pg_temp.ok(pg_temp.q('authenticated', a, 'select count(*) from public.lead_insights') = '1', 'A reads lead insights');
+  perform pg_temp.ok(pg_temp.q('authenticated', b, 'select count(*) from public.lead_insights') = '0', 'B cannot read A insights');
+  perform pg_temp.ok(pg_temp.q('authenticated', a, 'select count(*) from public.search_queries') = '1', 'A reads own past searches');
+  perform pg_temp.ok(pg_temp.q('authenticated', b, 'select count(*) from public.search_queries') = '0', 'B cannot read A searches');
+  perform pg_temp.ok(pg_temp.err('authenticated', a, format('insert into public.lead_insights (organization_id, lead_id) values (%L, %L)', org_a, lead2)) like '42501%', 'users cannot write insights');
+  perform pg_temp.ok(pg_temp.err('authenticated', a, format('insert into public.search_queries (organization_id, query) values (%L, %L)', org_a, 'x')) like '42501%', 'users cannot write searches');
+  perform pg_temp.ok(pg_temp.err('authenticated', a, format('insert into public.negative_examples (organization_id, reason) values (%L, %L)', org_a, 'x')) like '42501%', 'users cannot write negative examples directly');
+  perform pg_temp.ok(pg_temp.err('anon', null, 'select count(*) from public.lead_insights') like '42501%', 'anon blocked from insights');
+  perform pg_temp.ok(pg_temp.q('authenticated', a, 'select count(*) from public.app_config') = '1', 'config readable');
+  perform pg_temp.ok(pg_temp.err('authenticated', a, $q$update public.app_config set value = '0'$q$) like '42501%', 'config not writable by users');
+  perform pg_temp.ok(pg_temp.err('authenticated', a, format('select public.ingest_leads(%L, %L, %L, true)', org_a, camp_a, '[]')) like '42501%', 'ingest v3 still service-only');
+  perform pg_temp.ok(pg_temp.err('postgres', null, format('select public.ingest_leads(%L, %L, %L)', org_a, camp_a, '[]')) = 'OK', 'the old 3-argument ingest_leads still works for workflows deployed before this release');
+  perform pg_temp.ok(pg_temp.err('authenticated', a, format('select public.ingest_leads(%L, %L, %L)', org_a, camp_a, '[]')) like '42501%', 'and it is still service-only');
+
+  -- Learning loop: opportunity type is stored per message and aggregated per org
+  perform pg_temp.q('postgres', null, format('update public.messages set opportunity_type = %L where id = %L', 'unclaimed_listing', msg));
+  perform pg_temp.q('postgres', null, format('update public.leads set status = %L where id = %L', 'replied', lead_a));
+  perform pg_temp.ok(pg_temp.q('authenticated', a, format('select sent || %L || replied from public.opportunity_stats(%L)', '/', org_a)) = '1/1', 'opportunity stats: 1 sent, 1 replied');
+  perform pg_temp.ok(pg_temp.q('authenticated', b, format('select count(*) from public.opportunity_stats(%L)', org_a)) = '0', 'B cannot read A opportunity stats');
+
+  -- Failed generation: stored as a visible 'failed' row with no text, never sendable, regenerable
+  perform pg_temp.q('postgres', null, format('insert into public.messages (organization_id, lead_id, campaign_id, channel, generated_text, review_status, fail_reason) values (%L, %L, %L, %L, %L, %L, %L)', org_a, lead_land, camp_a, 'messenger', 'ignored', 'failed', 'style:word_count_29'));
+  perform pg_temp.ok((select review_status || '/' || generated_text || '/' || fail_reason from public.messages where lead_id = lead_land and channel = 'messenger') = 'failed//style:word_count_29', 'a failed generation is stored as failed, with no text');
+  perform pg_temp.ok(pg_temp.q('authenticated', a, format('select count(*) from public.messages where review_status = %L', 'failed')) = '1', 'members see failed rows of their organization');
+  perform pg_temp.ok(pg_temp.q('authenticated', b, format('select count(*) from public.messages where review_status = %L', 'failed')) = '0', 'other organizations do not');
+  perform pg_temp.ok(pg_temp.err('authenticated', a, format('select public.mark_message_sent(%L)', (select id from public.messages where review_status = 'failed'))) like '%not_approved%', 'a failed message can never be sent');
+  perform pg_temp.ok(pg_temp.err('postgres', null, format('update public.messages set review_status = %L where review_status = %L', 'pending', 'failed')) like '%empty_message%', 'a failed row cannot become reviewable without text');
+  perform pg_temp.q('postgres', null, format('update public.messages set review_status = %L, generated_text = %L, fail_reason = null where review_status = %L', 'pending', 'نص جديد', 'failed'));
+  perform pg_temp.ok((select count(*) from public.messages where review_status = 'failed') = 0, 'regenerating turns a failed row into a normal pending message');
+
+  -- Angle switching: only an opportunity the lead has, only by members
+  perform pg_temp.q('postgres', null, format('update public.campaign_leads set opportunities = %L where id = %L', '[{"type":"unclaimed_listing","strength":2,"evidence":{},"angle":"x"},{"type":"dormant_activity","strength":1,"evidence":{},"angle":"y"}]', cl_a));
+  perform pg_temp.q('authenticated', a, format('select public.set_selected_opportunity(%L, %L)', cl_a, 'dormant_activity'));
+  perform pg_temp.ok((select selected_opportunity from public.campaign_leads where id = cl_a) = 'dormant_activity', 'angle switched');
+  perform pg_temp.ok(pg_temp.err('authenticated', a, format('select public.set_selected_opportunity(%L, %L)', cl_a, 'new_business')) like '%unknown_opportunity%', 'cannot pick an opportunity the lead does not have');
+  perform pg_temp.ok(pg_temp.err('authenticated', b, format('select public.set_selected_opportunity(%L, %L)', cl_a, 'unclaimed_listing')) like 'P0002%', 'B cannot switch A angle');
 
   -- Planner / signal job types
   perform pg_temp.ok(pg_temp.err('authenticated', a, format('select public.create_job(%L, null, %L, 2, %L)', org_a, 'plan', 'plan-1')) = 'OK', 'planner job allowed');

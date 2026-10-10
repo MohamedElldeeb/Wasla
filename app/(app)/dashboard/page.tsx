@@ -55,7 +55,7 @@ export default async function Dashboard() {
         {stats.map((s) => (
           <div key={s.label} className="flex min-w-[220px] snap-start flex-col gap-1 rounded-card border border-border bg-surface p-4 md:min-w-0 md:p-6">
             <span className="text-body-sm text-fg-muted">{s.label}</span>
-            <span className="num text-display text-fg">{s.value}</span>
+            <span className="num text-stat text-fg">{s.value}</span>
           </div>
         ))}
       </section>
@@ -70,7 +70,7 @@ export default async function Dashboard() {
           <ul className="flex flex-col gap-3 md:gap-4">
             {recent.map((c) => (
               <li key={c.id}>
-                <Link href={`/campaigns/${c.id}`} className="transition-ui flex min-h-14 items-center justify-between gap-3 rounded-card border border-border bg-surface p-4 hover:border-border-strong hover:bg-surface-muted md:p-6">
+                <Link href={`/campaigns/${c.id}`} className="transition-ui flex min-h-14 items-center justify-between gap-3 rounded-card border border-border bg-surface p-4 hover:border-border-strong hover:bg-surface-hover md:p-6">
                   <span className="min-w-0">
                     <strong className="block truncate text-body text-fg" dir="auto">{c.name}</strong>
                     <span className="text-body-sm text-fg-muted">{dateFmt(c.created_at, locale)}</span>

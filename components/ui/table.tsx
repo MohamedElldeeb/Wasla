@@ -11,7 +11,7 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
 }
 
 function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
-  return <thead data-slot="table-header" className={cn("sticky top-0 bg-surface-muted [&_tr]:border-b", className)} {...props} />
+  return <thead data-slot="table-header" className={cn("sticky top-0 bg-surface [&_tr]:border-b", className)} {...props} />
 }
 
 function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
@@ -19,7 +19,7 @@ function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
 }
 
 function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
-  return <tr data-slot="table-row" className={cn("transition-ui h-14 border-b border-border hover:bg-surface-muted data-[state=selected]:bg-primary-soft", className)} {...props} />
+  return <tr data-slot="table-row" className={cn("transition-ui h-11 border-b border-border hover:bg-surface-hover data-[state=selected]:bg-brand-soft", className)} {...props} />
 }
 
 function TableHead({ className, ...props }: React.ComponentProps<"th">) {

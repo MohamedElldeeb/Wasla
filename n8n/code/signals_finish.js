@@ -1,4 +1,4 @@
-// WF2b "Finish": final credit usage and counts for the whole ingest job (leads + signals).
+// WF2b "Finish": final credit usage and counts for the whole ingest job (leads + signals). Review analysis is charged per scraped lead.
 const body = $('Webhook').first().json.body;
 const job = $('Get job').first().json;
 const plan = $('Plan signals').first().json;
@@ -10,6 +10,8 @@ try { const g = $('Group reviews').first().json; if (g && g.empty && g.error) wa
 const charged = parsed ? parsed.chargedLeads : 0;
 const newLeads = Number((job.counts || {}).new) || 0;
 const used = newLeads + charged * plan.perLead;
+const prevFit = (job.counts || {}).fit_usage || { in: 0, out: 0, cost: 0, model: null };
+const u = parsed ? parsed.usage : { in: 0, out: 0, cost: 0, model: null };
 
 return [{
   json: {
@@ -23,6 +25,7 @@ return [{
       reviews_scraped: charged,
       signals_warning: warning,
     },
-    usage: parsed ? parsed.usage : { in: 0, out: 0, cost: 0, model: null },
+    // One LLM cost line for the job: the fit check done in WF2 plus the review analysis done here.
+    usage: { in: u.in + (prevFit.in || 0), out: u.out + (prevFit.out || 0), cost: u.cost + (prevFit.cost || 0), model: u.model || prevFit.model },
   },
 }];

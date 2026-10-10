@@ -2,7 +2,9 @@ import { requireOrg } from '@/lib/org';
 import { getT } from '@/lib/i18n/server';
 import { logout } from '@/app/actions/auth';
 import { regionsToText } from '@/lib/regions';
-import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { Card, CardDescription, CardTitle } from '@/components/ui/card';
 import { PageHeader } from '@/components/app/page-header';
 import { LanguageToggle } from '@/components/app/language-toggle';
@@ -22,6 +24,9 @@ export default async function SettingsPage() {
     [o.idealCustomer, p.ideal_customer],
     [o.problems, p.problems_we_solve],
     [o.proof, p.proof_points],
+    [o.ctaOffer, p.cta_offer],
+    [o.senderName, p.sender_name],
+    [o.styleExamples, (p.style_examples ?? []).join('\n\n')],
     [o.regions, regionsToText(p.regions)],
     [s.dailyCap, String(num(org.wa_daily_cap))],
   ];
@@ -42,6 +47,7 @@ export default async function SettingsPage() {
             </div>
           ))}
         </dl>
+        {org.role === 'owner' && <Link href="/settings/profile" className={cn(buttonVariants({ variant: 'secondary' }), 'self-start')}>{t.interview.rerun}</Link>}
       </Card>
 
       <Card>

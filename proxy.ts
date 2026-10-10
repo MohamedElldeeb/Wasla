@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
-const PUBLIC = ['/login', '/signup', '/auth'];
+const PUBLIC = ['/login', '/signup', '/auth', '/preview']; // /preview 404s unless PREVIEW_ROUTES=1
 const OPEN = ['/']; // public landing page (logged-in users are redirected to the dashboard by the page itself)
 
 // Refreshes the Supabase session cookie and gates the app behind login.

@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { requireOrg } from '@/lib/org';
 import { startJob, type StartResult } from '@/lib/jobs';
-import { defaults, llmConfig } from '@/lib/config/defaults';
+import { defaults, llmConfig, plannerLlmConfig } from '@/lib/config/defaults';
 import { getT } from '@/lib/i18n/server';
 import type { CampaignParameters } from '@/lib/types';
 
@@ -13,7 +13,7 @@ const location = z.object({ governorate: z.string().max(60).optional(), city: z.
 
 // Validation messages are keys into the wizard dictionary so they can be shown in the user's language.
 const paramsSchema = z.object({
-  keywords: z.array(z.string().trim().min(1).max(60)).min(1, 'needKeywords').max(12),
+  keywords: z.array(z.string().trim().min(1).max(60)).min(1, 'needKeywords').max(6),
   locations: z.array(location).min(1, 'needLocation').max(12),
   max_results: z.number().int().min(1).max(defaults.maxResultsCap),
   filters: z
@@ -24,14 +24,23 @@ const paramsSchema = z.object({
       must_have_mobile: z.boolean().optional(),
       must_have_website: z.boolean().optional(),
       exclude_closed: z.boolean().optional(),
+      categories_include: z.array(z.string().trim().min(1).max(60)).max(20).optional(),
+      categories_exclude: z.array(z.string().trim().min(1).max(60)).max(20).optional(),
     })
     .default({}),
+  include_previous_companies: z.boolean().default(false),
+  learned_categories: z.array(z.string().trim().min(1).max(60)).max(30).optional(),
+  ideal_lead_description: z.string().trim().max(400).optional(),
+  synonyms: z.array(z.string().trim().min(1).max(60)).max(6).optional(),
+  nearby_locations: z.array(location).max(8).optional(),
+  opportunities: z.array(z.object({ type: z.string().max(40), angle_ar: z.string().max(240), why_it_means_they_need_the_offer: z.string().max(260).optional() })).max(8).optional(),
+  complaint_relevance: z.string().trim().max(300).nullable().optional(),
   enrich_emails: z.boolean().default(false),
   channel: z.enum(['whatsapp', 'messenger', 'email']).default('whatsapp'),
   tone: z.enum(['friendly', 'professional', 'direct']).default('friendly'),
   offer_override: z.string().max(2000).optional(),
   llm_model_override: z.string().max(100).optional(),
-  signals: z.array(z.object({ key: z.string().max(60), weight: z.number().int().min(-100).max(100) })).max(9).default([]),
+  signals: z.array(z.object({ key: z.string().max(60), weight: z.number().int().min(-100).max(100), emphasis: z.boolean().optional() })).max(16).default([]),
   angle: z.object({ title_ar: z.string().max(80), description_ar: z.string().max(300) }).nullable().optional(),
 });
 
@@ -50,7 +59,7 @@ export async function startPlanner(offerOverride: string | null, nonce: string):
     credits: defaults.plannerCredits,
     idempotencyKey: `plan:${org.id}:${nonce || randomUUID()}`,
     webhook: 'wasla-plan',
-    payload: { ...llmConfig(), offer_override: offerOverride?.trim() || null, locale },
+    payload: { ...plannerLlmConfig(), offer_override: offerOverride?.trim() || null, locale },
   });
 }
 
@@ -96,7 +105,7 @@ export async function runCampaign(campaignId: string, nonce: string): Promise<St
     credits,
     idempotencyKey: `ingest:${campaignId}:${nonce || randomUUID()}`,
     webhook: 'wasla-ingest',
-    payload: { ...llmConfig(p.llm_model_override), max_results_cap: defaults.maxResultsCap },
+    payload: { ...llmConfig(p.llm_model_override), planner_model: plannerLlmConfig().planner_model, max_results_cap: defaults.maxResultsCap, round: 1 },
   });
   if (res.jobId) await supabase.from('campaigns').update({ status: 'running' }).eq('id', campaignId);
   revalidatePath(`/campaigns/${campaignId}`);
@@ -155,4 +164,57 @@ export async function regenerateMessage(messageId: string, instruction: string, 
     webhook: 'wasla-generate',
     payload: { ...llmConfig((c?.parameters as CampaignParameters | undefined)?.llm_model_override), regenerate: { message_id: messageId, instruction: instruction.trim().slice(0, 200) || null } },
   });
+}
+
+/** Cheap sample before the full run (spec 6.0 step 3): about 5 places per query, judged against the ideal lead description. */
+export async function startProbe(campaignId: string, nonce: string): Promise<StartResult> {
+  const { supabase, org } = await requireOrg();
+  const { t } = await getT();
+  const { data: c } = await supabase.from('campaigns').select('id,status').eq('id', campaignId).single();
+  if (!c || c.status !== 'draft') return { error: t.errors.generic };
+  return startJob(supabase, {
+    orgId: org.id,
+    campaignId,
+    type: 'probe',
+    credits: defaults.probeCredits,
+    idempotencyKey: `probe:${campaignId}:${nonce || randomUUID()}`,
+    webhook: 'wasla-probe',
+    payload: plannerLlmConfig(),
+  });
+}
+
+/** "Not relevant": removes the lead from this campaign, returns its credits once and teaches future planning of this organization. */
+export async function markNotRelevant(campaignLeadId: string, reason: string): Promise<{ refunded?: number; error?: string }> {
+  const { t } = await getT();
+  const { supabase } = await requireOrg();
+  const { data, error } = await supabase.rpc('mark_not_relevant', { p_campaign_lead: campaignLeadId, p_reason: reason.trim().slice(0, 300) || null });
+  if (error) return { error: error.message.includes('already_sent') ? t.insights.alreadySent : t.errors.generic };
+  revalidatePath('/campaigns');
+  return { refunded: Number((data as { refunded?: number } | null)?.refunded ?? 0) };
+}
+
+/**
+ * A category is "learned" ONLY from a user action. This one: the user sent a message to a lead, so that lead's Maps category is
+ * accepted directly in later searches of the same campaign. (The other one is "Looks right" on the probe sample, in the wizard.)
+ */
+export async function learnCategoryFromSent(messageId: string): Promise<void> {
+  const { supabase } = await requireOrg();
+  const { data: m } = await supabase.from('messages').select('campaign_id, leads(category)').eq('id', messageId).maybeSingle();
+  const lead = (m as { campaign_id?: string; leads?: { category?: string | null } | { category?: string | null }[] } | null)?.leads;
+  const cat = String((Array.isArray(lead) ? lead[0]?.category : lead?.category) ?? '').trim();
+  const campaignId = (m as { campaign_id?: string } | null)?.campaign_id;
+  if (!cat || !campaignId) return;
+  const { data: c } = await supabase.from('campaigns').select('parameters').eq('id', campaignId).maybeSingle();
+  const params = (c?.parameters ?? {}) as CampaignParameters;
+  const have = [...(params.filters?.categories_include ?? []), ...(params.learned_categories ?? [])].map((x) => x.toLowerCase());
+  if (have.includes(cat.toLowerCase())) return;
+  await supabase.from('campaigns').update({ parameters: { ...params, learned_categories: [...(params.learned_categories ?? []), cat].slice(-30) } }).eq('id', campaignId);
+}
+
+/** The user switches the angle a lead's message will be built on (only among the opportunities the lead really has). */
+export async function selectOpportunity(campaignLeadId: string, type: string): Promise<{ error?: string }> {
+  const { t } = await getT();
+  const { supabase } = await requireOrg();
+  const { error } = await supabase.rpc('set_selected_opportunity', { p_campaign_lead: campaignLeadId, p_type: type });
+  return error ? { error: t.errors.generic } : {};
 }

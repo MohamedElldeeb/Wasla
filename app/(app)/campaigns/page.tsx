@@ -27,7 +27,7 @@ export default async function CampaignsPage() {
         <ul className="grid gap-3 md:grid-cols-2 md:gap-4">
           {list.map((c) => (
             <li key={c.id}>
-              <Link href={`/campaigns/${c.id}`} className="transition-ui flex h-full flex-col gap-3 rounded-card border border-border bg-surface p-4 hover:border-border-strong hover:bg-surface-muted md:p-6">
+              <Link href={`/campaigns/${c.id}`} className="transition-ui flex h-full flex-col gap-3 rounded-card border border-border bg-surface p-4 hover:border-border-strong hover:bg-surface-hover md:p-6">
                 <div className="flex items-center justify-between gap-3">
                   <strong className="min-w-0 truncate text-h3 text-fg" dir="auto">{c.name}</strong>
                   <StatusBadge kind="campaign" status={c.status} />

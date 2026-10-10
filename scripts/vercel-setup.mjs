@@ -31,6 +31,7 @@ const vars = [
   ['N8N_BASE_URL', e.N8N_BASE_URL, 'encrypted'],
   ['N8N_WEBHOOK_SECRET', e.N8N_WEBHOOK_SECRET, 'sensitive'],
   ['OPENROUTER_MODEL', e.OPENROUTER_MODEL, 'encrypted'],
+  ['OPENROUTER_PLANNER_MODEL', e.OPENROUTER_PLANNER_MODEL, 'encrypted'],
   ['OPENROUTER_FALLBACK_MODELS', e.OPENROUTER_FALLBACK_MODELS, 'encrypted'],
 ];
 if (argUrl) vars.push(['NEXT_PUBLIC_APP_URL', argUrl, 'encrypted']);

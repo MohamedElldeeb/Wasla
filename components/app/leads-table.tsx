@@ -17,7 +17,8 @@ import { reasonTexts } from '@/lib/reasons';
 import { newNonce } from '@/lib/nonce';
 import { num } from '@/lib/format';
 import { cn } from '@/lib/utils';
-import type { Campaign, CampaignLead } from '@/lib/types';
+import { LeadBriefCompact, NotRelevantButton } from '@/components/app/lead-brief';
+import type { Campaign, CampaignLead, LeadInsight } from '@/lib/types';
 
 export type LeadFilters = { score: 'all' | 'high' | 'mid' | 'low'; phone: 'all' | 'mobile' | 'landline'; site: 'all' | 'has' | 'none' };
 export const NO_FILTERS: LeadFilters = { score: 'all', phone: 'all', site: 'all' };
@@ -40,7 +41,7 @@ function Choice<T extends string>({ value, options, onChange, label }: { value: 
     <div role="radiogroup" aria-label={label} className="flex flex-wrap gap-2">
       {options.map((o) => (
         <button key={o.v} type="button" role="radio" aria-checked={value === o.v} onClick={() => onChange(o.v)}
-          className={cn('transition-ui min-h-12 rounded-control border px-4 text-body-sm font-medium lg:min-h-10', value === o.v ? 'border-primary bg-primary-soft text-primary' : 'border-border-strong bg-surface text-fg hover:bg-surface-muted')}>
+          className={cn('transition-ui min-h-12 rounded-control border px-4 text-body-sm font-medium lg:min-h-10', value === o.v ? 'border-brand bg-brand-soft text-brand' : 'border-border-strong bg-surface text-fg hover:bg-surface-hover')}>
           {o.label}
         </button>
       ))}
@@ -92,7 +93,7 @@ export function FilterBar({ value, onChange, count }: { value: LeadFilters; onCh
 }
 
 /** Desktop table: sticky header, 56px rows, max 6 columns, numbers aligned to the end. */
-export function LeadsDesktopTable({ items }: { items: CampaignLead[] }) {
+export function LeadsDesktopTable({ items, insights = {}, canRemove = false }: { items: CampaignLead[]; insights?: Record<string, LeadInsight>; canRemove?: boolean }) {
   const t = useT();
   const c = t.campaign;
   return (
@@ -105,6 +106,7 @@ export function LeadsDesktopTable({ items }: { items: CampaignLead[] }) {
             <TableHead>{c.reasons}</TableHead>
             <TableHead>{c.phone}</TableHead>
             <TableHead className="text-end">{c.rating}</TableHead>
+            {canRemove && <TableHead className="w-12"><span className="sr-only">{t.insights.notRelevant}</span></TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -113,12 +115,12 @@ export function LeadsDesktopTable({ items }: { items: CampaignLead[] }) {
             const reasons = reasonTexts(cl, t);
             return (
               <TableRow key={cl.id}>
-                <TableCell>{cl.opportunity_score != null && reasons.length > 0 ? <ScoreBadge score={cl.opportunity_score} /> : <span className="text-fg-subtle">—</span>}</TableCell>
+                <TableCell>{cl.opportunity_score != null ? <ScoreBadge score={cl.opportunity_score} /> : <span className="text-fg-subtle">—</span>}</TableCell>
                 <TableCell className="max-w-64">
                   <div className="truncate font-medium text-fg" dir="auto">{l.business_name}</div>
                   <div className="truncate text-caption text-fg-muted" dir="auto">{[l.category, l.district || l.city].filter(Boolean).join(' · ')} · {l.website ? c.website : c.noWebsite}</div>
                 </TableCell>
-                <TableCell className="max-w-72"><ReasonChips reasons={reasons} max={3} /></TableCell>
+                <TableCell className="max-w-80"><div className="flex flex-col gap-2"><ReasonChips reasons={reasons} max={3} />{cl.opportunities?.length || insights[l.id] ? <LeadBriefCompact item={cl} insight={insights[l.id]} /> : null}</div></TableCell>
                 <TableCell>
                   {l.phone_e164 ? (
                     <span className="inline-flex items-center gap-2">
@@ -137,6 +139,7 @@ export function LeadsDesktopTable({ items }: { items: CampaignLead[] }) {
                     </span>
                   )}
                 </TableCell>
+                {canRemove && <TableCell><NotRelevantButton campaignLeadId={cl.id} name={l.business_name} iconOnly /></TableCell>}
               </TableRow>
             );
           })}
@@ -146,8 +149,8 @@ export function LeadsDesktopTable({ items }: { items: CampaignLead[] }) {
   );
 }
 
-export function LeadsTable({ campaign, leads, hasMessages, busy, onGenerated }: {
-  campaign: Campaign; leads: CampaignLead[]; hasMessages: boolean; busy: boolean; onGenerated: () => void;
+export function LeadsTable({ campaign, leads, hasMessages, busy, onGenerated, insights = {} }: {
+  campaign: Campaign; leads: CampaignLead[]; hasMessages: boolean; busy: boolean; onGenerated: () => void; insights?: Record<string, LeadInsight>;
 }) {
   const t = useT();
   const router = useRouter();
@@ -200,9 +203,9 @@ export function LeadsTable({ campaign, leads, hasMessages, busy, onGenerated }: 
       ) : (
         <>
           <ul className="flex flex-col gap-3 lg:hidden">
-            {shown.map((cl) => <li key={cl.id}><LeadCard item={cl} /></li>)}
+            {shown.map((cl) => <li key={cl.id}><LeadCard item={cl} insight={insights[cl.leads.id]} canRemove /></li>)}
           </ul>
-          <LeadsDesktopTable items={shown} />
+          <LeadsDesktopTable items={shown} insights={insights} canRemove />
         </>
       )}
 

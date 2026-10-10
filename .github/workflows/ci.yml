@@ -23,5 +23,6 @@ jobs:
       - run: npx tsc --noEmit
       - run: npm run lint
       - run: npm test
+      - run: npm run test:db # all migrations + RLS and business-rule suite on in-memory Postgres
       - run: npm run n8n:build && git diff --exit-code n8n/workflows
       - run: npm run build

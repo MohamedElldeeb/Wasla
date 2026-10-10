@@ -38,7 +38,7 @@ export function AuthForm({ mode, action, oauthError }: Props) {
         </Button>
         <p className="text-center text-body-sm text-fg-muted">
           {signup ? t.auth.haveAccount : t.auth.noAccount}{' '}
-          <Link href={signup ? '/login' : '/signup'} className="font-semibold text-primary underline-offset-4 hover:underline">
+          <Link href={signup ? '/login' : '/signup'} className="inline-flex min-h-12 items-center font-semibold text-brand underline-offset-4 hover:underline">
             {signup ? t.auth.login : t.auth.signup}
           </Link>
         </p>

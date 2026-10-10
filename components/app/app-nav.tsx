@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { BrandLogo } from '@/components/app/brand-logo';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSyncExternalStore } from 'react';
@@ -22,7 +23,7 @@ const isActive = (path: string, href: string) => path === href || path.startsWit
 export function CreditsPill({ balance, className }: { balance: number; className?: string }) {
   const t = useT();
   return (
-    <span className={cn('num inline-flex h-10 items-center gap-2 rounded-full bg-primary-soft px-3 text-body-sm font-semibold text-primary', className)} title={t.common.credits}>
+    <span className={cn('num inline-flex h-10 items-center gap-2 rounded-full bg-brand-soft px-3 text-body-sm font-semibold text-brand', className)} title={t.common.credits}>
       <Coins className="size-4" aria-hidden />
       {num(balance)}
       <span className="font-normal text-fg-muted">{t.common.creditUnit}</span>
@@ -46,7 +47,7 @@ export function BottomNav() {
               <Link
                 href={href}
                 aria-current={active ? 'page' : undefined}
-                className={cn('transition-ui relative flex h-16 flex-col items-center justify-center gap-1 text-caption', active ? 'text-primary' : 'text-fg-muted hover:text-fg')}
+                className={cn('transition-ui relative flex h-16 flex-col items-center justify-center gap-1 text-caption', active ? 'text-fg' : 'text-fg-muted hover:text-fg')}
               >
                 {active && <span className="absolute inset-x-4 top-0 h-0.5 rounded-full bg-primary" aria-hidden />}
                 <Icon className="size-6" aria-hidden />
@@ -91,12 +92,12 @@ export function Sidebar({ balance, orgName, role, initial }: Shell) {
   const collapsed = useSyncExternalStore(subscribe, getCollapsed, () => false);
   const toggle = () => { localStorage.setItem('wasla_sidebar', collapsed ? '0' : '1'); window.dispatchEvent(new Event('wasla:sidebar')); };
   return (
-    <aside className={cn('sticky top-0 hidden h-screen shrink-0 flex-col gap-4 border-e border-border bg-surface p-4 transition-[width] duration-200 ease-ui lg:flex', collapsed ? 'w-[72px]' : 'w-[248px]')}>
+    <aside className={cn('sticky top-0 hidden h-screen shrink-0 flex-col gap-4 border-e border-border bg-surface p-4 transition-[width] duration-200 ease-ui lg:flex', collapsed ? 'w-[72px]' : 'w-[240px]')}>
       <div className={cn('flex items-center', collapsed ? 'justify-center' : 'justify-between')}>
         <Link href="/dashboard" aria-label={t.brand.name}>
           {collapsed
             ? <Image src="/brand/wasla-logo-mark.svg" alt="" width={40} height={40} className="size-10 rounded-control" />
-            : <Image src="/brand/wasla-logo.svg" alt="" width={230} height={96} className="h-12 w-auto" />}
+            : <BrandLogo className="h-12" />}
         </Link>
       </div>
       <nav aria-label={t.nav.main} className="flex flex-1 flex-col gap-1">
@@ -108,8 +109,9 @@ export function Sidebar({ balance, orgName, role, initial }: Shell) {
               href={href}
               aria-current={active ? 'page' : undefined}
               title={collapsed ? t.nav[key] : undefined}
-              className={cn('transition-ui flex h-12 items-center gap-3 rounded-control px-3 text-body font-medium', collapsed && 'justify-center px-0', active ? 'bg-primary-soft text-primary' : 'text-fg-muted hover:bg-surface-muted hover:text-fg')}
+              className={cn('transition-ui relative flex h-12 items-center gap-3 rounded-control px-3 text-body-sm font-medium lg:h-8', collapsed && 'justify-center px-0', active ? 'bg-surface-hover text-fg' : 'text-fg-muted hover:bg-surface-hover hover:text-fg')}
             >
+              {active && <span className="absolute inset-y-1.5 start-0 w-0.5 rounded-full bg-primary" aria-hidden />}
               <Icon className="size-5 shrink-0" aria-hidden />
               {!collapsed && t.nav[key]}
             </Link>
@@ -129,7 +131,7 @@ export function Sidebar({ balance, orgName, role, initial }: Shell) {
         onClick={toggle}
         aria-label={collapsed ? t.shell.expand : t.shell.collapse}
         title={collapsed ? t.shell.expand : t.shell.collapse}
-        className="transition-ui flex h-12 items-center justify-center rounded-control text-fg-muted hover:bg-surface-muted hover:text-fg"
+        className="transition-ui flex h-12 items-center justify-center rounded-control text-fg-muted hover:bg-surface-hover hover:text-fg"
       >
         <ChevronsLeft className={cn('size-5 rtl:-scale-x-100', collapsed && 'rotate-180')} aria-hidden />
       </button>

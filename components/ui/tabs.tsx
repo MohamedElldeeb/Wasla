@@ -12,7 +12,7 @@ function TabsList({ className, ...props }: TabsPrimitive.List.Props) {
   return (
     <TabsPrimitive.List
       data-slot="tabs-list"
-      className={cn("flex w-full gap-1 overflow-x-auto rounded-control bg-surface-muted p-1 [scrollbar-width:none]", className)}
+      className={cn("flex w-full gap-1 overflow-x-auto rounded-control border border-border bg-surface p-1 [scrollbar-width:none]", className)}
       {...props}
     />
   )
@@ -23,7 +23,7 @@ function TabsTrigger({ className, ...props }: TabsPrimitive.Tab.Props) {
     <TabsPrimitive.Tab
       data-slot="tabs-trigger"
       className={cn(
-        "transition-ui inline-flex h-12 min-w-24 flex-1 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-control px-4 text-body-sm font-medium text-fg-muted hover:text-fg disabled:pointer-events-none disabled:opacity-50 data-active:bg-surface data-active:text-fg data-active:ring-1 data-active:ring-border lg:h-10",
+        "transition-ui inline-flex h-12 min-w-24 flex-1 shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-control px-4 text-body-sm font-medium text-fg-muted hover:text-fg disabled:pointer-events-none disabled:opacity-50 data-active:bg-surface-hover data-active:text-fg data-active:ring-1 data-active:ring-border-strong lg:h-10",
         className
       )}
       {...props}

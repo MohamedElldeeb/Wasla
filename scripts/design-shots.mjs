@@ -57,6 +57,7 @@ for (const lang of langs) for (const scheme of schemes) for (const w of widths) 
   const mk = async () => {
     const c = await browser.newContext({ viewport: { width: w, height: heights[w] }, colorScheme: scheme, locale: lang === 'ar' ? 'ar-EG' : 'en-US' });
     await c.addCookies([{ name: 'wasla_locale', value: lang, url: BASE }]);
+    await c.addInitScript((th) => { try { localStorage.setItem('theme', th); } catch {} }, scheme);
     return c;
   };
   const ctxs = [];
@@ -77,6 +78,8 @@ for (const lang of langs) for (const scheme of schemes) for (const w of widths) 
     try {
       await s.run(page);
       await settle(page);
+      await page.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 600) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 80)); } window.scrollTo(0, 0); });
+      await page.waitForTimeout(400);
       await page.screenshot({ path: `${out}/${n}__${w}__${lang}__${scheme}.jpg`, type: 'jpeg', quality: 62, fullPage: true });
       count++;
     } catch (e) {

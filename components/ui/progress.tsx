@@ -13,13 +13,13 @@ function Progress({ className, value = 0, tone = "primary", ...props }: Props) {
       aria-valuemax={100}
       aria-valuenow={Math.round(v)}
       data-slot="progress"
-      className={cn("relative h-2 w-full overflow-hidden rounded-full bg-surface-muted", className)}
+      className={cn("relative h-2 w-full overflow-hidden rounded-full bg-surface-hover", className)}
       {...props}
     >
       <div
         className={cn(
           "absolute inset-y-0 start-0 w-full origin-[left] rounded-full transition-transform duration-200 ease-ui rtl:origin-[right]",
-          tone === "primary" && "bg-primary",
+          tone === "primary" && "bg-brand",
           tone === "warning" && "bg-warning",
           tone === "danger" && "bg-danger"
         )}

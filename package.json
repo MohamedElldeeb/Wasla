@@ -13,7 +13,8 @@
     "n8n:deploy": "node --env-file=.env.local n8n/deploy.mjs",
     "e2e:pipeline": "node --env-file=.env.local scripts/e2e-pipeline.mjs",
     "design:shots": "node scripts/design-shots.mjs",
-    "design:check": "node scripts/design-check.mjs"
+    "design:check": "node scripts/design-check.mjs",
+    "test:db": "node scripts/db-test.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -35,6 +36,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.8",
     "@tailwindcss/turbopack": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
