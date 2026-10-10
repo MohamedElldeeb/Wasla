@@ -1,6 +1,6 @@
 {
   "base": "https://wasla-henna.vercel.app",
-  "at": "2026-10-10T13:38:30.831Z",
+  "at": "2026-10-10T18:31:59.810Z",
   "results": [
     {
       "name": "desktop review: list pane (left/start) is visible next to the message pane",
@@ -55,7 +55,7 @@
     {
       "name": "mobile: the dialog is a bottom sheet (touches the bottom edge, full width)",
       "ok": true,
-      "detail": "{\"x\":0,\"y\":281,\"width\":375,\"height\":531}"
+      "detail": "{\"x\":0,\"y\":278.5,\"width\":375,\"height\":533.5}"
     },
     {
       "name": "mobile: sheet buttons are at least 40px tall (48px touch targets)",

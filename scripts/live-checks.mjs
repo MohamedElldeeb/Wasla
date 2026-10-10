@@ -121,6 +121,7 @@ const before = (await rest(`messages?campaign_id=eq.${state.campaign}&select=id,
   await ctx.addCookies([{ name: 'wasla_locale', value: 'en', url: BASE }]);
   const page = await ctx.newPage();
   await page.goto(`${BASE}/login`, { waitUntil: 'domcontentloaded' });
+  await page.waitForLoadState('networkidle').catch(() => {}); // the button is a client component: click only after hydration
   const btn = page.getByRole('button', { name: /google/i }).first();
   check('google: the button is present on the login page', await btn.isVisible());
   const nav = page.waitForURL((u) => /accounts\.google\.com/.test(u.hostname), { timeout: 30000 }).then(() => true).catch(() => false);
