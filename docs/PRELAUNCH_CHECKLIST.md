@@ -25,3 +25,12 @@ Items that are deliberately relaxed for the pilot and MUST be reverted or comple
 - [ ] Fill the OPEN decisions: plan prices (EGP), final credit costs, Apollo key model, digits style, `WASLA_SALES_WHATSAPP`.
 - [ ] Confirm the default OpenRouter model after a quality comparison on Egyptian Arabic.
 - [ ] Rotate every key that was shared during development (Supabase service role, n8n API key, OpenRouter, Apify, Resend).
+
+## Lead insights release (branch `feat/lead-insights`, nothing deployed yet)
+- [ ] Apply the 4 new migrations (`20261010120000_lead_insights`, `..120100_message_opportunity`, `..120200_select_opportunity`, `..120300_templates_no_min_reviews`) to DEV, then to production, after the user approves. They were verified only on local PGlite (`npm run test:db`).
+- [ ] Regenerate and redeploy all n8n workflows (`npm run n8n:build && npm run n8n:deploy`): WF0, WF0b_probe, WF_interview, WF1, WF2, WF2b, WF3 changed.
+- [ ] Set `OPENROUTER_PLANNER_MODEL` in Vercel and n8n env (a stronger model than the writer is recommended; see `docs/MODEL_COMPARISON.md`). The user still has to choose the writer and planner models.
+- [ ] OPEN: credit cost of a probe (`probeCredits`) and of the interview (`interviewCredits`) are 0 placeholders in `lib/config/defaults.ts`.
+- [ ] Review `app_config.contact_cooldown_days` (30, PROPOSED) and the fresh-leads default.
+- [ ] Onboarding changed: the old form was replaced by the AI interview; check it with a real new user before launch.
+- [ ] Re-run `scripts/live-checks.mjs` against the deployed site after deploy (shortcuts, mobile filter sheet, Google redirect). Full Google sign-in needs a real Google account and was not tested.

@@ -211,3 +211,22 @@ test('interview: only public http(s) URLs are fetched (the page is read by our n
   assert.equal(safePublicUrl('https://www.facebook.com/somepage'), 'https://www.facebook.com/somepage');
   for (const bad of ['http://localhost:3000', 'http://127.0.0.1', 'http://10.0.0.5/admin', 'ftp://example.com', 'javascript:alert(1)', 'https://user:pw@example.com', 'http://[::1]/', 'http://intranet', 'http://printer.local', '', '   ']) assert.equal(safePublicUrl(bad), null, bad);
 });
+
+test('category matching ignores plural/singular and the Arabic article, in both languages (the planner may list "وكالات تسويق", Maps says "وكالة تسويق")', () => {
+  const m = (cats, allowed) => categoryMatch(cats, allowed).ok;
+  assert.ok(m(['وكالة تسويق'], ['وكالات تسويق']));
+  assert.ok(m(['وكالة إعلانية'], ['وكالات دعاية وإعلان', 'وكالات إعلانات']));
+  assert.ok(m(['خدمة التسويق عبر الإنترنت'], ['خدمات التسويق عبر الانترنت']));
+  assert.ok(m(['Marketing agency'], ['Marketing Agencies']));
+  assert.ok(m(['Advertising agency'], ['advertising agencies']));
+  assert.ok(m(['وكالة تسويق'], ['وكالة تسويق رقمي']), 'a parent category of an allowed entry matches');
+  assert.ok(!m(['وكالة سفر'], ['وكالات تسويق']), 'same first word is not enough');
+  assert.ok(!m(['مورد معدات'], ['وكالات تسويق', 'Marketing Agencies']));
+  assert.ok(!m(['تاجر سيارات'], ['وكالات تسويق']));
+  assert.ok(!m(['School'], ['Marketing agency']));
+});
+
+test('claims: the sender must not claim to have heard about, seen or liked the lead work', () => {
+  for (const bad of ['سمعت إن شغلكم ممتاز', 'بصراحة عاجبني شغل وكالتكم', 'من أفضل الوكالات في المنطقة']) assert.equal(checkTact(bad).ok, false, bad);
+  assert.equal(checkTact('شفت إنكم على خرائط جوجل في سيدي جابر وتقييمكم 4.8. إحنا بنساعد الوكالات تلاقي عملاء جدد.').ok, true);
+});

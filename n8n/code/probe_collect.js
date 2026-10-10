@@ -24,11 +24,11 @@ outs.forEach((it, idx) => {
     const cats = [x.categoryName, ...(Array.isArray(x.categories) ? x.categories : [])].filter(Boolean);
     if (x.permanentlyClosed || x.temporarilyClosed) { removed.closed++; continue; }
     if (globalExclusion(cats)) { removed.global++; continue; }
-    if (!categoryMatch(cats, f.categories_include).ok) { removed.category++; continue; }
+    const category_mismatch = !categoryMatch(cats, f.categories_include).ok;
     const place = {};
     for (const k of KEEP) if (x[k] !== undefined) place[k] = x[k];
     place._district = plan.district; place._city = plan.city; place._governorate = plan.governorate;
-    seen.set(x.placeId, { raw: place, ask: fitAsk(x, [x.neighborhood, x.city].filter(Boolean).join(', ')) });
+    seen.set(x.placeId, { raw: place, category_mismatch, ask: fitAsk(x, [x.neighborhood, x.city].filter(Boolean).join(', ')) });
   }
 });
 const places = [...seen.values()];

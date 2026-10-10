@@ -1,0 +1,96 @@
+{
+  "base": "https://wasla-henna.vercel.app",
+  "at": "2026-10-10T13:38:30.831Z",
+  "results": [
+    {
+      "name": "desktop review: list pane (left/start) is visible next to the message pane",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "desktop review: the list shows pending messages",
+      "ok": true,
+      "detail": "2 items"
+    },
+    {
+      "name": "shortcut J moves to the next lead",
+      "ok": true,
+      "detail": "0 -> 1"
+    },
+    {
+      "name": "shortcut K moves back",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "shortcut R opens the regenerate panel",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "shortcut R again closes it",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "typing in the message box does not trigger shortcuts",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "shortcut A approves the selected message (saved in the database)",
+      "ok": true,
+      "detail": "0 -> 1"
+    },
+    {
+      "name": "mobile: the filter button is visible on the leads tab",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile: the filter opens as a dialog",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mobile: the dialog is a bottom sheet (touches the bottom edge, full width)",
+      "ok": true,
+      "detail": "{\"x\":0,\"y\":281,\"width\":375,\"height\":531}"
+    },
+    {
+      "name": "mobile: sheet buttons are at least 40px tall (48px touch targets)",
+      "ok": true,
+      "detail": "48,48,48,48,48,48,48,48,48,48,48,48"
+    },
+    {
+      "name": "mobile: applying a filter changes the list (or keeps it when it matches all)",
+      "ok": true,
+      "detail": "4 -> 4"
+    },
+    {
+      "name": "mobile: reset restores the full list",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "google: the button is present on the login page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "google: sign-in redirects to Google (accounts.google.com)",
+      "ok": true,
+      "detail": "accounts.google.com"
+    },
+    {
+      "name": "google: the OAuth client id is configured",
+      "ok": true,
+      "detail": "966955275063-7…"
+    },
+    {
+      "name": "google: Google will send the user back to the Supabase callback",
+      "ok": true,
+      "detail": "https://szuarlmqbtlfbfylqobe.supabase.co/auth/v1/callback"
+    }
+  ]
+}

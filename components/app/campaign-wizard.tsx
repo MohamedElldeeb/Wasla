@@ -65,7 +65,7 @@ function Chip({ children, onRemove, removeLabel }: { children: React.ReactNode; 
   );
 }
 
-function ProbeSample({ probe }: { probe: ProbeResult }) {
+function ProbeSample({ probe, categories, onAddCategory }: { probe: ProbeResult; categories: string[]; onAddCategory: (c: string) => void }) {
   const t = useT();
   const k = t.targeting;
   const good = probe.judged > 0 && probe.fit_share >= 0.5;
@@ -89,6 +89,16 @@ function ProbeSample({ probe }: { probe: ProbeResult }) {
             ))}
           </ul>
           <p className="text-caption text-fg-muted">{k.sampleKept}</p>
+          {probe.suggested_categories && probe.suggested_categories.filter((c) => !categories.includes(c)).length > 0 && (
+            <div className="flex flex-col gap-2">
+              <span className="text-body-sm font-medium text-fg">{k.suggestedCategories}</span>
+              <div className="flex flex-wrap gap-2">
+                {probe.suggested_categories.filter((c) => !categories.includes(c)).map((c) => (
+                  <button key={c} type="button" onClick={() => onAddCategory(c)} dir="auto" className="transition-ui inline-flex min-h-12 items-center gap-1 rounded-control border border-border-strong bg-surface px-3 text-body-sm hover:bg-surface-muted lg:min-h-10"><Plus className="size-4" aria-hidden />{c}</button>
+                ))}
+              </div>
+            </div>
+          )}
         </>
       ) : (
         <Alert variant="warning" role="status">{k.probeEmpty}</Alert>
@@ -431,7 +441,7 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
                 <Button type="button" variant="secondary" onClick={runProbe} loading={probing || pending} disabled={planning}>{probing ? t.targeting.probeRunning : t.targeting.probeCta}</Button>
               </div>
               {probeMsg && <Alert variant="warning" role="status">{probeMsg}</Alert>}
-              {probe && <ProbeSample probe={probe} />}
+              {probe && <ProbeSample probe={probe} categories={categories} onAddCategory={(c) => setCategories((x) => [...x, c])} />}
             </Card>
           </>
         )}

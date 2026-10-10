@@ -46,21 +46,39 @@ async function normalizeCairo(over = {}) {
   });
 }
 
-test('Part 2c on the Cairo fixture: government, utilities, education and off-category places never reach the fit check', async () => {
+test('Part 2c on the Cairo fixture: government, utilities and education never reach the fit check; off-category places go to it flagged', async () => {
   const out = await normalizeCairo();
   const all = out[0].json.all;
   assert.equal(all.stats.staged, 20);
-  assert.equal(all.stats.removed_global, 2); // power station + school
+  assert.equal(all.stats.removed_global, 2); // power station + school: always removed, by category
   assert.deepEqual(all.globalGroups, { utility: 1, education: 1 });
-  assert.equal(all.stats.removed_category, 10); // government agency, car dealer, electronics, equipment supplier, ...
   const names = all.toJudge.map((c) => c.lead.business_name);
-  assert.equal(names.length, 8);
-  for (const bad of ['جهاز تنمية', 'محطة كهرباء', 'BDR', 'Cairo Marketing Company', '2B', 'Asd Business']) assert.ok(!names.some((n) => n.includes(bad)), bad);
+  for (const never of ['محطة كهرباء', 'السالزيان']) assert.ok(!names.some((n) => n.includes(never)), never);
+  // a model-written category list never covers every wording: places outside it are judged, not blindly dropped
+  const outside = all.toJudge.filter((c) => c.category_mismatch).map((c) => c.lead.business_name);
+  for (const x of ['جهاز تنمية', 'BDR', 'Cairo Marketing Company', '2B', 'Asd Business']) assert.ok(outside.some((n) => n.includes(x)), `${x} must be flagged as outside the categories`);
+  assert.equal(all.toJudge.filter((c) => !c.category_mismatch).length, 8, 'ordered: places inside the categories first');
+  assert.ok(all.toJudge.slice(0, 8).every((c) => !c.category_mismatch));
   assert.equal(all.stats.invalid_phone, 0);
-  // the LLM fit request asks for every candidate and is offer-agnostic
   const req = JSON.parse(out[0].json.requestBody);
   assert.equal(req.model, 'pm');
   assert.match(req.messages[0].content, /Ideal prospect: Marketing agencies/);
+});
+
+test('outside the allowed categories: kept only when judged clearly "fit" (and the category is learned); "maybe" and "not fit" are removed', async () => {
+  const out = await normalizeCairo();
+  const n = out[0].json.all.toJudge.length;
+  const labels = (i) => (out[0].json.all.toJudge[i].category_mismatch
+    ? (out[0].json.all.toJudge[i].lead.business_name.includes('TeleTarget') ? { fit: 'fit', reason: 'outsourced outreach service' } : { fit: 'maybe', reason: 'unclear' })
+    : { fit: 'fit', reason: 'agency' });
+  const llm = out.map((c) => llmItem({ results: c.json.idx.map((i) => ({ i, ...labels(i) })) }));
+  const res = (await runNode('fit_apply.js', { nodes: { Webhook: [WEBHOOK], Normalize: out.map((c) => c.json) }, input: llm }))[0].json;
+  const names = res.p_leads.map((l) => l.business_name);
+  assert.ok(names.some((x) => x.includes('TeleTarget')), 'a clear fit outside the list is kept');
+  assert.equal(res.p_leads.length, 9);
+  assert.deepEqual(res.learned_categories, ['خدمة التسويق عبر الهاتف']);
+  assert.equal(res.stats.removed_category, n - 9);
+  assert.ok(!names.some((x) => x.includes('Cairo Marketing Company')));
 });
 
 test('Part 3 fresh leads: known companies and companies in cooldown are skipped before the cap, unless included', async () => {
@@ -70,10 +88,17 @@ test('Part 3 fresh leads: known companies and companies in cooldown are skipped 
   const s = out[0].json.all.stats;
   assert.equal(s.previously_found, 1);
   assert.equal(s.cooldown, 1);
-  assert.equal(out[0].json.all.toJudge.length, 6);
+  const names = out[0].json.all.toJudge.map((c) => c.lead.business_name);
+  assert.ok(!names.some((n) => n.includes('إنجاز') || n.includes('Essence')));
   const inc = await normalizeCairo({ params: { include_previous_companies: true }, known: [{ dedupe_key: `place:${eng.placeId}` }] });
   assert.equal(inc[0].json.all.stats.previously_found, 0);
-  assert.equal(inc[0].json.all.toJudge.length, 8);
+  assert.ok(inc[0].json.all.toJudge.some((c) => c.lead.business_name.includes('إنجاز')));
+});
+
+test('learned categories are accepted directly in the next round', async () => {
+  const out = await normalizeCairo({ counts: { learned_categories: ['خدمة التسويق عبر الهاتف'] } });
+  const mm = out[0].json.all.toJudge.find((c) => c.lead.business_name.includes('TeleTarget'));
+  assert.equal(mm.category_mismatch, false);
 });
 
 test('1: requested count = delivered: the fit check drops "not fit", keeps "maybe", and the cap applies after it', async () => {
@@ -91,10 +116,11 @@ test('1: requested count = delivered: the fit check drops "not fit", keeps "mayb
   assert.equal(j.p_include_previous, false);
 });
 
-test('fit check failure never silently passes or drops: unchecked => "maybe"', async () => {
+test('fit check failure never silently passes or drops: unchecked => "maybe" inside the categories, removed outside them', async () => {
   const out = await normalizeCairo();
   const res = await runNode('fit_apply.js', { nodes: { Webhook: [WEBHOOK], Normalize: out.map((c) => c.json) }, input: out.map(() => ({ statusCode: 500, body: {} })) });
-  assert.equal(res[0].json.stats.fit_unchecked, 8);
+  assert.equal(res[0].json.stats.fit_unchecked, out[0].json.all.toJudge.length);
+  assert.equal(res[0].json.p_leads.length, 8);
   assert.ok(res[0].json.p_leads.every((l) => l.fit === 'maybe' && l.fit_reason === 'unchecked'));
 });
 

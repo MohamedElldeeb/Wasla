@@ -16,10 +16,19 @@ if (!chunks[0].noChunks) {
     }
   });
 }
-const places = all.places.map((c, i) => ({ raw: c.raw, name: c.raw.title, category: c.raw.categoryName || null, area: c.ask.area, ...(labels.get(i) || { fit: 'maybe', reason: 'unchecked' }) }));
+// Outside the allowed categories: kept in the sample only if judged clearly fit (and then its category is suggested to the user).
+const removed = { ...all.removed };
+const suggested = new Set();
+const places = [];
+all.places.forEach((c, i) => {
+  const lab = labels.get(i) || { fit: 'maybe', reason: 'unchecked' };
+  if (c.category_mismatch && lab.fit !== 'fit') { removed.category++; return; }
+  if (c.category_mismatch && c.raw.categoryName) suggested.add(c.raw.categoryName);
+  places.push({ raw: c.raw, name: c.raw.title, category: c.raw.categoryName || null, area: c.ask.area, ...lab });
+});
 const fit = places.filter((x) => x.fit === 'fit').length;
 const judged = places.length;
 const share = judged ? fit / judged : 0;
 // Rewrite when fewer than half fit. If the gates already removed most of what was found, that counts as "not fitting" too.
 const needsRewrite = judged >= 3 ? share < 0.5 : all.raw >= 3;
-return [{ json: { places, share, judged, fit, raw: all.raw, removed: all.removed, ideal: all.ideal, offerText: all.offerText, usage, needsRewrite } }];
+return [{ json: { places, share, judged, fit, raw: all.raw, removed, suggested: [...suggested], ideal: all.ideal, offerText: all.offerText, usage, needsRewrite } }];

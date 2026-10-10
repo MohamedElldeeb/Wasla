@@ -16,6 +16,8 @@ const p = campaign.parameters || {};
 const f = p.filters || {};
 const counts = job.counts || {};
 const includePrevious = p.include_previous_companies === true;
+// Allowed categories = the campaign's list plus categories learned in earlier rounds (places outside the list that the fit check judged clearly fit).
+const allowedCats = [...(Array.isArray(f.categories_include) ? f.categories_include : []), ...(Array.isArray(counts.learned_categories) ? counts.learned_categories : [])];
 const leadCap = Number(counts.lead_cap) || 100;
 const remaining = Math.max(0, leadCap - (Number(counts.delivered) || 0));
 
@@ -43,8 +45,9 @@ for (const row of staging) {
   // 2. always-on exclusions (government, utilities, education, hospitals, worship, embassies, military): by category, never by name alone
   const ex = globalExclusion(cats);
   if (ex) { stats.removed_global++; globalGroups[ex.group] = (globalGroups[ex.group] || 0) + 1; continue; }
-  // 3. the campaign's allowed categories (Arabic and English), matched here and never by the actor
-  if (!categoryMatch(cats, f.categories_include).ok) { stats.removed_category++; continue; }
+  // 3. the campaign's allowed categories (Arabic and English), matched here and never by the actor. A place OUTSIDE them is not dropped
+  // blindly (a model-written list never covers every wording Google Maps uses): it goes to the fit check and is kept only if judged clearly "fit".
+  const category_mismatch = !categoryMatch(cats, allowedCats).ok;
   if (Array.isArray(f.categories_exclude) && f.categories_exclude.length && categoryMatch(cats, f.categories_exclude).ok) { stats.removed_category++; continue; }
   // 4. optional user filters (none are on by default: few reviews is a signal, a landline can still be called)
   if (f.min_rating && !(Number(x.totalScore) >= Number(f.min_rating))) { stats.removed_filters++; continue; }
@@ -66,6 +69,7 @@ for (const row of staging) {
   if (!includePrevious && known.has(dedupe_key)) { stats.previously_found++; continue; }
 
   candidates.push({
+    category_mismatch,
     probe_fit: x._fit || null,
     ask: { name, categories: cats.slice(0, 5), website: website ? 'yes' : 'no', area: [district, clean(x.city)].filter(Boolean).join(', '), rating: x.totalScore ?? null, reviews: x.reviewsCount ?? null },
     lead: {
@@ -104,7 +108,9 @@ for (const row of staging) {
 
 // Candidates to judge: a bit more than we still need (fit removes some), probe-labelled ones first (already judged).
 const limit = Math.min(candidates.length, Math.ceil(remaining * 1.6) + 4);
-candidates.sort((a, b) => (b.probe_fit ? 1 : 0) - (a.probe_fit ? 1 : 0));
+// Probe-labelled first (already judged), then places inside the allowed categories, then the rest.
+const rankOf = (c) => (c.probe_fit ? 0 : c.category_mismatch ? 2 : 1);
+candidates.sort((a, b) => rankOf(a) - rankOf(b));
 const toJudge = candidates.slice(0, limit);
 stats.capped = candidates.length - toJudge.length;
 const need = toJudge.map((c, i) => ({ c, i })).filter(({ c }) => !c.probe_fit);
@@ -120,7 +126,7 @@ for (let k = 0; k < need.length; k += SIZE) {
   items.push({ json: { chunk: k / SIZE, idx: part.map(({ i }) => i), requestBody: llmRequest({ system: SYSTEM, user: { places: part.map(({ c, i }) => ({ i, ...c.ask })) }, model, fallback: body.fallback_models }) } });
 }
 
-const all = { toJudge: toJudge.map((c) => ({ lead: c.lead, probe_fit: c.probe_fit })), stats, globalGroups, remaining, leadCap, includePrevious };
+const all = { toJudge: toJudge.map((c) => ({ lead: c.lead, probe_fit: c.probe_fit, category_mismatch: c.category_mismatch })), stats, globalGroups, remaining, leadCap, includePrevious };
 if (!items.length) return [{ json: { noChunks: true, all } }];
 items[0].json.all = all;
 return items;

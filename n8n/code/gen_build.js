@@ -37,7 +37,8 @@ Hard rules:
 - Introduce the sender's offer briefly using ONLY the offer profile provided. If proof_points are given you may use them, otherwise do not claim any.
 - Follow the requested structure hint so messages differ from each other. Do not start every message with a greeting plus the business name only.
 - Do NOT invent a sender name, a person name, or a company name. If "sender_company_name" is given you may use it once, otherwise speak as "إحنا" without any name.
-- Do not claim you visited, used, or heard about them. State only what you actually saw in the provided data (for example that they are on Google Maps).
+- You have NOT seen their work. Never say you heard about them, liked their work, followed them, visited them, or that they are great or excellent. Never praise or judge their work yourself. State only a plain fact from "safe_facts" (for example that you found them on Google Maps in their area, or their rating). Customer praise may be quoted only as what customers say, from "customers_praise".
+- Never mention things the business has or lacks (website, photos, listing, replies, activity). "help_angle" says what OUR OFFER does for them; express only that.
 - Use natural Egyptian dialect words (إزاي، دلوقتي، كده، عايز، ممكن)، not formal Modern Standard Arabic. Keep sentences short.
 - Write in the requested tone.`;
 

@@ -21,6 +21,7 @@ const result = {
   fit,
   raw_places: raw,
   removed: j1.removed,
+  suggested_categories: [...new Set([...(j1.suggested || []), ...(j2 ? j2.suggested || [] : [])])].slice(0, 8),
   rewritten: !!(rw && rw.rewritten),
   queries: rw && rw.rewritten ? rw.queries : null,
 };

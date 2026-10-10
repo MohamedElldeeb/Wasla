@@ -37,7 +37,7 @@ Return ONE JSON object with exactly these keys:
   "ideal_lead_description": string,  // ONE sentence describing the ideal prospect (who they are, what they do, why they would buy). Used later to judge every place found.
   "queries": [string],              // AT MOST 4 specific Google Maps search phrases that directly name the prospect type, as a person would type in Maps. Mix Arabic and English synonyms. No district or city inside (the engine adds the district).
   "synonyms": [string],             // up to 4 further alternative phrases for the same prospects, used only if the first queries are not enough
-  "categories": [string],           // 4-14 Google Maps category names that the prospects appear under. Give EACH category in Arabic AND in English (separate entries), as Google Maps names them. Places outside these categories are dropped.
+  "categories": [string],           // 4-14 Google Maps category names that the prospects appear under, in the SINGULAR form that Google Maps shows on a place page (a category is a short noun phrase naming ONE kind of business, never plural, never a sentence, never a customer type). Give EACH category in Arabic AND in English (separate entries). Places outside these categories are dropped, so cover the real wording variants of the same kind of business.
   "locations": [{"governorate": string, "city": string, "district": string}], // ONLY from the profile's regions; split large areas into districts/neighborhoods (max 8). Empty array if no regions are given
   "nearby_locations": [{"governorate": string, "city": string, "district": string}], // up to 4 neighboring districts of the same area, used only if the main locations run dry
   "signals": [{"key": string, "weight": number, "reason_ar": string, "emphasis": boolean}], // 3-6 items
@@ -55,7 +55,7 @@ Do not rely on one signal: pick signals that each point to real need for THIS of
 
 Opportunities are the reasons to contact a prospect right now. Use ONLY these types, and include only those the seller's offer can truly help with:
 ${oppList}
-angle_ar is ONE positive sentence describing how the offer helps (never criticize the prospect).
+Include an opportunity ONLY when the seller's offer genuinely addresses that need; a fact that is merely true about the prospect but unrelated to what the seller sells must be left out (two good ones beat six weak ones). angle_ar is ONE positive sentence about what the SELLER'S OFFER does for the prospect, a capability of the offer; it must not state or hint at what the prospect has or lacks, and it never criticizes the prospect.
 ${negatives.length ? `\nThe organization marked these businesses as NOT relevant. Avoid looking for similar ones:\n${negatives.slice(0, 20).map((n) => `- ${n.business_name || ''} (${n.category || ''}): ${n.reason || ''}`).join('\n')}\n` : ''}
 ${english
   ? 'Write reason_ar, angle_ar, title_ar, description_ar, ideal_lead_description and complaint_relevance in clear, simple English (the field names keep the _ar suffix for compatibility). Queries and categories stay in Arabic or English as people would type them in Google Maps.'
@@ -74,7 +74,8 @@ const request = {
   usage: { include: true },
 };
 const fallbacks = Array.isArray(body.fallback_models) ? body.fallback_models.filter(Boolean) : [];
-if (fallbacks.length) request.models = [body.model, ...fallbacks];
-else request.model = body.model;
+const plannerModel = body.planner_model || body.model;
+if (fallbacks.length) request.models = [plannerModel, ...fallbacks];
+else request.model = plannerModel;
 
 return [{ json: { requestBody: JSON.stringify(request), job_id: body.job_id } }];

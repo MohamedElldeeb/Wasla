@@ -52,14 +52,15 @@ class Workflow {
   }
   rpc(name, fn, body, node = {}) { return this.sb(name, 'POST', `rpc/${fn}`, { body, node }); }
   openrouter(name, { batch, node = {} } = {}) {
-    const options = { response: { response: { fullResponse: true, neverError: true } }, timeout: 120000 };
+    // Provider errors (429, 5xx, a transient 400) throw so the node retries; after 3 tries the item continues with an error and the Code nodes treat it as a failed call.
+    const options = { response: { response: { fullResponse: true } }, timeout: 120000 };
     if (batch) options.batching = { batch: { batchSize: batch, batchInterval: 1200 } };
     return this.add(name, 'n8n-nodes-base.httpRequest', 4.2, {
       method: 'POST', url: 'https://openrouter.ai/api/v1/chat/completions',
       authentication: 'genericCredentialType', genericAuthType: 'httpHeaderAuth',
       sendHeaders: true, headerParameters: { parameters: [{ name: 'HTTP-Referer', value: '__APP_URL__' }, { name: 'X-Title', value: 'Wasla' }] },
       sendBody: true, specifyBody: 'json', jsonBody: '={{ $json.requestBody }}', options,
-    }, { credentials: CRED.openrouter, ...node });
+    }, { credentials: CRED.openrouter, retryOnFail: true, maxTries: 3, waitBetweenTries: 2000, onError: 'continueRegularOutput', ...node });
   }
   apify(name, actor, bodyExpr, timeoutMs = 320000) {
     return this.add(name, 'n8n-nodes-base.httpRequest', 4.2, {

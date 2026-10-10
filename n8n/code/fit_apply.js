@@ -24,9 +24,17 @@ if (!norm0[0].noChunks) {
 const kept = [];
 const dropped = [];
 let removedNotFit = 0;
+let removedCategory = 0;
+const learned = new Set();
 all.toJudge.forEach((c, i) => {
   const lab = c.probe_fit || labels.get(i) || { fit: 'maybe', reason: 'unchecked' };
   if (lab.fit === 'not_fit') { removedNotFit++; dropped.push({ name: c.lead.business_name, reason: lab.reason }); return; }
+  // Outside the allowed categories: only a clear "fit" is kept; the Maps category is then learned so later rounds accept it directly.
+  if (c.category_mismatch) {
+    if (lab.fit !== 'fit') { removedCategory++; return; }
+    const cat = c.lead.category;
+    if (cat) learned.add(cat);
+  }
   if (kept.length >= all.remaining) return;
   kept.push({ ...c.lead, fit: lab.fit === 'fit' ? 'fit' : 'maybe', fit_reason: lab.reason || null });
 });
@@ -37,7 +45,8 @@ return [{
     p_campaign: body.campaign_id,
     p_leads: kept,
     p_include_previous: all.includePrevious,
-    stats: { ...all.stats, removed_not_fit: removedNotFit, fit_unchecked: unchecked, judged: all.toJudge.length },
+    stats: { ...all.stats, removed_category: all.stats.removed_category + removedCategory, removed_not_fit: removedNotFit, fit_unchecked: unchecked, judged: all.toJudge.length },
+    learned_categories: [...learned],
     globalGroups: all.globalGroups,
     dropped: dropped.slice(0, 30),
     usage,

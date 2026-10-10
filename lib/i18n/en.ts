@@ -398,6 +398,7 @@ export const en: Dict = {
     probeRewritten: 'We wrote more precise search phrases and applied them below; this sample comes from them.',
     probeEmpty: 'The sample found no businesses. Try a wider area or different phrases.',
     verdict: { fit: 'Fits', maybe: 'Maybe', not_fit: 'Does not fit' },
+    suggestedCategories: 'Categories that appeared in the sample for businesses that fit. Add them to the allowed list:',
     sampleKept: 'Businesses that fit in the sample are kept and never paid twice.',
     planAdded: 'The planner also suggested outreach opportunities and categories; review them in the next step.',
     opportunitiesTitle: 'Outreach opportunities that suit your offer',

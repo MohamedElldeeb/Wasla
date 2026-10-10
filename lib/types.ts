@@ -132,7 +132,7 @@ export type Opportunity = { type: string; strength: number; evidence: Record<str
 
 export type ProbeResult = {
   places: { name: string; category: string | null; area: string; fit: 'fit' | 'maybe' | 'not_fit'; reason: string }[];
-  fit_share: number; judged: number; fit: number; raw_places: number; rewritten: boolean; queries: string[] | null;
+  fit_share: number; judged: number; fit: number; raw_places: number; rewritten: boolean; queries: string[] | null; suggested_categories?: string[];
   removed?: { closed: number; global: number; category: number };
 };
 
