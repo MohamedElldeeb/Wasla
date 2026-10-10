@@ -26,12 +26,47 @@
       "webhookId": "83368514-b323-0012-a60c-9c8a0052c35c"
     },
     {
-      "id": "35d69eb3-5c30-bf2e-960a-e2c9011f71b8",
-      "name": "Claim job",
+      "id": "9c3101bc-dc85-66ae-d206-c197c6db8a2b",
+      "name": "Get job",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
         480,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/jobs?id=eq.{{ $(\"Webhook\").first().json.body.job_id }}&select=*",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "3fd333e3-fcf7-12fe-d562-6f6444913870",
+      "name": "Mark running",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
         300
       ],
       "parameters": {
@@ -44,7 +79,7 @@
           "parameters": [
             {
               "name": "Prefer",
-              "value": "return=representation"
+              "value": "return=minimal"
             }
           ]
         },
@@ -76,7 +111,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        720,
+        960,
         300
       ],
       "parameters": {
@@ -111,7 +146,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        960,
+        1200,
         300
       ],
       "parameters": {
@@ -143,17 +178,89 @@
       "waitBetweenTries": 1500
     },
     {
+      "id": "1c502a6b-bd59-b957-3a2d-e6a58f5f6b9d",
+      "name": "Get past searches",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1440,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/search_queries?organization_id=eq.{{ $(\"Webhook\").first().json.body.organization_id }}&select=query,campaign_id&order=created_at.desc&limit=1500",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500,
+      "alwaysOutputData": true
+    },
+    {
+      "id": "266cb34f-7a8b-5128-10ca-652afdd5b2ba",
+      "name": "Get probe",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1680,
+        300
+      ],
+      "parameters": {
+        "method": "GET",
+        "url": "=__SUPABASE_URL__/rest/v1/jobs?campaign_id=eq.{{ $(\"Webhook\").first().json.body.campaign_id }}&type=eq.probe&status=eq.succeeded&order=created_at.desc&limit=1&select=result",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": false,
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500,
+      "alwaysOutputData": true
+    },
+    {
       "id": "19ac3029-6d7b-9845-10d0-14f3811f45ac",
       "name": "Plan queries",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1200,
+        1920,
         300
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "// WF1 \"Plan queries\": expand keywords x locations into Apify runs (one location per run),\n// with per-search caps derived from the reserved credits so a run can never exceed its cap.\nconst body = $('Webhook').first().json.body;\nconst job = $('Claim job').first().json;\nconst campaign = $('Get campaign').first().json;\nconst sigRes = $('Signal cost').first().json;\nconst perLeadSignals = Number(sigRes !== null && typeof sigRes === 'object' ? (sigRes.data ?? Object.values(sigRes)[0]) : sigRes) || 0;\n\nconst p = campaign.parameters || {};\nconst f = p.filters || {};\nconst keywords = (p.keywords || []).map((k) => String(k).trim()).filter(Boolean);\nconst locations = (p.locations || []).filter((l) => l && (l.district || l.city || l.governorate));\nconst hardMax = Number(body.max_results_cap) || 100;\nconst wanted = Math.min(Number(p.max_results) || 0, hardMax);\nconst leadCap = Math.max(0, Math.min(wanted, Math.floor(job.credits_reserved / (1 + perLeadSignals))));\n\nif (!keywords.length || !locations.length || leadCap < 1) {\n  return [{ json: { error: 'no_queries', leadCap, requestBody: '{}' } }];\n}\n\nconst stars = (m) => (m >= 4.5 ? 'fourAndHalf' : m >= 4 ? 'four' : m >= 3.5 ? 'threeAndHalf' : m >= 3 ? 'three' : m >= 2.5 ? 'twoAndHalf' : m >= 2 ? 'two' : '');\nconst searches = locations.length * keywords.length;\nconst perSearch = Math.max(1, Math.ceil(leadCap / searches));\n\nreturn locations.map((l) => {\n  const area = l.district || l.city || l.governorate;\n  const input = {\n    searchStringsArray: keywords.map((k) => `${k} ${area}`.trim()),\n    locationQuery: [l.district, l.city, l.governorate, 'Egypt'].filter(Boolean).join(', '),\n    maxCrawledPlacesPerSearch: perSearch,\n    language: 'ar',\n    countryCode: 'eg',\n    skipClosedPlaces: !!f.exclude_closed,\n    placeMinimumStars: stars(Number(f.min_rating) || 0),\n    website: f.must_have_website ? 'withWebsite' : 'allPlaces',\n    scrapePlaceDetailPage: false,\n    scrapeContacts: false,\n  };\n  return {\n    json: {\n      requestBody: JSON.stringify(input),\n      district: l.district || null,\n      city: l.city || null,\n      governorate: l.governorate || null,\n      leadCap,\n      perSearch,\n    },\n  };\n});\n"
+        "jsCode": "// WF1 \"Plan queries\": real-depth search rounds (spec 6.2). Requested count = DELIVERED qualified leads, so the engine keeps\n// searching in rounds (deeper, synonyms, nearby districts, broad fallback) until the target is reached or results run out.\n// Lead insights core (spec 6.2, 6.3a, 6.3b). Plain ESM JS with no imports so the SAME source is inlined into n8n Code\n// nodes (marker /*__INSIGHTS__*/) and used by unit tests and the fixture runner. Nothing here knows any industry,\n// segment or offer: relevance always comes from the campaign (allowed categories, signal weights, opportunity map).\n\n// ───────────────────────── text helpers ─────────────────────────\nconst INVISIBLE = new RegExp('[\\u200B-\\u200F\\u202A-\\u202E\\u2066-\\u2069\\uFEFF]', 'g');\nconst DIACRITICS = new RegExp('[\\u064B-\\u065F\\u0670\\u0640]', 'g');\n\n/** Lowercase, strip invisible/bidi marks and Arabic diacritics, unify alef/yaa/taa-marbuta, collapse spaces. */\nfunction norm(s) {\n  return String(s ?? '')\n    .toLowerCase()\n    .replace(INVISIBLE, '')\n    .replace(DIACRITICS, '')\n    .replace(/[أإآٱ]/g, 'ا')\n    .replace(/ى/g, 'ي')\n    .replace(/ة/g, 'ه')\n    .replace(/\\s+/g, ' ')\n    .trim();\n}\n\n/** Invisible/bidi marks removed, whitespace collapsed. */\nfunction stripInvisible(s) {\n  return String(s ?? '').replace(INVISIBLE, '').replace(/\\s+/g, ' ').trim();\n}\n\n/** Clean one location part for Apify: no invisible marks, no repeated words (\"التجمع الخامس القاهرة القاهرة\"). */\nfunction cleanPlace(s) {\n  const t = String(s ?? '').replace(INVISIBLE, '').replace(/\\s+/g, ' ').trim();\n  const out = [];\n  for (const w of t.split(' ')) if (!out.length || norm(out[out.length - 1]) !== norm(w)) out.push(w);\n  return out.join(' ');\n}\n\n// ───────────────────────── global exclusions (spec 6.3a) ─────────────────────────\n// Always on, for every campaign. Matched against Google Maps CATEGORIES (Arabic and English), never against the name alone.\n// Hospitals only for health: clinics, labs and pharmacies are legitimate prospects for many offers.\nconst GLOBAL_EXCLUSIONS = {\n  government: ['مكتب حكومي', 'جهه حكوميه', 'هيئه حكوميه', 'مبني حكومي', 'وزاره', 'محافظه', 'مجلس مدينه', 'قسم شرطه', 'مركز شرطه', 'محكمه', 'نيابه', 'مصلحه', 'سجل مدني', 'government office', 'government organization', 'government agency', 'local government', 'city government', 'county government', 'municipality', 'ministry', 'police', 'courthouse', 'public administration'],\n  utility: ['محطه كهرباء', 'محطه توليد', 'محطه مياه', 'محطه معالجه', 'محطه تحويل', 'محطه صرف', 'شركه كهرباء', 'شركه مياه', 'شركه غاز', 'سنترال', 'مرفق عام', 'power station', 'power plant', 'electric utility', 'electricity', 'water utility', 'water treatment', 'water works', 'sewage', 'telephone exchange', 'substation', 'gas utility', 'public utility'],\n  education: ['جامعه', 'كليه', 'مدرسه', 'روضه اطفال', 'ثانويه', 'اعداديه', 'ابتدائيه', 'university', 'college', 'school', 'kindergarten', 'academy of', 'faculty'],\n  health: ['مستشفي', 'hospital'],\n  worship: ['مسجد', 'جامع', 'كنيسه', 'دير', 'معبد', 'مكان عباده', 'mosque', 'church', 'temple', 'synagogue', 'place of worship', 'cathedral', 'monastery'],\n  embassy: ['سفاره', 'قنصليه', 'embassy', 'consulate'],\n  military: ['موقع عسكري', 'قاعده عسكريه', 'معسكر', 'عسكري', 'military', 'army base', 'air force', 'naval'],\n};\n\nconst hasEn = (p) => /^[a-z ]+$/.test(p);\nconst catMatches = (c, p) => (hasEn(p) ? new RegExp(`(^| )${p}( |$|s\\\\b)`).test(c) : c.includes(p));\n\n/** @returns {{group:string, match:string, category:string}|null} */\nfunction globalExclusion(categories) {\n  for (const raw of categories || []) {\n    const c = norm(raw);\n    if (!c) continue;\n    for (const [group, pats] of Object.entries(GLOBAL_EXCLUSIONS)) {\n      for (const p of pats) if (catMatches(c, norm(p))) return { group, match: p, category: String(raw) };\n    }\n  }\n  return null;\n}\n\n/**\n * Does any Maps category match the campaign's allowed categories (Arabic and English)? Done by us, never by the actor.\n * An empty allow-list means \"no category restriction\" (old campaigns).\n * @returns {{ok:boolean, matched:string|null}}\n */\nfunction categoryMatch(placeCategories, allowed) {\n  const list = (allowed || []).map(norm).filter((a) => a.length >= 3);\n  if (!list.length) return { ok: true, matched: null };\n  for (const raw of placeCategories || []) {\n    const c = norm(raw);\n    if (!c) continue;\n    for (const a of list) if (c === a || c.includes(a) || (c.length >= 4 && a.includes(c))) return { ok: true, matched: a };\n  }\n  return { ok: false, matched: null };\n}\n\n// ───────────────────────── deterministic facts (spec 6.3b step 1) ─────────────────────────\nconst DAY = 86400000;\nconst MONTH = 30.44 * DAY;\nconst r1 = (x) => Math.round(x * 10) / 10;\n\n/**\n * @param {any} place raw Google Maps place (compass/crawler-google-places)\n * @param {any[]} reviews raw reviews for that place (compass/google-maps-reviews-scraper), newest first or any order\n * @param {{now?:number, branches?:number}} [opt]\n */\nfunction computeFacts(place, reviews = [], opt = {}) {\n  const now = opt.now ?? Date.now();\n  const seen = new Set();\n  const rev = [];\n  for (const r of reviews || []) {\n    if (!r) continue;\n    const id = r.reviewId || `${r.publishedAtDate}|${r.stars}|${r.text}`;\n    if (seen.has(id)) continue;\n    seen.add(id);\n    rev.push(r);\n  }\n  const dates = rev.map((r) => Date.parse(r.publishedAtDate)).filter(Number.isFinite).sort((a, b) => a - b);\n  const n = rev.length;\n  const total = Number(place.reviewsCount) || n;\n  const overall = Number(place.totalScore) || null;\n  const last = dates.length ? dates[dates.length - 1] : null;\n  const oldest = dates.length ? dates[0] : null;\n  const sinceLast = last == null ? null : (now - last) / DAY;\n  const activity_label = last == null ? 'unknown' : sinceLast <= 90 ? 'active' : sinceLast <= 365 ? 'slowing' : 'dormant';\n  const spanMonths = oldest == null ? null : Math.max(0.25, (now - oldest) / MONTH);\n  const replies = rev.filter((r) => r.responseFromOwnerText && String(r.responseFromOwnerText).trim()).length;\n  const low = rev.filter((r) => Number(r.stars) <= 2);\n  const stars = rev.map((r) => Number(r.stars)).filter(Number.isFinite);\n  const recent_avg = stars.length ? stars.reduce((a, b) => a + b, 0) / stars.length : null;\n  const texts = rev.filter((r) => (r.text || r.textTranslated || '').toString().trim());\n  const images = Number(place.imagesCount) || 0;\n  return {\n    n_reviews_fetched: n,\n    n_texts: texts.length,\n    total_reviews: total,\n    overall_rating: overall,\n    last_review_at: last == null ? null : new Date(last).toISOString(),\n    days_since_last_review: sinceLast == null ? null : Math.round(sinceLast),\n    reviews_per_month: spanMonths == null || n < 2 ? null : r1(n / spanMonths),\n    activity_label,\n    // Only claim \"new\" when the fetched window provably covers the whole history and it started within a year.\n    is_new_business: oldest != null && now - oldest <= 365 * DAY && total <= n ? true : null,\n    owner_reply_rate: n ? Math.round((replies / n) * 100) / 100 : null,\n    low_reviews: low.length,\n    unanswered_low_reviews: low.filter((r) => !(r.responseFromOwnerText && String(r.responseFromOwnerText).trim())).length,\n    recent_avg_rating: recent_avg == null ? null : r1(recent_avg),\n    rating_delta: recent_avg == null || overall == null ? null : r1(recent_avg - overall),\n    unclaimed_listing: place.claimThisBusiness === true,\n    images_count: images,\n    has_hours: Array.isArray(place.openingHours) && place.openingHours.length > 0,\n    has_description: !!(place.description || place.ownerDescription || place.subTitle),\n    has_website: !!(place.website && String(place.website).trim()),\n    permanently_closed: !!place.permanentlyClosed,\n    temporarily_closed: !!place.temporarilyClosed,\n    branches: opt.branches ?? 1,\n  };\n}\n\nconst clamp01 = (v) => Math.max(0, Math.min(1, v));\nconst round3 = (v) => Math.round(clamp01(v) * 1000) / 1000;\n\n/** Normalized signal values (0..1, 1 = the signal's HIGH state) from facts. Unknown stays absent (never guessed). */\nfunction signalValues(f) {\n  const out = {};\n  out.has_website = f.has_website ? 1 : 0;\n  const rc = Math.min(1, Math.log10(1 + (f.total_reviews || 0)) / 3.3);\n  const rt = clamp01(((f.overall_rating || 0) - 3) / 2);\n  out.size_proxy = round3(0.6 * rc + 0.15 * rt + 0.25 * Math.min(1, ((f.branches || 1) - 1) / 3));\n  out.unclaimed_listing = f.unclaimed_listing ? 1 : 0;\n  out.profile_completeness = round3(0.7 * Math.min(1, (f.images_count || 0) / 15) + 0.3 * (f.has_hours ? 1 : 0));\n  if (f.activity_label !== 'unknown') out.activity = f.activity_label === 'active' ? 1 : f.activity_label === 'slowing' ? 0.5 : 0;\n  if (f.n_reviews_fetched >= 3) out.owner_engagement = round3(f.owner_reply_rate ?? 0);\n  if (f.n_reviews_fetched >= 1) out.unanswered_low_reviews = round3((f.unanswered_low_reviews || 0) / 3);\n  if (f.n_reviews_fetched >= 5 && f.rating_delta != null) out.rating_trend = round3(0.5 + Math.max(-0.5, Math.min(0.5, f.rating_delta / 1.0)));\n  if (f.is_new_business === true) out.new_business = 1;\n  return out;\n}\n\n/**\n * Value of the review_insights signal: how much of what customers complain about the seller's offer can help with (0..1).\n * Complaints the offer cannot help with count for nothing (spec 6.3b step 5). Undefined when there is no analysis.\n */\nfunction reviewInsightValue(analysis) {\n  if (!analysis || analysis.skipped) return undefined;\n  const rel = (analysis.complaints || []).filter((c) => c && c.offer_can_help);\n  const n = rel.reduce((a, c) => a + (Number(c.count) || 1), 0);\n  const top = rel.slice().sort((a, b) => (b.count || 0) - (a.count || 0))[0];\n  return { value: Math.min(1, n / 3), theme: top ? top.theme : null };\n}\n\n// ───────────────────────── opportunities (spec 6.3b step 3) ─────────────────────────\n// Generic insight types computed from facts. WHICH ones matter, and the angle sentence for each, comes from the\n// campaign's opportunity_map (planner output for this offer). Nothing is tied to a segment.\nconst OPPORTUNITY_TYPES = ['unclaimed_listing', 'no_website', 'thin_profile', 'unanswered_low_reviews', 'dormant_activity', 'declining_rating', 'low_owner_engagement', 'new_business', 'multi_branch', 'review_theme'];\n\nfunction evalOpportunity(type, f, analysis) {\n  switch (type) {\n    case 'unclaimed_listing':\n      return f.unclaimed_listing ? { strength: 2, evidence: { reviews: f.total_reviews } } : null;\n    case 'no_website':\n      return !f.has_website ? { strength: f.total_reviews >= 30 ? 3 : 2, evidence: { reviews: f.total_reviews, rating: f.overall_rating } } : null;\n    case 'thin_profile':\n      return f.images_count <= 5 || !f.has_hours ? { strength: f.images_count === 0 ? 3 : f.images_count <= 2 ? 2 : 1, evidence: { photos: f.images_count, hours: f.has_hours } } : null;\n    case 'unanswered_low_reviews':\n      return f.unanswered_low_reviews >= 1 ? { strength: Math.min(3, f.unanswered_low_reviews), evidence: { count: f.unanswered_low_reviews, of: f.n_reviews_fetched } } : null;\n    case 'dormant_activity':\n      return f.activity_label === 'dormant' ? { strength: 3, evidence: { days: f.days_since_last_review, last: f.last_review_at } }\n        : f.activity_label === 'slowing' ? { strength: 1, evidence: { days: f.days_since_last_review, last: f.last_review_at } } : null;\n    case 'declining_rating':\n      return f.n_reviews_fetched >= 5 && f.rating_delta != null && f.rating_delta <= -0.3\n        ? { strength: f.rating_delta <= -0.6 ? 3 : 2, evidence: { recent: f.recent_avg_rating, overall: f.overall_rating } } : null;\n    case 'low_owner_engagement':\n      return f.n_reviews_fetched >= 5 && f.owner_reply_rate != null && f.owner_reply_rate < 0.2\n        ? { strength: f.owner_reply_rate === 0 && f.n_reviews_fetched >= 8 ? 3 : 2, evidence: { rate: f.owner_reply_rate, of: f.n_reviews_fetched } } : null;\n    case 'new_business':\n      return f.is_new_business === true ? { strength: 2, evidence: { reviews: f.total_reviews } } : null;\n    case 'multi_branch':\n      return f.branches >= 2 ? { strength: Math.min(3, f.branches), evidence: { branches: f.branches } } : null;\n    case 'review_theme': {\n      // Complaint themes become an opportunity ONLY when the analysis says this offer can help, and confidence is not low.\n      if (!analysis || analysis.confidence === 'low') return null;\n      const hit = (analysis.complaints || []).filter((c) => c && c.offer_can_help).sort((a, b) => (b.count || 0) - (a.count || 0))[0];\n      return hit ? { strength: Math.min(3, Math.max(1, hit.count || 1)), evidence: { theme: hit.theme, count: hit.count || 1 } } : null;\n    }\n    default:\n      return null;\n  }\n}\n\n/**\n * Top opportunities for one lead in one campaign.\n * @param {any} facts\n * @param {any} analysis review analysis (may be null)\n * @param {{type:string, angle:string}[]} oppMap campaign opportunity map, in the planner's priority order\n */\nfunction buildOpportunities(facts, analysis, oppMap, max = 3) {\n  const out = [];\n  (oppMap || []).forEach((m, idx) => {\n    if (!m || !OPPORTUNITY_TYPES.includes(m.type)) return;\n    const e = evalOpportunity(m.type, facts, analysis);\n    if (e) out.push({ type: m.type, strength: e.strength, evidence: e.evidence, angle: String(m.angle || '').slice(0, 200), _p: idx });\n  });\n  out.sort((a, b) => b.strength - a.strength || a._p - b._p);\n  return out.slice(0, max).map(({ _p, ...o }) => o);\n}\n\n// ───────────────────────── score (spec 6.3a) ─────────────────────────\n// Mirrors public.recompute_campaign_scores in SQL (same constants). Signed weights: w>0 rewards the HIGH state, w<0 the LOW state.\nconst SCORE = {\n  favorable: 0.66, // a signal counts as \"above zero\" for the two-signal rule when its favorable state is this strong\n  noBaseCap: 69, // fewer than two relevant non-baseline signals => score cannot exceed 69 (never \"high\" alone)\n  maybeCap: 60,\n  baselineMaxWeight: 25, // baseline facts (e.g. has a website) are clamped unless the planner marked the signal as emphasized\n};\n\n/**\n * @param {{fit?:'fit'|'maybe'|'not_fit'|null, signals:{key:string, weight:number, value:number, baseline?:boolean, emphasis?:boolean}[]}} x\n * @returns {{score:number|null, relevant:number, capped_by:string|null, favorable:{key:string, side:'high'|'low', contribution:number}[]}}\n */\nfunction scoreLead({ fit, signals }) {\n  if (fit === 'not_fit') return { score: null, relevant: 0, capped_by: 'not_fit', favorable: [] };\n  let sum = 0;\n  let den = 0;\n  let relevant = 0;\n  const favorable = [];\n  for (const s of signals) {\n    let w = Number(s.weight);\n    if (!w) continue;\n    if (s.baseline && !s.emphasis) w = Math.sign(w) * Math.min(Math.abs(w), SCORE.baselineMaxWeight);\n    const v = clamp01(Number(s.value));\n    const c = w * v - Math.min(w, 0);\n    sum += c;\n    den += Math.abs(w);\n    const fav = (w > 0 && v >= SCORE.favorable) || (w < 0 && v <= 1 - SCORE.favorable);\n    if (fav) {\n      favorable.push({ key: s.key, side: w > 0 ? 'high' : 'low', contribution: c });\n      if (!s.baseline || s.emphasis) relevant++;\n    }\n  }\n  if (!den) return { score: null, relevant, capped_by: null, favorable };\n  let score = Math.round((100 * sum) / den);\n  let capped_by = null;\n  if (relevant < 2 && score > SCORE.noBaseCap) { score = SCORE.noBaseCap; capped_by = 'needs_two_signals'; }\n  if (fit === 'maybe' && score > SCORE.maybeCap) { score = SCORE.maybeCap; capped_by = 'maybe_fit'; }\n  favorable.sort((a, b) => b.contribution - a.contribution);\n  return { score, relevant, capped_by, favorable };\n}\n\n// ───────────────────────── message tact (spec 6.3b step 5) ─────────────────────────\n// Safety net on top of the prompt: the first message never mentions complaints, low ratings or any weakness of the lead.\nconst NEGATIVE_AR = ['شكوي', 'شكاوي', 'شكوه', 'شتك', 'مشكله', 'مشاكل', 'سيء', 'سيئ', 'وحش', 'ضعيف', 'ضعف', 'تاخير', 'متاخر', 'اهمال', 'مهمل', 'قصور', 'فشل', 'بطيء', 'بطئ', 'غير راضي', 'مش راضي', 'تقييم سيء', 'تقييم منخفض', 'تقييم قليل', 'تقييمات منخفضه', 'تقييمات سلبيه', 'سلبي', 'نجمه واحده', 'نجمتين', 'ريفيوهات وحشه', 'عيب', 'عيوب', 'نقطه ضعف', 'نقاط ضعف', 'مفيش رد', 'بدون رد', 'مرددتوش', 'ما ردتوش', 'مردتوش', 'مش بتردو', 'مبتردوش'];\nconst NEGATIVE_EN = ['complain', 'bad review', 'low rating', 'poor rating', 'negative', 'weakness', 'problem with', 'unanswered'];\n\n/** @returns {{ok:boolean, reasons:string[]}} */\nfunction checkTact(message, complaints = []) {\n  const m = norm(message);\n  const reasons = [];\n  for (const w of NEGATIVE_AR.concat(NEGATIVE_EN)) if (m.includes(norm(w))) reasons.push(`word:${w}`);\n  // \"your rating/reviews are low/bad\" in any phrasing\n  if (/(تقييم|ريفيو|نجوم|rating|review)\\S*\\s+(\\S+\\s+){0,2}(منخفض|قليل|ضعيف|سلبي|وحش|سيء|واطي|low|poor|bad)/.test(m)) reasons.push('rating_negative');\n  for (const c of complaints || []) {\n    const theme = typeof c === 'string' ? c : c && c.theme;\n    for (const tok of norm(theme).split(' ')) if (tok.length >= 5 && m.includes(tok)) reasons.push(`theme:${tok}`);\n  }\n  return { ok: reasons.length === 0, reasons: [...new Set(reasons)] };\n}\n\n\n// ───────────────────────── LLM helpers (OpenRouter request/response) ─────────────────────────\n/** OpenRouter chat request body (string). `fallback` = fallback model ids tried on provider failure. */\nfunction llmRequest({ system, user, model, fallback = [], temperature = 0, extraMessages = [] }) {\n  const req = {\n    messages: [{ role: 'system', content: system }, { role: 'user', content: typeof user === 'string' ? user : JSON.stringify(user) }, ...extraMessages],\n    response_format: { type: 'json_object' },\n    temperature,\n    usage: { include: true },\n  };\n  const fb = (fallback || []).filter(Boolean);\n  if (fb.length) req.models = [model, ...fb]; else req.model = model;\n  return JSON.stringify(req);\n}\n\n/** Parse an OpenRouter full-response item. @returns {{data:any|null, usage:{in:number,out:number,cost:number,model:string|null}, status:number|null}} */\nfunction parseLlm(res) {\n  const r = res || {};\n  const u = (r.body && r.body.usage) || {};\n  const usage = { in: u.prompt_tokens || 0, out: u.completion_tokens || 0, cost: Number(u.cost) || 0, model: (r.body && r.body.model) || null };\n  let data = null;\n  if (r.statusCode >= 200 && r.statusCode < 300 && r.body && r.body.choices) {\n    try { data = JSON.parse((r.body.choices[0]?.message?.content || '').replace(/^```(?:json)?/i, '').replace(/```$/, '').trim()); } catch (e) { data = null; }\n  }\n  return { data, usage, status: typeof r.statusCode === 'number' ? r.statusCode : null };\n}\n\n/** System prompt of the fit check (spec 6.0 step 3 and 4). Offer-agnostic: the ideal prospect text is the only criterion. */\nfunction fitSystemPrompt({ ideal, offerText, negatives = [] }) {\n  return `You judge whether Google Maps places are potential CUSTOMERS (prospects) for a seller.\nIdeal prospect: ${ideal || '(not stated; judge from the seller offer)'}\nSeller offer: ${String(offerText || '').slice(0, 500)}\nFor each place decide: \"fit\" (clearly the kind of business described), \"maybe\" (possibly, adjacent or unclear), \"not_fit\" (a different kind of business even if its NAME contains similar words, a public or government body, a competitor of the seller, or unrelated).\nJudge by categories, website and area. Never judge by words in the name alone. Give a SHORT reason (max 12 words, in the same language as the ideal prospect text).${negatives.length ? `\\nThe seller already rejected businesses like these (treat similar ones as not_fit):\\n${negatives.slice(0, 15).map((n) => `- ${n.business_name || ''} (${n.category || ''}): ${n.reason || ''}`).join('\\n')}` : ''}\nReturn ONE JSON object only: {\"results\":[{\"i\": number, \"fit\": \"fit\"|\"maybe\"|\"not_fit\", \"reason\": string}]} covering every i.`;\n}\n\n/** The compact description of one place sent to the fit check. */\nfunction fitAsk(rawPlace, area) {\n  const cats = [rawPlace.categoryName, ...(Array.isArray(rawPlace.categories) ? rawPlace.categories : [])].filter(Boolean);\n  return { name: stripInvisible(rawPlace.title), categories: cats.slice(0, 5), website: rawPlace.website ? 'yes' : 'no', area: area || '', rating: rawPlace.totalScore ?? null, reviews: rawPlace.reviewsCount ?? null };\n}\n\n// ───────────────────────── search rounds (spec 6.2) ─────────────────────────\n/** Search area of a location: the most specific name and a clean geocoder string (no repeated parts, no hidden characters). */\nfunction areaOf(l) {\n  // Unique parts; a part already contained in a more specific one is dropped (\"القاهرة\" inside \"التجمع الخامس القاهرة\").\n  const parts = [cleanPlace(l.district), cleanPlace(l.city), cleanPlace(l.governorate)].filter(Boolean);\n  const kept = parts.filter((p, i) => !parts.some((q, j) => j !== i && norm(q) !== norm(p) && norm(q).includes(norm(p))) && parts.findIndex((q) => norm(q) === norm(p)) === i);\n  return { area: cleanPlace(l.district || l.city || l.governorate || ''), locationQuery: kept.concat('Egypt').join(', ') };\n}\n\n/**\n * Plan the Apify searches for a round. Rounds: 1 base queries at real depth; 2 same queries deeper (only the ones that hit\n * their cap); 3 synonyms; 4 nearby districts; 5 broad fallback (city level, simplest keyword) used for zero results.\n * @returns {{round:number, searches:{query:string, area:string, locationQuery:string, depth:number}[]}|null} null = exhausted\n */\nfunction planRound({ round, target, keywords, synonyms = [], locations, nearby = [], done = [], saturated = [], avoid = [], minDepth = 20, maxDepth = 120 }) {\n  const doneSet = new Set(done.map((d) => norm(d)));\n  const loc = areaOf;\n  const mk = (kws, locs, depthMul = 1) => {\n    const base = Math.min(maxDepth, Math.max(minDepth, Math.ceil((target * 2.5) / Math.max(1, kws.length * locs.length))));\n    const depth = Math.min(maxDepth, Math.ceil(base * depthMul));\n    const s = [];\n    for (const l of locs) {\n      const { area, locationQuery } = loc(l);\n      for (const k of kws) {\n        const query = `${cleanPlace(k)} ${area}`.trim();\n        s.push({ query, area, locationQuery, depth, key: norm(`${depthMul}|${query}`) });\n      }\n    }\n    return s;\n  };\n  let searches = [];\n  if (round === 1) searches = mk(keywords, locations);\n  else if (round === 2) {\n    const sat = new Set(saturated.map(norm));\n    searches = mk(keywords, locations, 2.5).filter((s) => sat.has(norm(s.query)));\n  } else if (round === 3) searches = mk(synonyms, locations);\n  else if (round === 4) searches = mk(keywords.concat(synonyms).slice(0, 4), nearby);\n  else if (round === 5) {\n    // Broad fallback: simplest keyword, city level (or governorate), no district polygon.\n    const broad = locations.map((l) => ({ governorate: l.governorate, city: l.city || l.governorate, district: '' }));\n    searches = mk(keywords.slice(0, 2), broad.length ? broad : locations);\n  } else return null;\n  // `avoid` = searches this organization already ran in earlier campaigns: the same companies would come back, so prefer new ones.\n  const avoidSet = new Set(avoid.map(norm));\n  searches = searches.filter((s) => s.query && !doneSet.has(norm(s.query) + '|' + round) && !avoidSet.has(norm(s.query)));\n  return searches.length ? { round, searches } : null;\n}\n\n/**\n * After a round: which round next (null = stop). Normal order 1..5; if round 1 found no places at all the engine jumps to the\n * broad fallback first (city level, simplest keywords), then synonyms and nearby districts.\n * @returns {{next:number|null, mode:'normal'|'zero'}}\n */\nfunction decideNext({ round, mode = 'normal', delivered, target, rawTotal }) {\n  if (delivered >= target) return { next: null, mode };\n  if (round === 1 && rawTotal === 0) return { next: 5, mode: 'zero' };\n  if (mode === 'zero') return { next: round === 5 ? 3 : round === 3 ? 4 : null, mode };\n  return { next: round < 5 ? round + 1 : null, mode };\n}\n\n/** Why a campaign delivered nothing (plain code, mapped to a user message with concrete suggestions in the UI). */\nfunction emptyReason(f) {\n  if (!f.raw_places) return 'no_places';\n  if (f.removed_not_fit >= (f.raw_places - f.removed_category - f.removed_global - f.removed_closed) && f.removed_not_fit > 0) return 'all_not_fit';\n  if (f.removed_category + f.removed_global >= f.raw_places * 0.8) return 'all_category';\n  if (f.previously_found > 0 && f.previously_found >= f.raw_places * 0.5) return 'all_previously_found';\n  if (f.cooldown > 0 && f.cooldown >= f.raw_places * 0.5) return 'all_cooldown';\n  return 'all_filtered';\n}\n\n/** Funnel keys shown on the campaign page, in order (spec 6.2). */\nconst FUNNEL_KEYS = ['queries', 'raw_places', 'removed_category', 'removed_global', 'removed_closed', 'removed_landline', 'removed_filters', 'removed_not_fit', 'duplicates', 'previously_found', 'opted_out', 'cooldown', 'delivered'];\n\nconst body = $('Webhook').first().json.body;\nconst job = $('Get job').first().json;\nconst campaign = $('Get campaign').first().json;\nconst sigRes = $('Signal cost').first().json;\nconst past = $('Get past searches').all().map((i) => i.json).filter((r) => r && r.query);\nconst perLeadSignals = Number(sigRes !== null && typeof sigRes === 'object' ? (sigRes.data ?? Object.values(sigRes)[0]) : sigRes) || 0;\n\nconst p = campaign.parameters || {};\nconst f = p.filters || {};\nconst counts = job.counts || {};\nconst round0 = Number(body.round) || 1;\nconst keywords = (p.keywords || []).map((k) => stripInvisible(k)).filter(Boolean).slice(0, 4);\nconst synonyms = (p.synonyms || []).map((k) => stripInvisible(k)).filter(Boolean);\nconst locations = (p.locations || []).filter((l) => l && (l.district || l.city || l.governorate));\nconst nearby = (p.nearby_locations || []).filter((l) => l && (l.district || l.city || l.governorate));\nconst hardMax = Number(body.max_results_cap) || 100;\nconst wanted = Math.min(Number(p.max_results) || 0, hardMax);\nconst leadCap = Number(counts.lead_cap) || Math.max(0, Math.min(wanted, Math.floor(job.credits_reserved / (1 + perLeadSignals))));\nconst delivered = Number(counts.delivered) || 0;\nconst mode = counts.mode || 'normal';\nconst rawTotal = Number(counts.raw_total) || 0;\n\nif ((!keywords.length || !locations.length || leadCap < 1) && round0 === 1) {\n  return [{ json: { error: 'no_queries', leadCap, requestBody: '{}' } }];\n}\n\nconst done = Array.isArray(counts.done_queries) ? counts.done_queries : [];\nconst saturated = Array.isArray(counts.saturated) ? counts.saturated : [];\nconst avoid = p.include_previous_companies === true ? [] : past.filter((r) => String(r.campaign_id || '') !== String(body.campaign_id)).map((r) => r.query);\n\n// Take the first round (from the requested one on) that still has searches; rounds that have nothing new are skipped.\nlet round = round0;\nlet plan = null;\nwhile (round) {\n  plan = planRound({ round, target: Math.max(1, leadCap - delivered), keywords, synonyms, locations, nearby, done, saturated, avoid });\n  if (plan) break;\n  round = decideNext({ round, mode, delivered, target: leadCap, rawTotal: Math.max(rawTotal, 1) }).next;\n}\nif (!plan) return [{ json: { exhausted: true, round: round0, leadCap, requestBody: '{}' } }];\n\nconst stars = (m) => (m >= 4.5 ? 'fourAndHalf' : m >= 4 ? 'four' : m >= 3.5 ? 'threeAndHalf' : m >= 3 ? 'three' : m >= 2.5 ? 'twoAndHalf' : m >= 2 ? 'two' : '');\n\n// One Apify run per (location, depth): every search string of that group shares the geolocation.\nconst groups = new Map();\nfor (const s of plan.searches) {\n  const k = `${s.locationQuery}|${s.depth}`;\n  if (!groups.has(k)) groups.set(k, { locationQuery: s.locationQuery, depth: s.depth, area: s.area, queries: [] });\n  groups.get(k).queries.push(s.query);\n}\nreturn [...groups.values()].map((g) => {\n  const input = {\n    searchStringsArray: g.queries,\n    locationQuery: g.locationQuery,\n    maxCrawledPlacesPerSearch: g.depth,\n    language: 'ar',\n    countryCode: 'eg',\n    skipClosedPlaces: true,\n    placeMinimumStars: stars(Number(f.min_rating) || 0),\n    website: f.must_have_website ? 'withWebsite' : 'allPlaces',\n    scrapePlaceDetailPage: false,\n    scrapeContacts: false,\n  };\n  const loc = locations.concat(nearby).find((l) => cleanPlace(l.district || l.city || l.governorate) === g.area) || {};\n  return {\n    json: {\n      requestBody: JSON.stringify(input),\n      round: plan.round,\n      queries: g.queries,\n      area: g.area,\n      depth: g.depth,\n      district: loc.district || null,\n      city: loc.city || null,\n      governorate: loc.governorate || null,\n      leadCap,\n      mode,\n    },\n  };\n});\n"
       }
     },
     {
@@ -162,7 +269,7 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        1440,
+        2160,
         300
       ],
       "parameters": {
@@ -176,7 +283,7 @@
           "conditions": [
             {
               "id": "16bceef6-b397-b23c-fe9e-e2d19b978696",
-              "leftValue": "={{ !$json.error }}",
+              "leftValue": "={{ !$json.error && !$json.exhausted }}",
               "rightValue": "",
               "operator": {
                 "type": "boolean",
@@ -196,7 +303,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1680,
+        2400,
         300
       ],
       "parameters": {
@@ -231,21 +338,21 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        1920,
+        2640,
         300
       ],
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "// WF1 \"Collect\": flatten Apify responses into staging rows (trimmed raw, deduped by place id).\nconst body = $('Webhook').first().json.body;\nconst plans = $('Plan queries').all().map((i) => i.json);\nconst outs = $input.all();\n\nconst KEEP = ['title', 'categoryName', 'categories', 'address', 'neighborhood', 'street', 'city', 'state', 'countryCode',\n  'website', 'phone', 'phoneUnformatted', 'location', 'totalScore', 'reviewsCount', 'permanentlyClosed',\n  'temporarilyClosed', 'placeId', 'url', 'openingHours'];\n\nconst rows = new Map();\nconst errors = [];\nlet found = 0;\nouts.forEach((it, idx) => {\n  const r = it.json || {};\n  const plan = plans[idx] || {};\n  if (typeof r.statusCode === 'number' && r.statusCode >= 200 && r.statusCode < 300 && Array.isArray(r.body)) {\n    for (const x of r.body) {\n      if (!x || !x.placeId) continue;\n      found++;\n      if (rows.has(x.placeId)) continue;\n      const raw = {};\n      for (const k of KEEP) if (x[k] !== undefined) raw[k] = x[k];\n      raw._district = plan.district;\n      raw._city = plan.city;\n      raw._governorate = plan.governorate;\n      rows.set(x.placeId, {\n        organization_id: body.organization_id,\n        job_id: body.job_id,\n        source: 'google_maps',\n        external_id: x.placeId,\n        raw,\n      });\n    }\n  } else {\n    errors.push(String(r.statusCode || (r.error && (r.error.message || r.error)) || 'unknown'));\n  }\n});\n\nreturn [{ json: { rows: [...rows.values()], found, unique: rows.size, errors, allFailed: outs.length > 0 && errors.length === outs.length } }];\n"
+        "jsCode": "// WF1 \"Collect\": flatten Apify responses into staging rows (trimmed raw, deduped by place id), track which searches hit their depth\n// cap (saturated => a deeper round makes sense), and carry the fit-labelled places of the latest probe into the staging area.\n// Lead insights core (spec 6.2, 6.3a, 6.3b). Plain ESM JS with no imports so the SAME source is inlined into n8n Code\n// nodes (marker /*__INSIGHTS__*/) and used by unit tests and the fixture runner. Nothing here knows any industry,\n// segment or offer: relevance always comes from the campaign (allowed categories, signal weights, opportunity map).\n\n// ───────────────────────── text helpers ─────────────────────────\nconst INVISIBLE = new RegExp('[\\u200B-\\u200F\\u202A-\\u202E\\u2066-\\u2069\\uFEFF]', 'g');\nconst DIACRITICS = new RegExp('[\\u064B-\\u065F\\u0670\\u0640]', 'g');\n\n/** Lowercase, strip invisible/bidi marks and Arabic diacritics, unify alef/yaa/taa-marbuta, collapse spaces. */\nfunction norm(s) {\n  return String(s ?? '')\n    .toLowerCase()\n    .replace(INVISIBLE, '')\n    .replace(DIACRITICS, '')\n    .replace(/[أإآٱ]/g, 'ا')\n    .replace(/ى/g, 'ي')\n    .replace(/ة/g, 'ه')\n    .replace(/\\s+/g, ' ')\n    .trim();\n}\n\n/** Invisible/bidi marks removed, whitespace collapsed. */\nfunction stripInvisible(s) {\n  return String(s ?? '').replace(INVISIBLE, '').replace(/\\s+/g, ' ').trim();\n}\n\n/** Clean one location part for Apify: no invisible marks, no repeated words (\"التجمع الخامس القاهرة القاهرة\"). */\nfunction cleanPlace(s) {\n  const t = String(s ?? '').replace(INVISIBLE, '').replace(/\\s+/g, ' ').trim();\n  const out = [];\n  for (const w of t.split(' ')) if (!out.length || norm(out[out.length - 1]) !== norm(w)) out.push(w);\n  return out.join(' ');\n}\n\n// ───────────────────────── global exclusions (spec 6.3a) ─────────────────────────\n// Always on, for every campaign. Matched against Google Maps CATEGORIES (Arabic and English), never against the name alone.\n// Hospitals only for health: clinics, labs and pharmacies are legitimate prospects for many offers.\nconst GLOBAL_EXCLUSIONS = {\n  government: ['مكتب حكومي', 'جهه حكوميه', 'هيئه حكوميه', 'مبني حكومي', 'وزاره', 'محافظه', 'مجلس مدينه', 'قسم شرطه', 'مركز شرطه', 'محكمه', 'نيابه', 'مصلحه', 'سجل مدني', 'government office', 'government organization', 'government agency', 'local government', 'city government', 'county government', 'municipality', 'ministry', 'police', 'courthouse', 'public administration'],\n  utility: ['محطه كهرباء', 'محطه توليد', 'محطه مياه', 'محطه معالجه', 'محطه تحويل', 'محطه صرف', 'شركه كهرباء', 'شركه مياه', 'شركه غاز', 'سنترال', 'مرفق عام', 'power station', 'power plant', 'electric utility', 'electricity', 'water utility', 'water treatment', 'water works', 'sewage', 'telephone exchange', 'substation', 'gas utility', 'public utility'],\n  education: ['جامعه', 'كليه', 'مدرسه', 'روضه اطفال', 'ثانويه', 'اعداديه', 'ابتدائيه', 'university', 'college', 'school', 'kindergarten', 'academy of', 'faculty'],\n  health: ['مستشفي', 'hospital'],\n  worship: ['مسجد', 'جامع', 'كنيسه', 'دير', 'معبد', 'مكان عباده', 'mosque', 'church', 'temple', 'synagogue', 'place of worship', 'cathedral', 'monastery'],\n  embassy: ['سفاره', 'قنصليه', 'embassy', 'consulate'],\n  military: ['موقع عسكري', 'قاعده عسكريه', 'معسكر', 'عسكري', 'military', 'army base', 'air force', 'naval'],\n};\n\nconst hasEn = (p) => /^[a-z ]+$/.test(p);\nconst catMatches = (c, p) => (hasEn(p) ? new RegExp(`(^| )${p}( |$|s\\\\b)`).test(c) : c.includes(p));\n\n/** @returns {{group:string, match:string, category:string}|null} */\nfunction globalExclusion(categories) {\n  for (const raw of categories || []) {\n    const c = norm(raw);\n    if (!c) continue;\n    for (const [group, pats] of Object.entries(GLOBAL_EXCLUSIONS)) {\n      for (const p of pats) if (catMatches(c, norm(p))) return { group, match: p, category: String(raw) };\n    }\n  }\n  return null;\n}\n\n/**\n * Does any Maps category match the campaign's allowed categories (Arabic and English)? Done by us, never by the actor.\n * An empty allow-list means \"no category restriction\" (old campaigns).\n * @returns {{ok:boolean, matched:string|null}}\n */\nfunction categoryMatch(placeCategories, allowed) {\n  const list = (allowed || []).map(norm).filter((a) => a.length >= 3);\n  if (!list.length) return { ok: true, matched: null };\n  for (const raw of placeCategories || []) {\n    const c = norm(raw);\n    if (!c) continue;\n    for (const a of list) if (c === a || c.includes(a) || (c.length >= 4 && a.includes(c))) return { ok: true, matched: a };\n  }\n  return { ok: false, matched: null };\n}\n\n// ───────────────────────── deterministic facts (spec 6.3b step 1) ─────────────────────────\nconst DAY = 86400000;\nconst MONTH = 30.44 * DAY;\nconst r1 = (x) => Math.round(x * 10) / 10;\n\n/**\n * @param {any} place raw Google Maps place (compass/crawler-google-places)\n * @param {any[]} reviews raw reviews for that place (compass/google-maps-reviews-scraper), newest first or any order\n * @param {{now?:number, branches?:number}} [opt]\n */\nfunction computeFacts(place, reviews = [], opt = {}) {\n  const now = opt.now ?? Date.now();\n  const seen = new Set();\n  const rev = [];\n  for (const r of reviews || []) {\n    if (!r) continue;\n    const id = r.reviewId || `${r.publishedAtDate}|${r.stars}|${r.text}`;\n    if (seen.has(id)) continue;\n    seen.add(id);\n    rev.push(r);\n  }\n  const dates = rev.map((r) => Date.parse(r.publishedAtDate)).filter(Number.isFinite).sort((a, b) => a - b);\n  const n = rev.length;\n  const total = Number(place.reviewsCount) || n;\n  const overall = Number(place.totalScore) || null;\n  const last = dates.length ? dates[dates.length - 1] : null;\n  const oldest = dates.length ? dates[0] : null;\n  const sinceLast = last == null ? null : (now - last) / DAY;\n  const activity_label = last == null ? 'unknown' : sinceLast <= 90 ? 'active' : sinceLast <= 365 ? 'slowing' : 'dormant';\n  const spanMonths = oldest == null ? null : Math.max(0.25, (now - oldest) / MONTH);\n  const replies = rev.filter((r) => r.responseFromOwnerText && String(r.responseFromOwnerText).trim()).length;\n  const low = rev.filter((r) => Number(r.stars) <= 2);\n  const stars = rev.map((r) => Number(r.stars)).filter(Number.isFinite);\n  const recent_avg = stars.length ? stars.reduce((a, b) => a + b, 0) / stars.length : null;\n  const texts = rev.filter((r) => (r.text || r.textTranslated || '').toString().trim());\n  const images = Number(place.imagesCount) || 0;\n  return {\n    n_reviews_fetched: n,\n    n_texts: texts.length,\n    total_reviews: total,\n    overall_rating: overall,\n    last_review_at: last == null ? null : new Date(last).toISOString(),\n    days_since_last_review: sinceLast == null ? null : Math.round(sinceLast),\n    reviews_per_month: spanMonths == null || n < 2 ? null : r1(n / spanMonths),\n    activity_label,\n    // Only claim \"new\" when the fetched window provably covers the whole history and it started within a year.\n    is_new_business: oldest != null && now - oldest <= 365 * DAY && total <= n ? true : null,\n    owner_reply_rate: n ? Math.round((replies / n) * 100) / 100 : null,\n    low_reviews: low.length,\n    unanswered_low_reviews: low.filter((r) => !(r.responseFromOwnerText && String(r.responseFromOwnerText).trim())).length,\n    recent_avg_rating: recent_avg == null ? null : r1(recent_avg),\n    rating_delta: recent_avg == null || overall == null ? null : r1(recent_avg - overall),\n    unclaimed_listing: place.claimThisBusiness === true,\n    images_count: images,\n    has_hours: Array.isArray(place.openingHours) && place.openingHours.length > 0,\n    has_description: !!(place.description || place.ownerDescription || place.subTitle),\n    has_website: !!(place.website && String(place.website).trim()),\n    permanently_closed: !!place.permanentlyClosed,\n    temporarily_closed: !!place.temporarilyClosed,\n    branches: opt.branches ?? 1,\n  };\n}\n\nconst clamp01 = (v) => Math.max(0, Math.min(1, v));\nconst round3 = (v) => Math.round(clamp01(v) * 1000) / 1000;\n\n/** Normalized signal values (0..1, 1 = the signal's HIGH state) from facts. Unknown stays absent (never guessed). */\nfunction signalValues(f) {\n  const out = {};\n  out.has_website = f.has_website ? 1 : 0;\n  const rc = Math.min(1, Math.log10(1 + (f.total_reviews || 0)) / 3.3);\n  const rt = clamp01(((f.overall_rating || 0) - 3) / 2);\n  out.size_proxy = round3(0.6 * rc + 0.15 * rt + 0.25 * Math.min(1, ((f.branches || 1) - 1) / 3));\n  out.unclaimed_listing = f.unclaimed_listing ? 1 : 0;\n  out.profile_completeness = round3(0.7 * Math.min(1, (f.images_count || 0) / 15) + 0.3 * (f.has_hours ? 1 : 0));\n  if (f.activity_label !== 'unknown') out.activity = f.activity_label === 'active' ? 1 : f.activity_label === 'slowing' ? 0.5 : 0;\n  if (f.n_reviews_fetched >= 3) out.owner_engagement = round3(f.owner_reply_rate ?? 0);\n  if (f.n_reviews_fetched >= 1) out.unanswered_low_reviews = round3((f.unanswered_low_reviews || 0) / 3);\n  if (f.n_reviews_fetched >= 5 && f.rating_delta != null) out.rating_trend = round3(0.5 + Math.max(-0.5, Math.min(0.5, f.rating_delta / 1.0)));\n  if (f.is_new_business === true) out.new_business = 1;\n  return out;\n}\n\n/**\n * Value of the review_insights signal: how much of what customers complain about the seller's offer can help with (0..1).\n * Complaints the offer cannot help with count for nothing (spec 6.3b step 5). Undefined when there is no analysis.\n */\nfunction reviewInsightValue(analysis) {\n  if (!analysis || analysis.skipped) return undefined;\n  const rel = (analysis.complaints || []).filter((c) => c && c.offer_can_help);\n  const n = rel.reduce((a, c) => a + (Number(c.count) || 1), 0);\n  const top = rel.slice().sort((a, b) => (b.count || 0) - (a.count || 0))[0];\n  return { value: Math.min(1, n / 3), theme: top ? top.theme : null };\n}\n\n// ───────────────────────── opportunities (spec 6.3b step 3) ─────────────────────────\n// Generic insight types computed from facts. WHICH ones matter, and the angle sentence for each, comes from the\n// campaign's opportunity_map (planner output for this offer). Nothing is tied to a segment.\nconst OPPORTUNITY_TYPES = ['unclaimed_listing', 'no_website', 'thin_profile', 'unanswered_low_reviews', 'dormant_activity', 'declining_rating', 'low_owner_engagement', 'new_business', 'multi_branch', 'review_theme'];\n\nfunction evalOpportunity(type, f, analysis) {\n  switch (type) {\n    case 'unclaimed_listing':\n      return f.unclaimed_listing ? { strength: 2, evidence: { reviews: f.total_reviews } } : null;\n    case 'no_website':\n      return !f.has_website ? { strength: f.total_reviews >= 30 ? 3 : 2, evidence: { reviews: f.total_reviews, rating: f.overall_rating } } : null;\n    case 'thin_profile':\n      return f.images_count <= 5 || !f.has_hours ? { strength: f.images_count === 0 ? 3 : f.images_count <= 2 ? 2 : 1, evidence: { photos: f.images_count, hours: f.has_hours } } : null;\n    case 'unanswered_low_reviews':\n      return f.unanswered_low_reviews >= 1 ? { strength: Math.min(3, f.unanswered_low_reviews), evidence: { count: f.unanswered_low_reviews, of: f.n_reviews_fetched } } : null;\n    case 'dormant_activity':\n      return f.activity_label === 'dormant' ? { strength: 3, evidence: { days: f.days_since_last_review, last: f.last_review_at } }\n        : f.activity_label === 'slowing' ? { strength: 1, evidence: { days: f.days_since_last_review, last: f.last_review_at } } : null;\n    case 'declining_rating':\n      return f.n_reviews_fetched >= 5 && f.rating_delta != null && f.rating_delta <= -0.3\n        ? { strength: f.rating_delta <= -0.6 ? 3 : 2, evidence: { recent: f.recent_avg_rating, overall: f.overall_rating } } : null;\n    case 'low_owner_engagement':\n      return f.n_reviews_fetched >= 5 && f.owner_reply_rate != null && f.owner_reply_rate < 0.2\n        ? { strength: f.owner_reply_rate === 0 && f.n_reviews_fetched >= 8 ? 3 : 2, evidence: { rate: f.owner_reply_rate, of: f.n_reviews_fetched } } : null;\n    case 'new_business':\n      return f.is_new_business === true ? { strength: 2, evidence: { reviews: f.total_reviews } } : null;\n    case 'multi_branch':\n      return f.branches >= 2 ? { strength: Math.min(3, f.branches), evidence: { branches: f.branches } } : null;\n    case 'review_theme': {\n      // Complaint themes become an opportunity ONLY when the analysis says this offer can help, and confidence is not low.\n      if (!analysis || analysis.confidence === 'low') return null;\n      const hit = (analysis.complaints || []).filter((c) => c && c.offer_can_help).sort((a, b) => (b.count || 0) - (a.count || 0))[0];\n      return hit ? { strength: Math.min(3, Math.max(1, hit.count || 1)), evidence: { theme: hit.theme, count: hit.count || 1 } } : null;\n    }\n    default:\n      return null;\n  }\n}\n\n/**\n * Top opportunities for one lead in one campaign.\n * @param {any} facts\n * @param {any} analysis review analysis (may be null)\n * @param {{type:string, angle:string}[]} oppMap campaign opportunity map, in the planner's priority order\n */\nfunction buildOpportunities(facts, analysis, oppMap, max = 3) {\n  const out = [];\n  (oppMap || []).forEach((m, idx) => {\n    if (!m || !OPPORTUNITY_TYPES.includes(m.type)) return;\n    const e = evalOpportunity(m.type, facts, analysis);\n    if (e) out.push({ type: m.type, strength: e.strength, evidence: e.evidence, angle: String(m.angle || '').slice(0, 200), _p: idx });\n  });\n  out.sort((a, b) => b.strength - a.strength || a._p - b._p);\n  return out.slice(0, max).map(({ _p, ...o }) => o);\n}\n\n// ───────────────────────── score (spec 6.3a) ─────────────────────────\n// Mirrors public.recompute_campaign_scores in SQL (same constants). Signed weights: w>0 rewards the HIGH state, w<0 the LOW state.\nconst SCORE = {\n  favorable: 0.66, // a signal counts as \"above zero\" for the two-signal rule when its favorable state is this strong\n  noBaseCap: 69, // fewer than two relevant non-baseline signals => score cannot exceed 69 (never \"high\" alone)\n  maybeCap: 60,\n  baselineMaxWeight: 25, // baseline facts (e.g. has a website) are clamped unless the planner marked the signal as emphasized\n};\n\n/**\n * @param {{fit?:'fit'|'maybe'|'not_fit'|null, signals:{key:string, weight:number, value:number, baseline?:boolean, emphasis?:boolean}[]}} x\n * @returns {{score:number|null, relevant:number, capped_by:string|null, favorable:{key:string, side:'high'|'low', contribution:number}[]}}\n */\nfunction scoreLead({ fit, signals }) {\n  if (fit === 'not_fit') return { score: null, relevant: 0, capped_by: 'not_fit', favorable: [] };\n  let sum = 0;\n  let den = 0;\n  let relevant = 0;\n  const favorable = [];\n  for (const s of signals) {\n    let w = Number(s.weight);\n    if (!w) continue;\n    if (s.baseline && !s.emphasis) w = Math.sign(w) * Math.min(Math.abs(w), SCORE.baselineMaxWeight);\n    const v = clamp01(Number(s.value));\n    const c = w * v - Math.min(w, 0);\n    sum += c;\n    den += Math.abs(w);\n    const fav = (w > 0 && v >= SCORE.favorable) || (w < 0 && v <= 1 - SCORE.favorable);\n    if (fav) {\n      favorable.push({ key: s.key, side: w > 0 ? 'high' : 'low', contribution: c });\n      if (!s.baseline || s.emphasis) relevant++;\n    }\n  }\n  if (!den) return { score: null, relevant, capped_by: null, favorable };\n  let score = Math.round((100 * sum) / den);\n  let capped_by = null;\n  if (relevant < 2 && score > SCORE.noBaseCap) { score = SCORE.noBaseCap; capped_by = 'needs_two_signals'; }\n  if (fit === 'maybe' && score > SCORE.maybeCap) { score = SCORE.maybeCap; capped_by = 'maybe_fit'; }\n  favorable.sort((a, b) => b.contribution - a.contribution);\n  return { score, relevant, capped_by, favorable };\n}\n\n// ───────────────────────── message tact (spec 6.3b step 5) ─────────────────────────\n// Safety net on top of the prompt: the first message never mentions complaints, low ratings or any weakness of the lead.\nconst NEGATIVE_AR = ['شكوي', 'شكاوي', 'شكوه', 'شتك', 'مشكله', 'مشاكل', 'سيء', 'سيئ', 'وحش', 'ضعيف', 'ضعف', 'تاخير', 'متاخر', 'اهمال', 'مهمل', 'قصور', 'فشل', 'بطيء', 'بطئ', 'غير راضي', 'مش راضي', 'تقييم سيء', 'تقييم منخفض', 'تقييم قليل', 'تقييمات منخفضه', 'تقييمات سلبيه', 'سلبي', 'نجمه واحده', 'نجمتين', 'ريفيوهات وحشه', 'عيب', 'عيوب', 'نقطه ضعف', 'نقاط ضعف', 'مفيش رد', 'بدون رد', 'مرددتوش', 'ما ردتوش', 'مردتوش', 'مش بتردو', 'مبتردوش'];\nconst NEGATIVE_EN = ['complain', 'bad review', 'low rating', 'poor rating', 'negative', 'weakness', 'problem with', 'unanswered'];\n\n/** @returns {{ok:boolean, reasons:string[]}} */\nfunction checkTact(message, complaints = []) {\n  const m = norm(message);\n  const reasons = [];\n  for (const w of NEGATIVE_AR.concat(NEGATIVE_EN)) if (m.includes(norm(w))) reasons.push(`word:${w}`);\n  // \"your rating/reviews are low/bad\" in any phrasing\n  if (/(تقييم|ريفيو|نجوم|rating|review)\\S*\\s+(\\S+\\s+){0,2}(منخفض|قليل|ضعيف|سلبي|وحش|سيء|واطي|low|poor|bad)/.test(m)) reasons.push('rating_negative');\n  for (const c of complaints || []) {\n    const theme = typeof c === 'string' ? c : c && c.theme;\n    for (const tok of norm(theme).split(' ')) if (tok.length >= 5 && m.includes(tok)) reasons.push(`theme:${tok}`);\n  }\n  return { ok: reasons.length === 0, reasons: [...new Set(reasons)] };\n}\n\n\n// ───────────────────────── LLM helpers (OpenRouter request/response) ─────────────────────────\n/** OpenRouter chat request body (string). `fallback` = fallback model ids tried on provider failure. */\nfunction llmRequest({ system, user, model, fallback = [], temperature = 0, extraMessages = [] }) {\n  const req = {\n    messages: [{ role: 'system', content: system }, { role: 'user', content: typeof user === 'string' ? user : JSON.stringify(user) }, ...extraMessages],\n    response_format: { type: 'json_object' },\n    temperature,\n    usage: { include: true },\n  };\n  const fb = (fallback || []).filter(Boolean);\n  if (fb.length) req.models = [model, ...fb]; else req.model = model;\n  return JSON.stringify(req);\n}\n\n/** Parse an OpenRouter full-response item. @returns {{data:any|null, usage:{in:number,out:number,cost:number,model:string|null}, status:number|null}} */\nfunction parseLlm(res) {\n  const r = res || {};\n  const u = (r.body && r.body.usage) || {};\n  const usage = { in: u.prompt_tokens || 0, out: u.completion_tokens || 0, cost: Number(u.cost) || 0, model: (r.body && r.body.model) || null };\n  let data = null;\n  if (r.statusCode >= 200 && r.statusCode < 300 && r.body && r.body.choices) {\n    try { data = JSON.parse((r.body.choices[0]?.message?.content || '').replace(/^```(?:json)?/i, '').replace(/```$/, '').trim()); } catch (e) { data = null; }\n  }\n  return { data, usage, status: typeof r.statusCode === 'number' ? r.statusCode : null };\n}\n\n/** System prompt of the fit check (spec 6.0 step 3 and 4). Offer-agnostic: the ideal prospect text is the only criterion. */\nfunction fitSystemPrompt({ ideal, offerText, negatives = [] }) {\n  return `You judge whether Google Maps places are potential CUSTOMERS (prospects) for a seller.\nIdeal prospect: ${ideal || '(not stated; judge from the seller offer)'}\nSeller offer: ${String(offerText || '').slice(0, 500)}\nFor each place decide: \"fit\" (clearly the kind of business described), \"maybe\" (possibly, adjacent or unclear), \"not_fit\" (a different kind of business even if its NAME contains similar words, a public or government body, a competitor of the seller, or unrelated).\nJudge by categories, website and area. Never judge by words in the name alone. Give a SHORT reason (max 12 words, in the same language as the ideal prospect text).${negatives.length ? `\\nThe seller already rejected businesses like these (treat similar ones as not_fit):\\n${negatives.slice(0, 15).map((n) => `- ${n.business_name || ''} (${n.category || ''}): ${n.reason || ''}`).join('\\n')}` : ''}\nReturn ONE JSON object only: {\"results\":[{\"i\": number, \"fit\": \"fit\"|\"maybe\"|\"not_fit\", \"reason\": string}]} covering every i.`;\n}\n\n/** The compact description of one place sent to the fit check. */\nfunction fitAsk(rawPlace, area) {\n  const cats = [rawPlace.categoryName, ...(Array.isArray(rawPlace.categories) ? rawPlace.categories : [])].filter(Boolean);\n  return { name: stripInvisible(rawPlace.title), categories: cats.slice(0, 5), website: rawPlace.website ? 'yes' : 'no', area: area || '', rating: rawPlace.totalScore ?? null, reviews: rawPlace.reviewsCount ?? null };\n}\n\n// ───────────────────────── search rounds (spec 6.2) ─────────────────────────\n/** Search area of a location: the most specific name and a clean geocoder string (no repeated parts, no hidden characters). */\nfunction areaOf(l) {\n  // Unique parts; a part already contained in a more specific one is dropped (\"القاهرة\" inside \"التجمع الخامس القاهرة\").\n  const parts = [cleanPlace(l.district), cleanPlace(l.city), cleanPlace(l.governorate)].filter(Boolean);\n  const kept = parts.filter((p, i) => !parts.some((q, j) => j !== i && norm(q) !== norm(p) && norm(q).includes(norm(p))) && parts.findIndex((q) => norm(q) === norm(p)) === i);\n  return { area: cleanPlace(l.district || l.city || l.governorate || ''), locationQuery: kept.concat('Egypt').join(', ') };\n}\n\n/**\n * Plan the Apify searches for a round. Rounds: 1 base queries at real depth; 2 same queries deeper (only the ones that hit\n * their cap); 3 synonyms; 4 nearby districts; 5 broad fallback (city level, simplest keyword) used for zero results.\n * @returns {{round:number, searches:{query:string, area:string, locationQuery:string, depth:number}[]}|null} null = exhausted\n */\nfunction planRound({ round, target, keywords, synonyms = [], locations, nearby = [], done = [], saturated = [], avoid = [], minDepth = 20, maxDepth = 120 }) {\n  const doneSet = new Set(done.map((d) => norm(d)));\n  const loc = areaOf;\n  const mk = (kws, locs, depthMul = 1) => {\n    const base = Math.min(maxDepth, Math.max(minDepth, Math.ceil((target * 2.5) / Math.max(1, kws.length * locs.length))));\n    const depth = Math.min(maxDepth, Math.ceil(base * depthMul));\n    const s = [];\n    for (const l of locs) {\n      const { area, locationQuery } = loc(l);\n      for (const k of kws) {\n        const query = `${cleanPlace(k)} ${area}`.trim();\n        s.push({ query, area, locationQuery, depth, key: norm(`${depthMul}|${query}`) });\n      }\n    }\n    return s;\n  };\n  let searches = [];\n  if (round === 1) searches = mk(keywords, locations);\n  else if (round === 2) {\n    const sat = new Set(saturated.map(norm));\n    searches = mk(keywords, locations, 2.5).filter((s) => sat.has(norm(s.query)));\n  } else if (round === 3) searches = mk(synonyms, locations);\n  else if (round === 4) searches = mk(keywords.concat(synonyms).slice(0, 4), nearby);\n  else if (round === 5) {\n    // Broad fallback: simplest keyword, city level (or governorate), no district polygon.\n    const broad = locations.map((l) => ({ governorate: l.governorate, city: l.city || l.governorate, district: '' }));\n    searches = mk(keywords.slice(0, 2), broad.length ? broad : locations);\n  } else return null;\n  // `avoid` = searches this organization already ran in earlier campaigns: the same companies would come back, so prefer new ones.\n  const avoidSet = new Set(avoid.map(norm));\n  searches = searches.filter((s) => s.query && !doneSet.has(norm(s.query) + '|' + round) && !avoidSet.has(norm(s.query)));\n  return searches.length ? { round, searches } : null;\n}\n\n/**\n * After a round: which round next (null = stop). Normal order 1..5; if round 1 found no places at all the engine jumps to the\n * broad fallback first (city level, simplest keywords), then synonyms and nearby districts.\n * @returns {{next:number|null, mode:'normal'|'zero'}}\n */\nfunction decideNext({ round, mode = 'normal', delivered, target, rawTotal }) {\n  if (delivered >= target) return { next: null, mode };\n  if (round === 1 && rawTotal === 0) return { next: 5, mode: 'zero' };\n  if (mode === 'zero') return { next: round === 5 ? 3 : round === 3 ? 4 : null, mode };\n  return { next: round < 5 ? round + 1 : null, mode };\n}\n\n/** Why a campaign delivered nothing (plain code, mapped to a user message with concrete suggestions in the UI). */\nfunction emptyReason(f) {\n  if (!f.raw_places) return 'no_places';\n  if (f.removed_not_fit >= (f.raw_places - f.removed_category - f.removed_global - f.removed_closed) && f.removed_not_fit > 0) return 'all_not_fit';\n  if (f.removed_category + f.removed_global >= f.raw_places * 0.8) return 'all_category';\n  if (f.previously_found > 0 && f.previously_found >= f.raw_places * 0.5) return 'all_previously_found';\n  if (f.cooldown > 0 && f.cooldown >= f.raw_places * 0.5) return 'all_cooldown';\n  return 'all_filtered';\n}\n\n/** Funnel keys shown on the campaign page, in order (spec 6.2). */\nconst FUNNEL_KEYS = ['queries', 'raw_places', 'removed_category', 'removed_global', 'removed_closed', 'removed_landline', 'removed_filters', 'removed_not_fit', 'duplicates', 'previously_found', 'opted_out', 'cooldown', 'delivered'];\n\nconst body = $('Webhook').first().json.body;\nconst job = $('Get job').first().json;\nconst plans = $('Plan queries').all().map((i) => i.json);\nconst outs = $input.all();\nconst probeRows = $('Get probe').all().map((i) => i.json).filter((r) => r && r.result);\n\nconst KEEP = ['title', 'categoryName', 'categories', 'address', 'neighborhood', 'street', 'city', 'state', 'countryCode',\n  'website', 'phone', 'phoneUnformatted', 'location', 'totalScore', 'reviewsCount', 'permanentlyClosed',\n  'temporarilyClosed', 'placeId', 'url', 'openingHours', 'claimThisBusiness', 'imagesCount', 'description', 'subTitle', 'ownerDescription'];\n\nconst rows = new Map();\nconst errors = [];\nconst perQuery = new Map(); // normalized search string -> places returned\nlet found = 0;\n\nconst add = (x, plan, extra) => {\n  if (!x || !x.placeId) return;\n  if (rows.has(x.placeId)) return;\n  const raw = {};\n  for (const k of KEEP) if (x[k] !== undefined) raw[k] = x[k];\n  raw._district = plan.district;\n  raw._city = plan.city;\n  raw._governorate = plan.governorate;\n  if (extra) Object.assign(raw, extra);\n  rows.set(x.placeId, { organization_id: body.organization_id, job_id: body.job_id, source: 'google_maps', external_id: x.placeId, raw });\n};\n\n// Places the probe already judged as fit are kept (nothing is wasted); they carry their label.\nif ((Number(body.round) || 1) === 1) {\n  const pr = probeRows[0] && probeRows[0].result;\n  for (const pl of (pr && pr.places) || []) {\n    if (pl && pl.raw && (pl.fit === 'fit' || pl.fit === 'maybe')) add(pl.raw, { district: pl.raw._district || null, city: pl.raw._city || null, governorate: pl.raw._governorate || null }, { _fit: { fit: pl.fit, reason: pl.reason || null } });\n  }\n}\n\nouts.forEach((it, idx) => {\n  const r = it.json || {};\n  const plan = plans[idx] || {};\n  if (typeof r.statusCode === 'number' && r.statusCode >= 200 && r.statusCode < 300 && Array.isArray(r.body)) {\n    for (const x of r.body) {\n      if (!x || !x.placeId) continue;\n      found++;\n      const key = norm(x.searchString || '');\n      perQuery.set(key, (perQuery.get(key) || 0) + 1);\n      add(x, plan);\n    }\n  } else {\n    errors.push(String(r.statusCode || (r.error && (r.error.message || r.error)) || 'unknown'));\n  }\n});\n\nconst counts0 = job.counts || {};\nconst round = Number(body.round) || (plans[0] && plans[0].round) || 1;\nconst planRoundUsed = (plans[0] && plans[0].round) || round;\nconst done = new Set(counts0.done_queries || []);\nconst saturated = new Set(counts0.saturated || []);\nconst searchRows = [];\nfor (const plan of plans) {\n  for (const q of plan.queries || []) {\n    const n = perQuery.get(norm(q)) || 0;\n    done.add(`${norm(q)}|${plan.round}`);\n    if (n >= Math.ceil(plan.depth * 0.9)) saturated.add(q);\n    searchRows.push({ organization_id: body.organization_id, campaign_id: body.campaign_id, job_id: body.job_id, query: q, area: plan.area, round: plan.round, places_found: n });\n  }\n}\nconst mode = counts0.mode || 'normal';\nconst counts = {\n  ...counts0,\n  round: planRoundUsed,\n  mode,\n  lead_cap: plans[0] ? plans[0].leadCap : counts0.lead_cap,\n  done_queries: [...done].slice(-200),\n  saturated: [...saturated].slice(-50),\n  raw_total: (Number(counts0.raw_total) || 0) + rows.size,\n  raw_round: rows.size,\n  queries: (Number(counts0.queries) || 0) + searchRows.length,\n  progress_note: `round_${planRoundUsed}`,\n};\n\nreturn [{\n  json: {\n    rows: [...rows.values()],\n    searchRows,\n    found,\n    unique: rows.size,\n    errors,\n    allFailed: outs.length > 0 && errors.length === outs.length,\n    counts,\n  },\n}];\n"
       }
     },
     {
-      "id": "7a0d486f-d11e-2dbd-75be-c15c801598a6",
-      "name": "Rows found?",
+      "id": "e1352a24-938f-93c5-6360-1a8a20ae3799",
+      "name": "Maps failed on round 1?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
       "position": [
-        2160,
+        2880,
         300
       ],
       "parameters": {
@@ -258,8 +365,8 @@
           },
           "conditions": [
             {
-              "id": "09c76d25-1e17-8c9f-f18c-6e0c84e652a6",
-              "leftValue": "={{ $json.rows.length > 0 }}",
+              "id": "3a69e4d7-2de6-fe22-0a19-65e18d89f49c",
+              "leftValue": "={{ $json.allFailed === true && ($(\"Plan queries\").first().json.round || 1) === 1 }}",
               "rightValue": "",
               "operator": {
                 "type": "boolean",
@@ -279,7 +386,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2400,
+        3120,
         300
       ],
       "parameters": {
@@ -319,12 +426,57 @@
       "waitBetweenTries": 1500
     },
     {
-      "id": "0b8b9ff8-0e10-aed6-46b3-28ea4de021a5",
-      "name": "Save lead cap",
+      "id": "41c6cc00-9d88-92c3-666f-b53b0956fbce",
+      "name": "Save searches",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2640,
+        3360,
+        300
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__SUPABASE_URL__/rest/v1/search_queries",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Prefer",
+              "value": "return=minimal"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($(\"Collect\").first().json.searchRows) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
+    },
+    {
+      "id": "aa1987e4-4c8c-5080-bf2c-7134beffb364",
+      "name": "Save round state",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3600,
         300
       ],
       "parameters": {
@@ -335,7 +487,7 @@
         "sendHeaders": false,
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ progress: 40, counts: { found: $(\"Collect\").first().json.found, unique: $(\"Collect\").first().json.unique, lead_cap: $(\"Plan queries\").first().json.leadCap, queries: $(\"Plan queries\").all().length } }) }}",
+        "jsonBody": "={{ JSON.stringify({ progress: Math.min(60, 20 + 10 * ($(\"Collect\").first().json.counts.round || 1)), counts: $(\"Collect\").first().json.counts }) }}",
         "options": {
           "response": {
             "response": {
@@ -361,7 +513,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2880,
+        3840,
         300
       ],
       "parameters": {
@@ -371,7 +523,7 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ $(\"Webhook\").first().json.body }}",
+        "jsonBody": "={{ Object.assign({}, $(\"Webhook\").first().json.body, { round: $(\"Collect\").first().json.counts.round }) }}",
         "options": {
           "response": {
             "response": {
@@ -392,41 +544,38 @@
       "waitBetweenTries": 2000
     },
     {
-      "id": "e61231c5-4c62-6aab-fe87-d71ad780c5cd",
-      "name": "Settle empty or failed",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "id": "868b9e1c-55f5-f538-8146-d0c0171ff799",
+      "name": "No queries at all?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
       "position": [
-        2640,
+        3600,
         460
       ],
       "parameters": {
-        "method": "POST",
-        "url": "=__SUPABASE_URL__/rest/v1/rpc/settle_job",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
-        "sendHeaders": false,
-        "sendBody": true,
-        "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify({ p_job_id: $(\"Webhook\").first().json.body.job_id, p_credits_used: 0, p_status: $(\"Collect\").first().json.allFailed ? \"failed\" : \"succeeded\", p_error: $(\"Collect\").first().json.allFailed ? \"maps_failed\" : null, p_counts: { found: 0, lead_cap: $(\"Plan queries\").first().json.leadCap } }) }}",
-        "options": {
-          "response": {
-            "response": {
-              "neverError": true
-            }
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
           },
-          "timeout": 60000
-        }
-      },
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "__CRED_SUPABASE__",
-          "name": "Wasla Supabase"
-        }
-      },
-      "retryOnFail": true,
-      "maxTries": 3,
-      "waitBetweenTries": 1500
+          "conditions": [
+            {
+              "id": "42aede86-7ae1-b190-0b2a-9d0b3d772b2f",
+              "leftValue": "={{ $json.error === \"no_queries\" }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      }
     },
     {
       "id": "f32720e1-12c5-be10-89b6-ecb88eb1e786",
@@ -434,8 +583,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        2880,
-        620
+        3840,
+        460
       ],
       "parameters": {
         "method": "POST",
@@ -464,6 +613,79 @@
       "retryOnFail": true,
       "maxTries": 3,
       "waitBetweenTries": 1500
+    },
+    {
+      "id": "5b7a5d79-9a23-da52-983d-8d3d1f0fab79",
+      "name": "Call normalize final",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4080,
+        460
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__N8N_BASE__/webhook/wasla-normalize",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ Object.assign({}, $(\"Webhook\").first().json.body, { final: true }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 30000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SECRET__",
+          "name": "Wasla Webhook Secret"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "id": "b7a72eba-73dc-3893-999b-2cfb9a3e0d00",
+      "name": "Settle maps failed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4320,
+        620
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "=__SUPABASE_URL__/rest/v1/rpc/settle_job",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": false,
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ p_job_id: $(\"Webhook\").first().json.body.job_id, p_credits_used: 0, p_status: \"failed\", p_error: \"maps_failed\" }) }}",
+        "options": {
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          },
+          "timeout": 60000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "__CRED_SUPABASE__",
+          "name": "Wasla Supabase"
+        }
+      },
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 1500
     }
   ],
   "connections": {
@@ -471,14 +693,25 @@
       "main": [
         [
           {
-            "node": "Claim job",
+            "node": "Get job",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Claim job": {
+    "Get job": {
+      "main": [
+        [
+          {
+            "node": "Mark running",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark running": {
       "main": [
         [
           {
@@ -501,6 +734,28 @@
       ]
     },
     "Signal cost": {
+      "main": [
+        [
+          {
+            "node": "Get past searches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get past searches": {
+      "main": [
+        [
+          {
+            "node": "Get probe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get probe": {
       "main": [
         [
           {
@@ -533,7 +788,25 @@
         ],
         [
           {
+            "node": "No queries at all?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No queries at all?": {
+      "main": [
+        [
+          {
             "node": "Settle no queries",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Call normalize final",
             "type": "main",
             "index": 0
           }
@@ -555,25 +828,25 @@
       "main": [
         [
           {
-            "node": "Rows found?",
+            "node": "Maps failed on round 1?",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Rows found?": {
+    "Maps failed on round 1?": {
       "main": [
         [
           {
-            "node": "Save staging",
+            "node": "Settle maps failed",
             "type": "main",
             "index": 0
           }
         ],
         [
           {
-            "node": "Settle empty or failed",
+            "node": "Save staging",
             "type": "main",
             "index": 0
           }
@@ -584,14 +857,25 @@
       "main": [
         [
           {
-            "node": "Save lead cap",
+            "node": "Save searches",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Save lead cap": {
+    "Save searches": {
+      "main": [
+        [
+          {
+            "node": "Save round state",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save round state": {
       "main": [
         [
           {

@@ -280,6 +280,12 @@ begin
   perform pg_temp.ok(pg_temp.err('authenticated', a, $q$update public.app_config set value = '0'$q$) like '42501%', 'config not writable by users');
   perform pg_temp.ok(pg_temp.err('authenticated', a, format('select public.ingest_leads(%L, %L, %L, true)', org_a, camp_a, '[]')) like '42501%', 'ingest v3 still service-only');
 
+  -- Learning loop: opportunity type is stored per message and aggregated per org
+  perform pg_temp.q('postgres', null, format('update public.messages set opportunity_type = %L where id = %L', 'unclaimed_listing', msg));
+  perform pg_temp.q('postgres', null, format('update public.leads set status = %L where id = %L', 'replied', lead_a));
+  perform pg_temp.ok(pg_temp.q('authenticated', a, format('select sent || %L || replied from public.opportunity_stats(%L)', '/', org_a)) = '1/1', 'opportunity stats: 1 sent, 1 replied');
+  perform pg_temp.ok(pg_temp.q('authenticated', b, format('select count(*) from public.opportunity_stats(%L)', org_a)) = '0', 'B cannot read A opportunity stats');
+
   -- Planner / signal job types
   perform pg_temp.ok(pg_temp.err('authenticated', a, format('select public.create_job(%L, null, %L, 2, %L)', org_a, 'plan', 'plan-1')) = 'OK', 'planner job allowed');
   perform pg_temp.ok(pg_temp.err('authenticated', a, format('select public.create_job(%L, null, %L, 0, %L)', org_a, 'bogus', 'bad-1')) like '23514%', 'unknown job type rejected');
