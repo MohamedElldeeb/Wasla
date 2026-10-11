@@ -183,8 +183,6 @@ if (!process.argv.includes('--skip-demo')) {
     await page.locator('#max').evaluate((el) => { const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set; set.call(el, '10'); el.dispatchEvent(new Event('input', { bubbles: true })); });
     await page.getByRole('button', { name: /^التالي$/ }).last().click();
     await page.waitForTimeout(800);
-    await page.getByRole('button', { name: /^التالي$/ }).last().click();
-    await page.waitForTimeout(800);
     const start = page.getByRole('button', { name: /بدء الحملة/ });
     const label = (await start.innerText()).replace(/\s+/g, ' ');
     check('wizard: the cost is shown on the start button before starting', /بدء الحملة · \d+ رصيد/.test(label), label);

@@ -1,6 +1,6 @@
 {
   "base": "https://wasla-henna.vercel.app",
-  "at": "2026-10-10T18:31:59.810Z",
+  "at": "2026-10-11T17:16:39.262Z",
   "results": [
     {
       "name": "desktop review: list pane (left/start) is visible next to the message pane",
@@ -91,6 +91,56 @@
       "name": "google: Google will send the user back to the Supabase callback",
       "ok": true,
       "detail": "https://szuarlmqbtlfbfylqobe.supabase.co/auth/v1/callback"
+    },
+    {
+      "name": "demo: \"جرب مجانا\" creates a trial account and opens onboarding",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "demo: the profile is saved and the dashboard opens",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "demo: the new account gets its free credits",
+      "ok": true,
+      "detail": "balance 50"
+    },
+    {
+      "name": "wizard: the cost is shown on the start button before starting",
+      "ok": true,
+      "detail": "بدء الحملة · 10 رصيد"
+    },
+    {
+      "name": "wizard: a free account can start 10 prospects (button enabled)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "start: no error is shown after pressing start",
+      "ok": true,
+      "detail": "فحص حي قيد التنفيذ"
+    },
+    {
+      "name": "end to end: the ingest job succeeded",
+      "ok": true,
+      "detail": "{\"status\":\"succeeded\",\"error\":null}"
+    },
+    {
+      "name": "end to end: prospects were delivered",
+      "ok": true,
+      "detail": "10 prospects"
+    },
+    {
+      "name": "credits: nothing stays reserved after the job",
+      "ok": true,
+      "detail": "0 open reservations"
+    },
+    {
+      "name": "server actions: every call answered 200",
+      "ok": true,
+      "detail": "200,200,200,200,200"
     }
   ]
 }
