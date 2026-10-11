@@ -3,7 +3,8 @@
 /*__INSIGHTS__*/
 const body = $('Webhook').first().json.body;
 const job = $('Get job').first().json;
-const plans = $('Plan queries').all().map((i) => i.json);
+// the searches that remain after unresolvable locations were skipped ("Filter locations")
+const plans = $('Filter locations').all().map((i) => i.json);
 const outs = $input.all();
 const probeRows = $('Get probe').all().map((i) => i.json).filter((r) => r && r.result);
 
@@ -79,6 +80,8 @@ const counts = {
   raw_round: rows.size,
   queries: (Number(counts0.queries) || 0) + searchRows.length,
   progress_note: `round_${planRoundUsed}`,
+  // locations the geocoder could not find (shown in the funnel as "location not found"); the search continued with the others
+  location_not_found: [...new Set([...(Array.isArray(counts0.location_not_found) ? counts0.location_not_found : []), ...((plans[0] && plans[0].skipped_locations) || [])])].slice(0, 12),
 };
 
 return [{

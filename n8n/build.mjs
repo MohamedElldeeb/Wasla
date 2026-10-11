@@ -204,6 +204,17 @@ const out = [];
   const probe = w.sb('Get probe', 'GET', `jobs?campaign_id=eq.{{ ${CAMPAIGN} }}&type=eq.probe&status=eq.succeeded&order=created_at.desc&limit=1&select=result`, { node: { alwaysOutputData: true } });
   const plan = w.code('Plan queries', 'ingest_plan_queries.js');
   const has = w.iff('Has queries?', '!$json.error && !$json.exhausted');
+  // Every location is geocoded first (same service the Apify actor uses): one that cannot be found is skipped, the others continue.
+  const geo = w.add('Geocode check', 'n8n-nodes-base.httpRequest', 4.2, {
+    method: 'GET', url: 'https://nominatim.openstreetmap.org/search',
+    sendQuery: true, queryParameters: { parameters: [{ name: 'q', value: '={{ $json.location_query }}' }, { name: 'format', value: 'json' }, { name: 'limit', value: '1' }] },
+    sendHeaders: true, headerParameters: { parameters: [{ name: 'User-Agent', value: 'Wasla/1.0 (location check before a lead search)' }] },
+    options: { response: { response: { fullResponse: true, neverError: true } }, timeout: 15000, batching: { batch: { batchSize: 1, batchInterval: 1100 } } },
+  }, { onError: 'continueRegularOutput' });
+  const filt = w.code('Filter locations', 'ingest_filter_locations.js');
+  const anyLoc = w.iff('Any location left?', '$json.allLocationsSkipped !== true');
+  const firstRound = w.iff('First round?', '($("Plan queries").first().json.round || 1) === 1');
+  const locFail = settle(w, 'Settle location not found', 'p_job_id: ' + JOB + ', p_credits_used: 0, p_status: "failed", p_error: "location_not_found", p_counts: Object.assign({}, $("Get job").first().json.counts || {}, { location_not_found: $json.skipped_locations || [] })');
   const apify = w.apify('Apify places', 'compass/crawler-google-places', '$json.requestBody');
   const collect = w.code('Collect', 'ingest_collect.js');
   const failed = w.iff('Maps failed on round 1?', '$json.allFailed === true && ($("Plan queries").first().json.round || 1) === 1');
@@ -219,7 +230,9 @@ const out = [];
   const exhausted = w.callWebhook('Call normalize final', 'wasla-normalize', 'Object.assign({}, $("Webhook").first().json.body, { final: true })');
   w.row = 2; const mapsFail = settle(w, 'Settle maps failed', 'p_job_id: ' + JOB + ', p_credits_used: 0, p_status: "failed", p_error: "maps_failed", p_counts: { search_errors: ($("Collect").first().json.errors || []).slice(0, 3) }');
   w.chain(hook, job, mark, camp, sig, past, probe, plan, has);
-  w.connect(has, apify, 0); w.connect(has, why, 1);
+  w.connect(has, geo, 0); w.chain(geo, filt, anyLoc); w.connect(anyLoc, apify, 0); w.connect(anyLoc, firstRound, 1);
+  w.connect(firstRound, locFail, 0); w.connect(firstRound, exhausted, 1);
+  w.connect(has, why, 1);
   w.connect(why, noq, 0); w.connect(why, exhausted, 1);
   w.chain(apify, collect, failed);
   w.connect(failed, mapsFail, 0); w.connect(failed, stage, 1);

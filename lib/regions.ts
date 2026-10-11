@@ -1,4 +1,4 @@
-export type Region = { governorate?: string; city?: string; district?: string };
+export type Region = { governorate?: string; city?: string; district?: string; governorate_en?: string; city_en?: string; district_en?: string };
 
 /** "محافظة، مدينة، حي" per line (also accepts commas "," and Arabic comma "،"). */
 export function parseRegions(text: string): Region[] {

@@ -18,7 +18,9 @@ import { useJob } from '@/components/app/use-job';
 import { useT } from '@/components/app/i18n-provider';
 import { runCampaign, saveCampaign, startPlanner, startProbe } from '@/app/actions/campaigns';
 import { defaults } from '@/lib/config/defaults';
-import { parseRegions, type Region } from '@/lib/regions';
+import type { Region } from '@/lib/regions';
+import { resolveRegion, regionLabelAr } from '@/lib/geo/egypt.mjs';
+import { LocationPicker } from '@/components/app/location-picker';
 import { newNonce } from '@/lib/nonce';
 import { num } from '@/lib/format';
 import { cn } from '@/lib/utils';
@@ -33,7 +35,19 @@ type Pref = { mode: 'off' | 'high' | 'low'; level: 1 | 2 | 3; emphasis?: boolean
 const LEVEL_WEIGHT = { 1: 30, 2: 60, 3: 100 } as const;
 const toWeight = (p: Pref) => (p.mode === 'off' ? 0 : (p.mode === 'high' ? 1 : -1) * LEVEL_WEIGHT[p.level]);
 const fromWeight = (w: number): Pref => ({ mode: w === 0 ? 'off' : w > 0 ? 'high' : 'low', level: Math.abs(w) <= 40 ? 1 : Math.abs(w) <= 75 ? 2 : 3 });
-const regionLabel = (r: Region) => [r.governorate, r.city, r.district].filter(Boolean).join('، ');
+const regionLabel = (r: Region) => regionLabelAr(r);
+
+/** Regions matched to the list (canonical form with English names); the names that matched nothing come back in `dropped`. */
+function keepKnown(list: Region[]): { known: Region[]; dropped: string[] } {
+  const known: Region[] = [];
+  const dropped: string[] = [];
+  for (const r of list) {
+    const k = resolveRegion(r);
+    if (!k) dropped.push(regionLabelAr(r) || '?');
+    else if (!known.some((x) => x.governorate === k.governorate && x.city === k.city && x.district === k.district)) known.push(k);
+  }
+  return { known, dropped };
+}
 
 function Segmented<T extends string | number>({ value, options, onChange, label }: { value: T; options: { v: T; label: string }[]; onChange: (v: T) => void; label: string }) {
   return (
@@ -131,8 +145,9 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
   const [name, setName] = useState('');
   const [keywords, setKeywords] = useState<string[]>([]);
   const [kwInput, setKwInput] = useState('');
-  const [locations, setLocations] = useState<Region[]>(orgRegions);
-  const [locInput, setLocInput] = useState('');
+  // Locations come from the list of Egyptian places only. Regions saved in the profile as free text are matched to the list; the rest are dropped with a note.
+  const [locations, setLocations] = useState<Region[]>(() => keepKnown(orgRegions).known);
+  const [locNotice, setLocNotice] = useState<string | null>(() => { const d = keepKnown(orgRegions).dropped; return d.length ? t.wizard.locationsDropped(d.join('، ')) : null; });
   const [maxResults, setMaxResults] = useState(30);
   const [minRating, setMinRating] = useState<number | ''>('');
   const [minReviews, setMinReviews] = useState<number | ''>('');
@@ -166,10 +181,14 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
       router.refresh(); // the planner charged credits: show the new balance
       const d = j.result as PlannerDraft;
       setKeywords(d.keywords ?? []);
-      if (d.locations?.length) setLocations(d.locations);
+      if (d.locations?.length) {
+        const k = keepKnown(d.locations);
+        if (k.known.length) setLocations(k.known.slice(0, 12));
+        setLocNotice(k.dropped.length ? w.locationsDropped(k.dropped.join('، ')) : null);
+      }
       setIdeal(d.ideal_lead_description ?? '');
       setCategories(d.categories ?? []);
-      setPlan({ synonyms: d.synonyms ?? [], nearby: d.nearby_locations ?? [], opportunities: d.opportunities ?? [], complaintRelevance: d.complaint_relevance ?? null });
+      setPlan({ synonyms: d.synonyms ?? [], nearby: keepKnown(d.nearby_locations ?? []).known, opportunities: d.opportunities ?? [], complaintRelevance: d.complaint_relevance ?? null });
       const next: Record<string, Pref> = {};
       const why: Record<string, string> = {};
       (d.signals ?? []).forEach((s) => { next[s.key] = { ...fromWeight(s.weight), ...(s.emphasis ? { emphasis: true } : {}) }; if (s.reason_ar) why[s.key] = s.reason_ar; });
@@ -215,11 +234,6 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
     const c = catInput.trim();
     if (c && !categories.some((x) => x.toLowerCase() === c.toLowerCase()) && categories.length < 20) setCategories([...categories, c]);
     setCatInput('');
-  }
-  function addLocation() {
-    const [r] = parseRegions(locInput);
-    if (r && locations.length < 12) setLocations([...locations, r]);
-    setLocInput('');
   }
 
   const active = signalDefs.filter((s) => s.enabled && (prefs[s.key]?.mode ?? 'off') !== 'off');
@@ -414,10 +428,8 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
               <div className="flex flex-wrap gap-2">
                 {locations.map((r, i) => <Chip key={`${regionLabel(r)}-${i}`} onRemove={() => setLocations(locations.filter((_, j) => j !== i))} removeLabel={`${t.common.remove} ${regionLabel(r)}`}>{regionLabel(r)}</Chip>)}
               </div>
-              <div className="flex gap-2">
-                <Input id="loc" value={locInput} dir="auto" placeholder="القاهرة، القاهرة، مدينة نصر" onChange={(e) => setLocInput(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addLocation(); } }} />
-                <Button type="button" variant="secondary" size="icon" onClick={addLocation} aria-label={t.common.add}><Plus aria-hidden /></Button>
-              </div>
+              <LocationPicker id="loc" selected={locations} max={12} onAdd={(r) => { setLocNotice(null); setLocations((x) => [...x, r]); }} />
+              {locNotice && <Alert variant="warning" role="status">{locNotice}</Alert>}
             </Field>
 
             <Field id="max" label={<>{w.maxResults}: <b className="num" dir="ltr">{maxResults}</b></>}>

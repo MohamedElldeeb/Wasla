@@ -15,7 +15,7 @@ export type OfferProfile = {
 };
 
 export type CampaignSignal = { key: string; weight: number; emphasis?: boolean };
-export type Region3 = { governorate?: string; city?: string; district?: string };
+export type Region3 = { governorate?: string; city?: string; district?: string; governorate_en?: string; city_en?: string; district_en?: string };
 /** Planner output: an opportunity type this offer can help with, and the one-sentence angle for it. */
 export type OpportunityMapItem = { type: string; angle_ar: string; why_it_means_they_need_the_offer?: string };
 
@@ -112,6 +112,7 @@ export type JobCounts = {
   found?: number; new?: number; already_known?: number; filtered_out?: number; delivered?: number; lead_cap?: number; round?: number;
   funnel?: Funnel; reached_target?: boolean; empty_reason?: string | null; short_reason?: string | null;
   not_fit_examples?: { name: string; reason: string }[]; fit_unchecked?: number;
+  location_not_found?: string[]; search_errors?: string[];
   generated?: number; failed?: number; retried?: number; skipped_cooldown?: number;
   [k: string]: unknown;
 };

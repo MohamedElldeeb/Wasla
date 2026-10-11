@@ -46,6 +46,12 @@ export function CampaignFunnel({ job, requested }: { job: Job; requested: number
           </div>
         ))}
       </dl>
+      {(c.location_not_found?.length ?? 0) > 0 && (
+        <div className="flex flex-col gap-1 rounded-control bg-warning-soft p-3" role="status" data-testid="funnel-location-not-found">
+          <strong className="text-body-sm text-fg">{f.locationNotFound}: <span dir="auto">{c.location_not_found!.join('، ')}</span></strong>
+          <span className="text-caption text-fg-muted">{f.locationNotFoundHint}</span>
+        </div>
+      )}
       {(c.not_fit_examples?.length ?? 0) > 0 && (
         <div className="flex flex-col gap-1">
           <h3 className="text-caption font-medium text-fg-muted">{f.notFitTitle}</h3>

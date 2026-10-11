@@ -1,5 +1,6 @@
 // Live-site checks (Part 5b): desktop two-pane review + keyboard shortcuts, the mobile filter bottom sheet, how far Google sign-in gets,
-// and (section 4) a trial account created through "جرب مجانا" that runs a 10-lead campaign end to end. Use --skip-demo to skip section 4 (it runs a real Apify job).
+// and (section 4) a trial account created through "جرب مجانا" that goes through onboarding and the wizard up to the start button.
+// By default NOTHING is spent. Add --with-demo (before deploys) to also start the 10-lead campaign: that runs a real Apify job (about 0.2 USD) and waits for it.
 // Usage: node --env-file=.env.local scripts/live-checks.mjs [outDir]    (BASE defaults to the production URL)
 // It uses the e2e test account (see scripts/e2e-pipeline.mjs). Message statuses it changes are restored through the service role at the end.
 import { chromium } from 'playwright-core';
@@ -139,8 +140,9 @@ const before = (await rest(`messages?campaign_id=eq.${state.campaign}&select=id,
   await ctx.close();
 }
 
-// ───── 4. sign up through "جرب مجانا" and run a 10-lead campaign end to end (real Apify run, about 0.2 USD) ─────
-if (!process.argv.includes('--skip-demo')) {
+// ───── 4. sign up through "جرب مجانا" and go through the wizard (the real Apify run happens only with --with-demo) ─────
+const withDemo = process.argv.includes('--with-demo');
+{
   const t0 = new Date(Date.now() - 5000).toISOString();
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, locale: 'ar-EG' });
   await ctx.addCookies([{ name: 'wasla_locale', value: 'ar', url: BASE }]);
@@ -178,6 +180,17 @@ if (!process.argv.includes('--skip-demo')) {
     await page.goto(`${BASE}/campaigns/new`, { waitUntil: 'networkidle' });
     await page.fill('#name', 'فحص حي');
     await page.getByRole('button', { name: /^التالي$/ }).last().click();
+    // locations are picked from the list (Arabic and English), never typed as free text
+    await page.fill('#loc', 'smouha');
+    const opt = page.getByRole('option').first();
+    await opt.waitFor({ timeout: 10000 });
+    const optText = (await opt.innerText()).replace(/\s+/g, ' ');
+    check('locations: autocomplete finds "smouha" with its Arabic and English names', /سموحة/.test(optText) && /Smouha/.test(optText), optText);
+    await opt.click();
+    check('locations: the picked place is added as an area', (await page.locator('main').innerText()).includes('سموحة'));
+    await page.fill('#loc', 'zzzzqq');
+    check('locations: a name that is not in the list offers nothing to add', (await page.getByRole('option').count()) === 0);
+    await page.fill('#loc', '');
     await page.fill('#kw', 'مطاعم');
     await page.keyboard.press('Enter');
     await page.locator('#max').evaluate((el) => { const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set; set.call(el, '10'); el.dispatchEvent(new Event('input', { bubbles: true })); });
@@ -187,6 +200,10 @@ if (!process.argv.includes('--skip-demo')) {
     const label = (await start.innerText()).replace(/\s+/g, ' ');
     check('wizard: the cost is shown on the start button before starting', /بدء الحملة · \d+ رصيد/.test(label), label);
     check('wizard: a free account can start 10 prospects (button enabled)', await start.isEnabled());
+    if (!withDemo) {
+      console.log('   (the 10-lead run was not started: add --with-demo to run it)');
+      throw new Error('__stop__');
+    }
     await start.click();
     await page.waitForURL((u) => /^\/campaigns\/[0-9a-f-]{36}$/.test(u.pathname), { timeout: 60000 });
     const campaignId = page.url().split('/').pop();
@@ -210,7 +227,7 @@ if (!process.argv.includes('--skip-demo')) {
     check('server actions: every call answered 200', actions.length > 0 && actions.every((s) => s === 200), actions.join(','));
     await page.screenshot({ path: `${out}/demo-campaign.png` });
   } catch (e) {
-    check('demo end-to-end flow completed', false, String(e.message).split('\n')[0]);
+    if (String(e.message) !== '__stop__') check('demo end-to-end flow completed', false, String(e.message).split('\n')[0]);
     await page.screenshot({ path: `${out}/demo-failure.png` }).catch(() => {});
   } finally {
     // the trial account and its data are removed (the organization cascades)

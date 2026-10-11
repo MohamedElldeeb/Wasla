@@ -48,7 +48,7 @@ export function JobProgress({ initial }: { initial: Job }) {
           ))}
         </dl>
       )}
-      {job.status === 'failed' && <Alert variant="danger" role="alert">{t.jobErrors[job.error ?? ''] ?? t.campaign.jobFailed}</Alert>}
+      {job.status === 'failed' && <Alert variant="danger" role="alert">{t.jobErrors[job.error ?? ''] ?? t.campaign.jobFailed}{job.error === 'location_not_found' && (job.counts?.location_not_found?.length ?? 0) > 0 && <span className="mt-1 block text-caption" dir="auto">{job.counts.location_not_found!.join('، ')}</span>}</Alert>}
     </Card>
   );
 }

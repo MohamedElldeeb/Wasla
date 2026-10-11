@@ -6,11 +6,12 @@ import { z } from 'zod';
 import { requireOrg } from '@/lib/org';
 import { startJob, messageForCode, type StartResult } from '@/lib/jobs';
 import { classifyDbError, firstInvalidField, logActionError } from '@/lib/action-errors.mjs';
+import { resolveRegion, regionLabelAr } from '@/lib/geo/egypt.mjs';
 import { defaults, llmConfig, plannerLlmConfig } from '@/lib/config/defaults';
 import { getT } from '@/lib/i18n/server';
 import type { CampaignParameters } from '@/lib/types';
 
-const location = z.object({ governorate: z.string().max(60).optional(), city: z.string().max(60).optional(), district: z.string().max(60).optional() });
+const location = z.object({ governorate: z.string().max(60).optional(), city: z.string().max(60).optional(), district: z.string().max(60).optional(), governorate_en: z.string().max(60).optional(), city_en: z.string().max(60).optional(), district_en: z.string().max(60).optional() });
 
 // Validation messages are keys into the wizard dictionary so they can be shown in the user's language.
 const paramsSchema = z.object({
@@ -80,7 +81,16 @@ export async function saveCampaign(input: CampaignInput): Promise<{ id?: string;
   if (!name) return { error: t.wizard.needName };
   const parsed = paramsSchema.safeParse(input.parameters);
   if (!parsed.success) return { error: invalidMessage(parsed.error, t) };
-  const parameters = parsed.data as CampaignParameters;
+  // Locations must come from the list of Egyptian governorates, cities and districts (never free text): unknown ones are refused by name,
+  // known ones are stored in their canonical form with the English names used to geocode them.
+  const known = [];
+  for (const loc of parsed.data.locations) {
+    const r = resolveRegion(loc);
+    if (!r) return { error: t.wizard.locationUnknown(regionLabelAr(loc) || '?') };
+    known.push(r);
+  }
+  const nearby = (parsed.data.nearby_locations ?? []).map((loc) => resolveRegion(loc)).filter((r): r is NonNullable<typeof r> => !!r);
+  const parameters = { ...parsed.data, locations: known, ...(parsed.data.nearby_locations ? { nearby_locations: nearby } : {}) } as CampaignParameters;
 
   if (input.id) {
     const { error } = await supabase.from('campaigns').update({ name, parameters }).eq('id', input.id).eq('status', 'draft');

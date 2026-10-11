@@ -67,6 +67,7 @@ return [...groups.values()].map((g) => {
   return {
     json: {
       requestBody: JSON.stringify(input),
+      location_query: g.locationQuery,
       round: plan.round,
       queries: g.queries,
       area: g.area,
