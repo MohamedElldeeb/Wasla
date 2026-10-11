@@ -1,4 +1,5 @@
-// Live-site checks (Part 5b): desktop two-pane review + keyboard shortcuts, the mobile filter bottom sheet, and how far Google sign-in gets.
+// Live-site checks (Part 5b): desktop two-pane review + keyboard shortcuts, the mobile filter bottom sheet, how far Google sign-in gets,
+// and (section 4) a trial account created through "جرب مجانا" that runs a 10-lead campaign end to end. Use --skip-demo to skip section 4 (it runs a real Apify job).
 // Usage: node --env-file=.env.local scripts/live-checks.mjs [outDir]    (BASE defaults to the production URL)
 // It uses the e2e test account (see scripts/e2e-pipeline.mjs). Message statuses it changes are restored through the service role at the end.
 import { chromium } from 'playwright-core';
@@ -136,6 +137,89 @@ const before = (await rest(`messages?campaign_id=eq.${state.campaign}&select=id,
     await page.screenshot({ path: `${out}/google-chooser.png` });
   }
   await ctx.close();
+}
+
+// ───── 4. sign up through "جرب مجانا" and run a 10-lead campaign end to end (real Apify run, about 0.2 USD) ─────
+if (!process.argv.includes('--skip-demo')) {
+  const t0 = new Date(Date.now() - 5000).toISOString();
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, locale: 'ar-EG' });
+  await ctx.addCookies([{ name: 'wasla_locale', value: 'ar', url: BASE }]);
+  const page = await ctx.newPage();
+  const actions = [];
+  page.on('response', async (r) => {
+    if (r.request().method() === 'POST' && r.request().headers()['next-action']) actions.push(r.status());
+  });
+  let demoUser = null;
+  let orgId = null;
+  try {
+    await page.goto(`${BASE}/`, { waitUntil: 'networkidle' });
+    await page.getByTestId('try-demo').first().click();
+    await page.waitForURL((u) => u.pathname === '/onboarding', { timeout: 90000 });
+    check('demo: "جرب مجانا" creates a trial account and opens onboarding', true);
+
+    await page.waitForLoadState('networkidle');
+    await page.getByLabel('اسم نشاطك').fill('اختبار حي');
+    await page.getByRole('button', { name: /تخطي المقابلة/ }).click();
+    await page.waitForSelector('#f-what_we_sell');
+    await page.fill('#f-what_we_sell', 'نظام محاسبة سحابي للشركات الصغيرة');
+    await page.fill('#f-ideal_customer', 'مطاعم ومحلات صغيرة');
+    await page.fill('#f-regions', 'القاهرة');
+    await page.getByRole('button', { name: /تأكيد وإكمال/ }).click();
+    await page.waitForURL((u) => u.pathname === '/dashboard', { timeout: 90000 });
+    check('demo: the profile is saved and the dashboard opens', true);
+
+    const users = (await (await fetch(`${SB}/auth/v1/admin/users?per_page=500`, { headers: { apikey: SR, authorization: `Bearer ${SR}` } })).json()).users || [];
+    demoUser = users.filter((u) => /@demo\.wasla\.app$/.test(u.email) && u.created_at >= t0).sort((a, b) => b.created_at.localeCompare(a.created_at))[0];
+    const mem = demoUser ? await rest(`memberships?user_id=eq.${demoUser.id}&select=organization_id`) : [];
+    orgId = mem && mem[0] && mem[0].organization_id;
+    const bal0 = orgId ? await (await fetch(`${SB}/rest/v1/rpc/org_credit_balance`, { method: 'POST', headers: { apikey: SR, authorization: `Bearer ${SR}`, 'content-type': 'application/json' }, body: JSON.stringify({ org: orgId }) })).json() : null;
+    check('demo: the new account gets its free credits', Number(bal0) === 50, `balance ${bal0}`);
+
+    await page.goto(`${BASE}/campaigns/new`, { waitUntil: 'networkidle' });
+    await page.fill('#name', 'فحص حي');
+    await page.getByRole('button', { name: /^التالي$/ }).last().click();
+    await page.fill('#kw', 'مطاعم');
+    await page.keyboard.press('Enter');
+    await page.locator('#max').evaluate((el) => { const set = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set; set.call(el, '10'); el.dispatchEvent(new Event('input', { bubbles: true })); });
+    await page.getByRole('button', { name: /^التالي$/ }).last().click();
+    await page.waitForTimeout(800);
+    await page.getByRole('button', { name: /^التالي$/ }).last().click();
+    await page.waitForTimeout(800);
+    const start = page.getByRole('button', { name: /بدء الحملة/ });
+    const label = (await start.innerText()).replace(/\s+/g, ' ');
+    check('wizard: the cost is shown on the start button before starting', /بدء الحملة · \d+ رصيد/.test(label), label);
+    check('wizard: a free account can start 10 prospects (button enabled)', await start.isEnabled());
+    await start.click();
+    await page.waitForURL((u) => /^\/campaigns\/[0-9a-f-]{36}$/.test(u.pathname), { timeout: 60000 });
+    const campaignId = page.url().split('/').pop();
+    const alertText = (await page.locator('[role=alert]').allInnerTexts()).join(' ');
+    check('start: no error is shown after pressing start', !/حدث خطأ|رصيدك غير كافٍ|المرجع/.test(alertText), alertText.slice(0, 120));
+
+    // wait for the job: succeeded with leads, and no credits left reserved
+    let job = null;
+    for (let i = 0; i < 48; i++) {
+      const jobs = await rest(`jobs?campaign_id=eq.${campaignId}&type=eq.ingest&select=status,error,credits_reserved,credits_used,counts`);
+      job = jobs && jobs[0];
+      if (job && ['succeeded', 'failed', 'cancelled'].includes(job.status)) break;
+      await new Promise((r) => setTimeout(r, 10000));
+    }
+    check('end to end: the ingest job succeeded', job?.status === 'succeeded', JSON.stringify({ status: job?.status, error: job?.error }));
+    const leads = await rest(`campaign_leads?campaign_id=eq.${campaignId}&select=id`);
+    check('end to end: prospects were delivered', Array.isArray(leads) && leads.length >= 1, `${leads?.length ?? 0} prospects`);
+    const ledger = await rest(`credit_ledger?organization_id=eq.${orgId}&select=kind,amount,job_id`);
+    const open = (ledger || []).filter((l) => l.kind === 'reserve').filter((l) => !(ledger || []).some((x) => x.job_id === l.job_id && (x.kind === 'settle' || x.kind === 'refund')));
+    check('credits: nothing stays reserved after the job', open.length === 0, `${open.length} open reservations`);
+    check('server actions: every call answered 200', actions.length > 0 && actions.every((s) => s === 200), actions.join(','));
+    await page.screenshot({ path: `${out}/demo-campaign.png` });
+  } catch (e) {
+    check('demo end-to-end flow completed', false, String(e.message).split('\n')[0]);
+    await page.screenshot({ path: `${out}/demo-failure.png` }).catch(() => {});
+  } finally {
+    // the trial account and its data are removed (the organization cascades)
+    if (orgId) await fetch(`${SB}/rest/v1/organizations?id=eq.${orgId}`, { method: 'DELETE', headers: { apikey: SR, authorization: `Bearer ${SR}` } }).catch(() => {});
+    if (demoUser) await fetch(`${SB}/auth/v1/admin/users/${demoUser.id}`, { method: 'DELETE', headers: { apikey: SR, authorization: `Bearer ${SR}` } }).catch(() => {});
+    await ctx.close();
+  }
 }
 
 // restore any message status the checks changed

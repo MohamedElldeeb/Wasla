@@ -50,6 +50,8 @@ begin
   org_a := pg_temp.q('authenticated', a, $q$select public.create_organization('Org A')$q$)::uuid;
   org_b := pg_temp.q('authenticated', b, $q$select public.create_organization('Org B')$q$)::uuid;
   perform pg_temp.ok(pg_temp.q('authenticated', a, format('select public.org_credit_balance(%L)', org_a)) = '50', 'free grant = 50');
+  -- a brand new free account can run at least one 10-lead campaign: the planner (2 credits) + 10 prospects with EVERY enabled signal fit in the free grant
+  perform pg_temp.ok(2 + 10 * (1 + pg_temp.q('postgres', null, $q$select public.signal_credits_per_lead((select jsonb_agg(jsonb_build_object('key', key)) from public.signal_definitions where enabled))$q$)::int) <= 50, 'free grant covers a planner run plus 10 prospects with all enabled signals');
   perform pg_temp.ok(pg_temp.q('authenticated', a, format('select public.org_credit_balance(%L)', org_b)) = '0', 'A cannot see B balance');
 
   -- Tenant isolation on reads
@@ -94,6 +96,21 @@ begin
   perform pg_temp.q('service_role', null, format('select public.settle_job(%L, 9, %L)', jid, 'succeeded'));
   perform pg_temp.ok(pg_temp.q('authenticated', a, format('select public.org_credit_balance(%L)', org_a)) = '46', 'settle idempotent');
   perform pg_temp.ok(pg_temp.q('authenticated', b, 'select count(*) from public.jobs') = '0', 'B cannot see A jobs');
+
+  -- Credits never stay reserved after a start that did not complete (stale jobs are failed and refunded)
+  perform pg_temp.q('authenticated', a, format('select (public.create_job(%L, null, %L, 40, %L)).id', org_a, 'ingest', 'stale-1'));
+  perform pg_temp.ok(pg_temp.q('authenticated', a, format('select public.org_credit_balance(%L)', org_a)) = '6', 'a start reserves 40');
+  perform pg_temp.ok(pg_temp.err('authenticated', a, format('select public.release_stale_jobs(%L)', org_a)) like '42501%', 'users cannot call the reaper');
+  perform pg_temp.ok(pg_temp.q('service_role', null, format('select public.release_stale_jobs(%L)', org_a)) = '0', 'a fresh queued job is not released');
+  perform pg_temp.ok(pg_temp.q('authenticated', a, format('select public.org_credit_balance(%L)', org_a)) = '6', 'and keeps its reservation');
+  perform pg_temp.q('postgres', null, format('update public.jobs set created_at = now() - interval %L where idempotency_key = %L', '10 minutes', 'stale-1'));
+  perform pg_temp.ok(pg_temp.q('authenticated', a, format('select (public.create_job(%L, null, %L, 45, %L)).id is not null', org_a, 'ingest', 'stale-2')) = 'true', 'creating a job first gives back the stale reservation, so 45 fits again');
+  perform pg_temp.ok((select status || '/' || error from public.jobs where idempotency_key = 'stale-1') = 'failed/start_failed', 'the stale job is failed with start_failed');
+  perform pg_temp.ok(pg_temp.q('authenticated', a, format('select public.org_credit_balance(%L)', org_a)) = '1', 'balance: 46 - 45 reserved');
+  perform pg_temp.q('postgres', null, format('update public.jobs set status = %L, started_at = now() - interval %L where idempotency_key = %L', 'running', '2 hours', 'stale-2'));
+  perform pg_temp.ok(pg_temp.q('service_role', null, format('select public.release_stale_jobs(%L)', org_a)) = '1', 'a job running for 2 hours is released');
+  perform pg_temp.ok((select error from public.jobs where idempotency_key = 'stale-2') = 'timed_out', 'as timed_out');
+  perform pg_temp.ok(pg_temp.q('authenticated', a, format('select public.org_credit_balance(%L)', org_a)) = '46', 'all reserved credits are back');
 
   -- Leads
   insert into public.leads (organization_id, business_name, phone_e164, phone_type, whatsapp_eligible, source, dedupe_key)

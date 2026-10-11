@@ -4,7 +4,8 @@ import { randomUUID } from 'node:crypto';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { requireOrg } from '@/lib/org';
-import { startJob, type StartResult } from '@/lib/jobs';
+import { startJob, messageForCode, type StartResult } from '@/lib/jobs';
+import { classifyDbError, firstInvalidField, logActionError } from '@/lib/action-errors.mjs';
 import { defaults, llmConfig, plannerLlmConfig } from '@/lib/config/defaults';
 import { getT } from '@/lib/i18n/server';
 import type { CampaignParameters } from '@/lib/types';
@@ -44,8 +45,17 @@ const paramsSchema = z.object({
   angle: z.object({ title_ar: z.string().max(80), description_ar: z.string().max(300) }).nullable().optional(),
 });
 
-const issueText = (issue: string | undefined, wizard: Record<string, unknown>, fallback: string) =>
-  (issue && typeof wizard[issue] === 'string' ? (wizard[issue] as string) : fallback);
+// A validation problem: a message key the wizard already knows, or a message naming the invalid field.
+const invalidMessage = (error: Parameters<typeof firstInvalidField>[0], t: Awaited<ReturnType<typeof getT>>['t']) => {
+  const { field, issue } = firstInvalidField(error);
+  const known = (t.wizard as Record<string, unknown>)[issue];
+  if (issue && typeof known === 'string') return known;
+  const name = t.wizard.fieldNames[field] ?? field;
+  return name ? t.wizard.fieldInvalid(name) : t.errors.unexpected(logActionError('validate-campaign', error.issues[0]?.message ?? 'invalid'));
+};
+// A database problem: a plain explanation when we know it, otherwise a reference id that is also in the server log.
+const dbMessage = (action: string, error: { message: string }, t: Awaited<ReturnType<typeof getT>>['t'], extra: Record<string, unknown> = {}) =>
+  messageForCode(classifyDbError(error.message), t) ?? t.errors.unexpected(logActionError(action, error.message, extra));
 
 export type CampaignInput = { id?: string; name: string; parameters: unknown };
 
@@ -69,12 +79,12 @@ export async function saveCampaign(input: CampaignInput): Promise<{ id?: string;
   const name = String(input.name ?? '').trim();
   if (!name) return { error: t.wizard.needName };
   const parsed = paramsSchema.safeParse(input.parameters);
-  if (!parsed.success) return { error: issueText(parsed.error.issues[0]?.message, t.wizard, t.errors.generic) };
+  if (!parsed.success) return { error: invalidMessage(parsed.error, t) };
   const parameters = parsed.data as CampaignParameters;
 
   if (input.id) {
     const { error } = await supabase.from('campaigns').update({ name, parameters }).eq('id', input.id).eq('status', 'draft');
-    if (error) return { error: t.errors.generic };
+    if (error) return { error: dbMessage('saveCampaign:update', error, t, { org: org.id, campaign: input.id }) };
     return { id: input.id };
   }
   const { data, error } = await supabase
@@ -82,7 +92,7 @@ export async function saveCampaign(input: CampaignInput): Promise<{ id?: string;
     .insert({ organization_id: org.id, created_by: user.id, name, source: 'google_maps', parameters })
     .select('id')
     .single();
-  if (error || !data) return { error: t.errors.generic };
+  if (error || !data) return { error: dbMessage('saveCampaign:insert', error ?? { message: 'insert returned no row' }, t, { org: org.id }) };
   revalidatePath('/campaigns');
   return { id: data.id };
 }
@@ -91,9 +101,9 @@ export async function runCampaign(campaignId: string, nonce: string): Promise<St
   const { t } = await getT();
   const { supabase, org } = await requireOrg();
   const { data: c } = await supabase.from('campaigns').select('id,parameters,status').eq('id', campaignId).single();
-  if (!c) return { error: t.errors.generic };
+  if (!c) return { error: t.errors.campaignNotFound };
   const parsed = paramsSchema.safeParse(c.parameters);
-  if (!parsed.success) return { error: issueText(parsed.error.issues[0]?.message, t.wizard, t.errors.generic) };
+  if (!parsed.success) return { error: invalidMessage(parsed.error, t) };
   const p = parsed.data;
 
   const { data: perLead } = await supabase.rpc('signal_credits_per_lead', { p_signals: p.signals });

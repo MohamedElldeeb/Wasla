@@ -1,5 +1,6 @@
 import { requireOrg } from '@/lib/org';
 import { getT } from '@/lib/i18n/server';
+import { releaseStaleJobs } from '@/lib/jobs';
 import { CampaignWizard } from '@/components/app/campaign-wizard';
 import { PageHeader } from '@/components/app/page-header';
 import type { SignalDefinition } from '@/lib/types';
@@ -7,6 +8,7 @@ import type { SignalDefinition } from '@/lib/types';
 export default async function NewCampaignPage() {
   const { supabase, org } = await requireOrg();
   const { t } = await getT();
+  await releaseStaleJobs(org.id); // reservations of starts that never completed are given back before the balance is read
   const [{ data: balance }, { data: defs }, { data: templates }] = await Promise.all([
     supabase.rpc('org_credit_balance', { org: org.id }),
     supabase.from('signal_definitions').select('*').order('sort_order'),

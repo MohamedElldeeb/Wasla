@@ -1,11 +1,13 @@
 import { requireOrg } from '@/lib/org';
 import { getT } from '@/lib/i18n/server';
+import { releaseStaleJobs } from '@/lib/jobs';
 import { BottomNav, MobileTopBar, Sidebar } from '@/components/app/app-nav';
 
 // App shell (DESIGN.md 4.3): mobile = top bar + bottom navigation; desktop = start-side sidebar, no top bar.
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const { supabase, org, user } = await requireOrg();
   const { t } = await getT();
+  await releaseStaleJobs(org.id); // credits reserved by a start that never completed come back before the balance is shown
   const { data } = await supabase.rpc('org_credit_balance', { org: org.id });
   const shell = {
     balance: Number(data ?? 0),

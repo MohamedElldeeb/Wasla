@@ -217,7 +217,7 @@ const out = [];
   const why = w.iff('No queries at all?', '$json.error === "no_queries"');
   const noq = settle(w, 'Settle no queries', 'p_job_id: ' + JOB + ', p_credits_used: 0, p_status: "failed", p_error: "no_queries"');
   const exhausted = w.callWebhook('Call normalize final', 'wasla-normalize', 'Object.assign({}, $("Webhook").first().json.body, { final: true })');
-  w.row = 2; const mapsFail = settle(w, 'Settle maps failed', 'p_job_id: ' + JOB + ', p_credits_used: 0, p_status: "failed", p_error: "maps_failed"');
+  w.row = 2; const mapsFail = settle(w, 'Settle maps failed', 'p_job_id: ' + JOB + ', p_credits_used: 0, p_status: "failed", p_error: "maps_failed", p_counts: { search_errors: ($("Collect").first().json.errors || []).slice(0, 3) }');
   w.chain(hook, job, mark, camp, sig, past, probe, plan, has);
   w.connect(has, apify, 0); w.connect(has, why, 1);
   w.connect(why, noq, 0); w.connect(why, exhausted, 1);

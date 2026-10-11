@@ -48,7 +48,8 @@ outs.forEach((it, idx) => {
       add(x, plan);
     }
   } else {
-    errors.push(String(r.statusCode || (r.error && (r.error.message || r.error)) || 'unknown'));
+    // technical detail for the job row (no personal data): status code and the actor's own message, trimmed
+    errors.push(String(r.statusCode || (r.error && (r.error.message || r.error)) || 'unknown') + (r.body && r.body.error && r.body.error.message ? `: ${String(r.body.error.message).slice(0, 160)}` : ''));
   }
 });
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useRef, useState, useTransition } from 'react';
+import { useEffect, useMemo, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Sparkles, X } from 'lucide-react';
 import { toast } from 'sonner';
@@ -163,6 +163,7 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
   const live = useJob(planJob, (j) => {
     if (j.status === 'failed') { setPlanMsg({ ok: false, text: t.jobErrors[j.error ?? ''] ?? w.plannerFailed }); return; }
     if (j.status === 'succeeded' && j.result) {
+      router.refresh(); // the planner charged credits: show the new balance
       const d = j.result as PlannerDraft;
       setKeywords(d.keywords ?? []);
       if (d.locations?.length) setLocations(d.locations);
@@ -229,6 +230,13 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
   }, [active]);
   const total = maxResults * (1 + perLead);
   const notEnough = total > balance;
+  // The largest run the balance pays for (steps of 5). A new free account (50 credits) always affords at least 10 prospects.
+  const fitMax = Math.min(defaults.maxResultsCap, Math.floor(Math.floor(balance / (1 + perLead)) / 5) * 5);
+  const sliderTouched = useRef(false);
+  useEffect(() => {
+    // Until the user picks a number, never default to a run the balance cannot pay for.
+    if (!sliderTouched.current && total > balance && fitMax >= 5) setMaxResults(fitMax);
+  }, [total, balance, fitMax]);
 
   function buildParameters(): CampaignParameters {
     return {
@@ -322,9 +330,17 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
         <div className="flex justify-between"><dt className="text-fg-muted">{w.estSignals}</dt><dd className="num font-semibold text-fg">{perLead ? `${perLead} × ${num(maxResults)}` : w.signalFree}</dd></div>
         <div className="flex justify-between border-t border-border pt-2"><dt className="text-fg">{w.estTotal}</dt><dd className="num text-h3 text-fg">{num(total)} {t.common.creditUnit}</dd></div>
         <div className="flex justify-between"><dt className="text-fg-muted">{w.balance}</dt><dd className="num font-semibold text-fg">{num(balance)}</dd></div>
+        {!notEnough && <div className="flex justify-between"><dt className="text-fg-muted">{w.afterReserve}</dt><dd className="num font-semibold text-fg">{num(balance - total)}</dd></div>}
       </dl>
       <p className="text-caption text-fg-muted">{w.refundNote}</p>
-      {notEnough && <Alert variant="danger" role="alert">{w.notEnough}</Alert>}
+      {notEnough && (
+        <Alert variant="danger" role="alert">
+          <strong className="block">{w.notEnoughDetail(total, balance)}</strong>
+          {fitMax >= 5 ? (
+            <Button type="button" variant="secondary" className="mt-2" onClick={() => { sliderTouched.current = true; setMaxResults(fitMax); }}>{w.fitToBalance(fitMax)}</Button>
+          ) : w.needMoreCredits}
+        </Alert>
+      )}
     </Card>
   );
 
@@ -405,7 +421,7 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
             </Field>
 
             <Field id="max" label={<>{w.maxResults}: <b className="num" dir="ltr">{maxResults}</b></>}>
-              <input id="max" type="range" min={5} max={defaults.maxResultsCap} step={5} value={maxResults} onChange={(e) => setMaxResults(Number(e.target.value))} className="h-12 w-full accent-[var(--primary)]" />
+              <input id="max" type="range" min={5} max={defaults.maxResultsCap} step={5} value={maxResults} onChange={(e) => { sliderTouched.current = true; setMaxResults(Number(e.target.value)); }} className="h-12 w-full accent-[var(--primary)]" />
             </Field>
 
             <Card>
@@ -528,7 +544,7 @@ export function CampaignWizard({ balance, signalDefs, templates, orgRegions }: P
           {step < 2 ? (
             <Button type="button" size="lg" onClick={() => setStep(step + 1)} disabled={!!blocked || planning}>{t.common.next}</Button>
           ) : (
-            <Button type="button" size="lg" loading={pending} disabled={!!blocked || planning || notEnough} onClick={() => submit(true)}>{w.run}</Button>
+            <Button type="button" size="lg" loading={pending} disabled={!!blocked || planning || notEnough} onClick={() => submit(true)}>{w.runWithCost(total)}</Button>
           )}
         </StickyBar>
         {step === 2 && (

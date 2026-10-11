@@ -1,12 +1,13 @@
 'use server';
 
+import { classifyDbError, logActionError } from '@/lib/action-errors.mjs';
 import { randomUUID } from 'node:crypto';
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { createClient } from '@/lib/supabase/server';
 import { requireOrg } from '@/lib/org';
-import { startJob, type StartResult } from '@/lib/jobs';
+import { startJob, messageForCode, type StartResult } from '@/lib/jobs';
 import { defaults, plannerLlmConfig } from '@/lib/config/defaults';
 import { getT } from '@/lib/i18n/server';
 import { safePublicUrl } from '@/lib/safe-url.mjs';
@@ -18,7 +19,7 @@ export async function startOnboardingOrg(name: string): Promise<{ orgId?: string
   if (clean.length < 2) return { error: t.onboarding.errorOrg };
   const supabase = await createClient();
   const { data, error } = await supabase.rpc('create_organization', { p_name: clean, p_offer_profile: {} });
-  if (error || !data) return { error: t.onboarding.errorGeneric };
+  if (error || !data) return { error: t.errors.unexpected(logActionError('startOnboardingOrg', error?.message ?? 'create_organization returned nothing')) };
   (await cookies()).set('wasla_org', data as string, { path: '/', httpOnly: true, sameSite: 'lax', maxAge: 60 * 60 * 24 * 365 });
   return { orgId: data as string };
 }
@@ -35,7 +36,7 @@ const turnSchema = z.object({
 export async function interviewTurn(input: z.infer<typeof turnSchema>): Promise<StartResult> {
   const { t, locale } = await getT();
   const parsed = turnSchema.safeParse(input);
-  if (!parsed.success) return { error: t.errors.generic };
+  if (!parsed.success) return { error: t.errors.unexpected(logActionError('interviewTurn:validate', parsed.error.issues[0]?.message ?? 'invalid')) };
   const { supabase, org } = await requireOrg();
   const first = parsed.data.transcript.length === 0;
   const site = first && parsed.data.siteUrl ? safePublicUrl(parsed.data.siteUrl) : null;
@@ -69,7 +70,7 @@ export async function saveOfferProfile(profile: z.input<typeof profileSchema>): 
   if (!parsed.success) return { error: t.interview.needSell };
   const { supabase, org } = await requireOrg();
   const { error } = await supabase.from('organizations').update({ offer_profile: parsed.data }).eq('id', org.id);
-  if (error) return { error: t.errors.generic };
+  if (error) return { error: messageForCode(classifyDbError(error.message), t) ?? t.errors.unexpected(logActionError('saveOfferProfile', error.message, { org: org.id })) };
   revalidatePath('/settings');
   revalidatePath('/dashboard');
   return {};
